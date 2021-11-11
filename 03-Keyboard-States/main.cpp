@@ -18,23 +18,24 @@
 #include "GameObject.h"
 #include "Textures.h"
 
-#include "Mario.h"
+#include "MainObject.h"
+#include "AutoEnemy.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"02 - Sprite animation"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+
 
 #define MAX_FRAME_RATE 90
 
-#define ID_TEX_MARIO 0
+#define ID_TEX_MAINOBJECT 0
 #define ID_TEX_ENEMY 10
 #define ID_TEX_MISC 20
 
 CGame *game;
-CMario *mario;
+CMainObject *mainObject;
+AutoEnemy *enemy;
 
 class CSampleKeyHander: public CKeyEventHandler
 {
@@ -50,24 +51,27 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+	case DIK_UP:
+		mainObject->SetState(MAINOBJECT_STATE_JUMP);
 		break;
+	case DIK_DOWN:
+		mainObject->SetState(MAINOBJECT_STATE_DOWN);
 	}
 }
 
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	mainObject->SetState(MAINOBJECT_STATE_STOP);
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		mainObject->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else mario->SetState(MARIO_STATE_IDLE);
+		mainObject->SetState(MAINOBJECT_STATE_WALKING_LEFT);
+	else mainObject->SetState(MAINOBJECT_STATE_IDLE);
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -85,29 +89,31 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 /*
 	Load all game resources 
-	In this example: load textures, sprites, animations and mario object
+	In this example: load textures, sprites, animations and mainObject object
 */
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
 
-	textures->Add(ID_TEX_MARIO, L"textures\\mario.png",D3DCOLOR_XRGB(176, 224, 248));
+	textures->Add(ID_TEX_MAINOBJECT, L"textures\\car.png",D3DCOLOR_XRGB(176, 224, 248));
 
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
 	
-	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
+	LPDIRECT3DTEXTURE9 texMainObject = textures->Get(ID_TEX_MAINOBJECT);
 
 
-	sprites->Add(10001, 246, 154, 260, 181, texMario);
+	sprites->Add(10001, 146, 5, 172, 23, texMainObject);
 
-	sprites->Add(10002, 275, 154, 290, 181, texMario);
-	sprites->Add(10003, 304, 154, 321, 181, texMario);
+	sprites->Add(10002, 178, 5, 204, 23, texMainObject);
+	sprites->Add(10003, 211, 5, 237, 23, texMainObject);
+	sprites->Add(10004, 241, 5, 267, 23, texMainObject);
 
-	sprites->Add(10011, 186, 154, 200, 181, texMario);
+	sprites->Add(10011, 109, 5, 135, 23, texMainObject);
 
-	sprites->Add(10012, 155, 154, 170, 181, texMario);
-	sprites->Add(10013, 125, 154, 140, 181, texMario);
+	sprites->Add(10012, 77, 5, 103, 23, texMainObject);
+	sprites->Add(10013, 44, 5, 70, 23, texMainObject);
+	sprites->Add(10014, 13, 5, 39, 23, texMainObject);
 
 
 	LPANIMATION ani;
@@ -125,21 +131,31 @@ void LoadResources()
 	ani->Add(10001);
 	ani->Add(10002);
 	ani->Add(10003);
+	ani->Add(10004);
 	animations->Add(500, ani);
 
 	ani = new CAnimation(100);
 	ani->Add(10011);
 	ani->Add(10012);
 	ani->Add(10013);
+	ani->Add(10014);
 	animations->Add(501, ani);
 
-	mario = new CMario();
-	CMario::AddAnimation(400);		// idle right
-	CMario::AddAnimation(401);		// idle left
-	CMario::AddAnimation(500);		// walk right
-	CMario::AddAnimation(501);		// walk left
+	mainObject = new CMainObject();
+	CMainObject::AddAnimation(400);		// idle right
+	CMainObject::AddAnimation(401);		// idle left
+	CMainObject::AddAnimation(500);		// walk right
+	CMainObject::AddAnimation(501);		// walk left
 
-	mario->SetPosition(0.0f, 100.0f);
+	mainObject->SetPosition(145.0f, 100.0f);
+
+	enemy = new AutoEnemy();
+	AutoEnemy::AddAnimation(400);		// idle right
+	AutoEnemy::AddAnimation(401);		// idle left
+	AutoEnemy::AddAnimation(500);		// walk right
+	AutoEnemy::AddAnimation(501);		// walk left
+
+	enemy->SetPosition(50.0f, 0.0f);
 }
 
 /*
@@ -148,7 +164,8 @@ void LoadResources()
 */
 void Update(DWORD dt)
 {
-	mario->Update(dt);
+	mainObject->Update(dt);
+	enemy->Update(dt);
 }
 
 /*
@@ -167,8 +184,8 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		mario->Render();
-
+		mainObject->Render();
+		enemy->Render();
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}
