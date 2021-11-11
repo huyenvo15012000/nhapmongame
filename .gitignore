@@ -1,0 +1,5 @@
+
+*.db-wal
+Code/.vs/Code/v16/Browse.VC.db
+Code/.vs/Code/v16/Browse.VC.db-shm
+Code/.vs/Code/v16/Browse.VC.opendb
