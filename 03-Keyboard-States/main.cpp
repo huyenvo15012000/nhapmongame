@@ -155,7 +155,7 @@ void LoadResources()
 	AutoEnemy::AddAnimation(500);		// walk right
 	AutoEnemy::AddAnimation(501);		// walk left
 
-	enemy->SetPosition(50.0f, 0.0f);
+	enemy->SetPosition(140.0f, 90.0f);
 }
 
 /*
