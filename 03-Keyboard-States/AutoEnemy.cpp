@@ -7,7 +7,7 @@
 void AutoEnemy::Update(DWORD dt)
 {
 	CGameObject::Update(dt);
-
+	//nothing
 	if (x > SCREEN_WIDTH - ENEMY_WIDTH)
 	{
 		this->SetState(GO_TO_BOTTOM);
