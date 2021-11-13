@@ -68,6 +68,12 @@ void CMainObject::SetState(int state)
 	}
 
 
-
 }
-
+float CMainObject::GetX()
+{
+	return this->x;
+}
+float CMainObject::GetY()
+{
+	return this->y;
+}

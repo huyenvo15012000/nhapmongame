@@ -1,14 +1,17 @@
 #include "Camera.h"
+#include "Game.h"
+
 Camera* Camera::mCamera = NULL;
 
-Camera::Camera(int width, int height)
+Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactors)
 {
     mWidth = width;
     mHeight = height;
+    this->angle = angle;
+    this->scaleFactors = scaleFactors;
 
-    mPosition = D3DXVECTOR3(0, 0, 0);
-
-
+    D3DXMatrixOrthoLH(&orthographicMatrix, width, -height, 0.0f, 1.0f);
+    D3DXMatrixIdentity(&identityMatrix);
 }
 
 
@@ -17,31 +20,20 @@ Camera::~Camera()
 
 }
 
-void Camera::SetPosition(float x, float y)
+void Camera::Update()
 {
-    SetPosition(D3DXVECTOR3(x, y, 0));
+        float cameraX = this->following->GetX();
+        float cameraY = this->following->GetY();
+        this->viewMatrix = D3DXMATRIX(scaleFactors.x * cos(angle), scaleFactors.x * sin(angle), 0, 0,
+            -scaleFactors.y * sin(angle), scaleFactors.y * cos(angle), 0, 0,
+            0, 0, scaleFactors.z, 0,
+            -cameraX * scaleFactors.x * cos(angle) + cameraY * scaleFactors.y * sin(angle), -cameraX * scaleFactors.y * sin(angle) - cameraY * scaleFactors.y * cos(angle), 0, 1
+        );
 }
 
-void Camera::SetPosition(D3DXVECTOR3 pos)
+void Camera::Follow(CMainObject* main)
 {
-    mPosition = pos;
-}
-
-D3DXVECTOR3 Camera::GetPosition()
-{
-    return mPosition;
-}
-
-RECT Camera::GetBound()
-{
-    RECT bound;
-
-    bound.left = mPosition.x - mWidth / 2;
-    bound.right = bound.left + mWidth;;
-    bound.top = mPosition.y + mHeight / 2;
-    bound.bottom = bound.top - mHeight;
-
-    return bound;
+    this->following = main;
 }
 
 Camera* Camera::GetInstance(int width, int height)
@@ -61,24 +53,9 @@ int Camera::GetHeight()
 {
     return mHeight;
 }
-D3DXVECTOR3 Camera::Transform(float x, float y)
+void Camera::setTransform(CGame* gDevice) const
 {
-    D3DXMATRIX matrix;
-    D3DXMatrixIdentity(&matrix);
-    matrix._22 = -1;
-    matrix._41 = -mPosition.x + this->mWidth / 2;
-    matrix._42 = mPosition.y + this->mHeight / 2;
-    D3DXVECTOR3 Pos3(x, y, 1);
-    D3DXVECTOR4 Pos4;
-    D3DXVec3Transform(&Pos4, &Pos3, &matrix);
-    D3DXVECTOR3 result = D3DXVECTOR3((int)Pos4.x, (int)Pos4.y, 0.0);
-    return result;
-}
-D3DXVECTOR3 Camera::Transform(D3DXVECTOR2 pos)
-{
-    return Transform(pos.x, pos.y);
-}
-D3DXVECTOR3 Camera::Transform(D3DXVECTOR3 pos)
-{
-    return Transform(pos.x, pos.y);
+    gDevice->GetDirect3DDevice()->SetTransform(D3DTS_PROJECTION, &orthographicMatrix);
+    gDevice->GetDirect3DDevice()->SetTransform(D3DTS_WORLD, &identityMatrix);
+    gDevice->GetDirect3DDevice()->SetTransform(D3DTS_VIEW, &viewMatrix);
 }

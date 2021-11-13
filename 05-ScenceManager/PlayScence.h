@@ -8,12 +8,11 @@
 #include "Goomba.h"
 #include "Koopas.h"
 
-
 class CPlayScene: public CScene
 {
 protected: 
 	CMario *player;					// A play scene has to have player, right? 
-
+	//Camera *camera;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);
@@ -32,7 +31,7 @@ public:
 	virtual void Unload();
 
 	CMario * GetPlayer() { return player; } 
-
+	//Camera * GetCamera() { return camera; }
 	//friend class CPlayScenceKeyHandler;
 };
 

@@ -28,4 +28,6 @@ public:
 	void Update(DWORD dt);
 	void Render();
 	void SetState(int state);
+	float GetX();
+	float GetY();
 };

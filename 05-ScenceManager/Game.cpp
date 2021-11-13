@@ -5,6 +5,9 @@
 #include "Utils.h"
 
 #include "PlayScence.h"
+#include "Camera.h"
+#include "Mario.h"
+
 
 CGame * CGame::__instance = NULL;
 
@@ -14,7 +17,7 @@ CGame * CGame::__instance = NULL;
 	- hInst: Application instance handle
 	- hWnd: Application window handle
 */
-void CGame::Init(HWND hWnd)
+void CGame::Init(HWND hWnd, int width, int height)
 {
 	LPDIRECT3D9 d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -58,6 +61,7 @@ void CGame::Init(HWND hWnd)
 	D3DXCreateSprite(d3ddv, &spriteHandler);
 
 	OutputDebugString(L"[INFO] InitGame done;\n");
+	camera = new Camera(width, height, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 }
 
 /*
@@ -65,13 +69,19 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
-	D3DXVECTOR3 p(x - cam_x, y - cam_y, 0);
+	if (camera)
+	{
+		camera->SetTransform(this->GetDirect3DDevice());
+	}
+	D3DXVECTOR3 p(x - camera->GetPosition().x, y - camera->GetPosition().y, 0);
 	RECT r; 
 	r.left = left;
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+
+	
 }
 
 int CGame::IsKeyDown(int KeyCode)
@@ -202,6 +212,11 @@ CGame::~CGame()
 	if (backBuffer != NULL) backBuffer->Release();
 	if (d3ddv != NULL) d3ddv->Release();
 	if (d3d != NULL) d3d->Release();
+	if (camera) {
+		delete camera;
+		camera = nullptr;
+	}
+
 }
 
 /*
@@ -395,4 +410,9 @@ void CGame::SwitchScene(int scene_id)
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();	
+}
+void CGame::SetCamPos(CMario *main) {
+	if (camera)
+		camera->Follow(main);
+	camera->Update();
 }
