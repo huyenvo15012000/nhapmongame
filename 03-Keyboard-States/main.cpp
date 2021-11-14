@@ -158,6 +158,7 @@ void LoadResources()
 	AutoEnemy::AddAnimation(501);		// walk left
 
 	enemy->SetPosition(140.0f, 90.0f);
+
 }
 
 /*
