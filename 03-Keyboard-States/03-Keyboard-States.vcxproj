@@ -124,18 +124,23 @@
   <ItemGroup>
     <ClCompile Include="AutoEnemy.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Connector.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Wheel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoEnemy.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Connector.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="MainObject.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
@@ -143,6 +148,7 @@
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Wheel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,16 +19,17 @@ Camera::~Camera()
 
 void Camera::Update()
 {
+	float camX, camY = 0;
 	if (this->following)
 	{
-		this->following->GetPosition(this->position.x, this->position.y);
+		this->following->GetPosition(camX, camY);
 	}
 
 	this->viewMatrix = D3DXMATRIX(
 		scaleFactors.x * cos(angle), scaleFactors.x * sin(angle), 0, 0,
 		-scaleFactors.y * sin(angle), scaleFactors.y * cos(angle), 0, 0,
 		0, 0, scaleFactors.z, 0,
-		-this->position.x * scaleFactors.x * cos(angle) + this->position.y * scaleFactors.y * sin(angle), -this->position.x * scaleFactors.y * sin(angle) - this->position.y * scaleFactors.y * cos(angle), 0, 1
+		-camX * scaleFactors.x * cos(angle) + camY * scaleFactors.y * sin(angle), -camX * scaleFactors.y * sin(angle) - camY * scaleFactors.y * cos(angle), 0, 1
 	);
 }
 

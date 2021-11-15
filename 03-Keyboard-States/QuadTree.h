@@ -2,9 +2,10 @@
 #include <list>
 #include "GameObject.h"
 
-class QuadTree
+class CTreeObject
 {
-	QNode* root;
+	int x1, y1, x2, y2;
+	CGameObject* target;
 };
 
 class QNode
@@ -14,9 +15,13 @@ class QNode
 	list<CTreeObject> objects;
 };
 
-class CTreeObject
+class QuadTree
 {
-	int x1, y1, x2, y2;
-	CGameObject* target;
+	QNode* root;
+protected:
+	void build(QNode* n);
+	void split();
 };
+
+
 

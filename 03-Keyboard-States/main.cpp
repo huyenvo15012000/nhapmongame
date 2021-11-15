@@ -16,11 +16,11 @@
 #include "debug.h"
 #include "Game.h"
 #include "GameObject.h"
-#include "Textures.h"
+//#include "Textures.h"
 
 #include "MainObject.h"
 #include "AutoEnemy.h"
-#include "Camera.h"
+
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"02 - Sprite animation"
@@ -29,14 +29,13 @@
 
 
 #define MAX_FRAME_RATE 90
-
-#define ID_TEX_MAINOBJECT 0
-#define ID_TEX_ENEMY 10
+#define ID_TEX_MAINOBJECT_RIGHT			10
+#define ID_TEX_MAINOBJECT_LEFT 			11
 #define ID_TEX_MISC 20
 
 CGame *game;
 CMainObject *mainObject;
-AutoEnemy *enemy;
+AutoEnemy *enemy, *enemy2;
 
 class CSampleKeyHander: public CKeyEventHandler
 {
@@ -95,30 +94,31 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 */
 void LoadResources()
 {
-	CTextures * textures = CTextures::GetInstance();
+	//CTextures * textures = CTextures::GetInstance();
 
-	textures->Add(ID_TEX_MAINOBJECT, L"textures\\car.png",D3DCOLOR_XRGB(176, 224, 248));
+	//textures->Add(ID_TEX_MAINOBJECT_RIGHT, L"textures\\CarAndMainRight.png",D3DCOLOR_XRGB(176, 224, 248));
+	//textures->Add(ID_TEX_MAINOBJECT_LEFT, L"textures\\CarAndMainLeft.png", D3DCOLOR_XRGB(176, 224, 248));
 
-	CSprites * sprites = CSprites::GetInstance();
-	CAnimations * animations = CAnimations::GetInstance();
-	
-	LPDIRECT3DTEXTURE9 texMainObject = textures->Get(ID_TEX_MAINOBJECT);
+	//CSprites * sprites = CSprites::GetInstance();
+	//CAnimations * animations = CAnimations::GetInstance();
+	//
+	//LPDIRECT3DTEXTURE9 texMainObjectRight = textures->Get(ID_TEX_MAINOBJECT_RIGHT);
+	//LPDIRECT3DTEXTURE9 texMainObjectLeft = textures->Get(ID_TEX_MAINOBJECT_LEFT);
+
+	//sprites->Add(10001, 146, 5, 172, 23, texMainObjectRight);
+
+	//sprites->Add(10002, 178, 5, 204, 23, texMainObject);
+	//sprites->Add(10003, 211, 5, 237, 23, texMainObject);
+	//sprites->Add(10004, 241, 5, 267, 23, texMainObject);
+
+	//sprites->Add(10011, 109, 5, 135, 23, texMainObject);
+
+	//sprites->Add(10012, 77, 5, 103, 23, texMainObject);
+	//sprites->Add(10013, 44, 5, 70, 23, texMainObject);
+	//sprites->Add(10014, 13, 5, 39, 23, texMainObject);
 
 
-	sprites->Add(10001, 146, 5, 172, 23, texMainObject);
-
-	sprites->Add(10002, 178, 5, 204, 23, texMainObject);
-	sprites->Add(10003, 211, 5, 237, 23, texMainObject);
-	sprites->Add(10004, 241, 5, 267, 23, texMainObject);
-
-	sprites->Add(10011, 109, 5, 135, 23, texMainObject);
-
-	sprites->Add(10012, 77, 5, 103, 23, texMainObject);
-	sprites->Add(10013, 44, 5, 70, 23, texMainObject);
-	sprites->Add(10014, 13, 5, 39, 23, texMainObject);
-
-
-	LPANIMATION ani;
+	/*LPANIMATION ani;
 
 	ani = new CAnimation(100);	
 	ani->Add(10001);
@@ -126,39 +126,72 @@ void LoadResources()
 
 	ani = new CAnimation(100);
 	ani->Add(10011);
-	animations->Add(401, ani);
+	animations->Add(401, ani);*/
 
+
+	//ani = new CAnimation(100);
+	//ani->Add(10001);
+	//ani->Add(10002);
+	//ani->Add(10003);
+	//ani->Add(10004);
+	//animations->Add(500, ani);
+
+	//ani = new CAnimation(100);
+	//ani->Add(10011);
+	//ani->Add(10012);
+	//ani->Add(10013);
+	//ani->Add(10014);
+	//animations->Add(501, ani);
+	/*CTextures* textures = CTextures::GetInstance();
+
+	textures->Add(ID_TEX_MAINOBJECT_RIGHT, L"textures\\CarAndMainRight.png", D3DCOLOR_XRGB(176, 224, 248));
+	textures->Add(ID_TEX_MAINOBJECT_LEFT, L"textures\\CarAndMainLeft.png", D3DCOLOR_XRGB(176, 224, 248));
+
+	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
+
+	LPDIRECT3DTEXTURE9 texMainObjectRight = textures->Get(ID_TEX_MAINOBJECT_RIGHT);
+	LPDIRECT3DTEXTURE9 texMainObjectLeft = textures->Get(ID_TEX_MAINOBJECT_LEFT);
+
+	sprites->Add(10001, 355, 3, 371, 11, texMainObjectRight);*/
+
+	///*sprites->Add(10002, 178, 5, 204, 23, texMainObject);
+	//sprites->Add(10003, 211, 5, 237, 23, texMainObject);
+	//sprites->Add(10004, 241, 5, 267, 23, texMainObject);*/
+
+	/*sprites->Add(10011, 39, 3, 55, 11, texMainObjectLeft);
+
+	LPANIMATION ani;
 
 	ani = new CAnimation(100);
 	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	ani->Add(10004);
-	animations->Add(500, ani);
+	animations->Add(400, ani);
 
 	ani = new CAnimation(100);
 	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	ani->Add(10014);
-	animations->Add(501, ani);
+	animations->Add(401, ani);*/
 
 	mainObject = new CMainObject();
-	CMainObject::AddAnimation(400);		// idle right
-	CMainObject::AddAnimation(401);		// idle left
-	CMainObject::AddAnimation(500);		// walk right
-	CMainObject::AddAnimation(501);		// walk left
+	mainObject->LoadResources();
+	//CMainObject::AddAnimation(400);		// idle right
+	//CMainObject::AddAnimation(401);		// idle left
+	//CMainObject::AddAnimation(500);		// walk right
+	//CMainObject::AddAnimation(501);		// walk left
 
+	game->GetInstance()->SetCamPos(mainObject);
 	mainObject->SetPosition(145.0f, 100.0f);
 
 	enemy = new AutoEnemy();
-	AutoEnemy::AddAnimation(400);		// idle right
-	AutoEnemy::AddAnimation(401);		// idle left
-	AutoEnemy::AddAnimation(500);		// walk right
-	AutoEnemy::AddAnimation(501);		// walk left
+	//enemy->LoadResources();
+	//AutoEnemy::AddAnimation(400);		// idle right
+	//AutoEnemy::AddAnimation(401);		// idle left
+	//AutoEnemy::AddAnimation(500);		// walk right
+	//AutoEnemy::AddAnimation(501);		// walk left
 
-	enemy->SetPosition(140.0f, 90.0f);
+	enemy->SetPosition(-100.0f, 90.0f);
 
+	enemy2 = new AutoEnemy();
+	enemy2->SetPosition(550.0f, 90.0f);
 }
 
 /*
@@ -168,7 +201,9 @@ void LoadResources()
 void Update(DWORD dt)
 {
 	mainObject->Update(dt);
+	game->GetInstance()->SetCamPos(mainObject);
 	enemy->Update(dt);
+	enemy2->Update(dt);
 }
 
 /*
@@ -188,7 +223,9 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
 		mainObject->Render();
-		enemy->Render();
+		//enemy->Render();
+		game->GetInstance()->SetCamPos(mainObject);
+		//enemy2->Render();
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}
@@ -248,7 +285,7 @@ int Run()
 {
 	MSG msg;
 	int done = 0;
-	DWORD frameStart = GetTickCount();
+	DWORD frameStart = GetTickCount64();
 	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 
 	while (!done)
@@ -261,7 +298,7 @@ int Run()
 			DispatchMessage(&msg);
 		}
 
-		DWORD now = GetTickCount();
+		DWORD now = GetTickCount64();
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
@@ -288,7 +325,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game = CGame::GetInstance();
-	game->Init(hWnd);
+	game->Init(hWnd, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	keyHandler = new CSampleKeyHander();
 	game->InitKeyboard(keyHandler);

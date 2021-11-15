@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "debug.h"
-
+#include "Camera.h"
 CGame * CGame::__instance = NULL;
 
 /*
@@ -9,7 +9,7 @@ CGame * CGame::__instance = NULL;
 	- hInst: Application instance handle
 	- hWnd: Application window handle
 */
-void CGame::Init(HWND hWnd)
+void CGame::Init(HWND hWnd, int width, int height)
 {
 	LPDIRECT3D9 d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -23,6 +23,8 @@ void CGame::Init(HWND hWnd)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 	d3dpp.BackBufferCount = 1;
+	camera = new Camera(width, height, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
 
 	RECT r;
 	GetClientRect(hWnd, &r);	// retrieve Window width & height 
@@ -57,7 +59,11 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
 {
-	D3DXVECTOR3 p(x, y, 0);
+	if (camera)
+	{
+		camera->SetTransform(this->GetDirect3DDevice());
+	}
+	D3DXVECTOR3 p(x - camera->GetPosition().x, y - camera->GetPosition().y, 0);
 	RECT r; 
 	r.left = left;
 	r.top = top;
@@ -188,6 +194,13 @@ void CGame::ProcessKeyboard()
 		else
 			keyHandler->OnKeyUp(KeyCode);
 	}
+}
+
+void CGame::SetCamPos(CMainObject* main) {
+	if (camera) {
+		camera->Follow(main);
+	}
+	camera->Update();
 }
 
 CGame::~CGame()

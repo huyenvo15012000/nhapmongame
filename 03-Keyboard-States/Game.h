@@ -5,6 +5,8 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+#include "Camera.h"
+#include "MainObject.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 /*
@@ -23,6 +25,7 @@ typedef CKeyEventHandler * LPKEYEVENTHANDLER;
 class CGame
 {
 	static CGame * __instance;
+	
 	HWND hWnd;									// Window handle
 
 	LPDIRECT3D9 d3d = NULL;						// Direct3D handle
@@ -40,8 +43,9 @@ class CGame
 	LPKEYEVENTHANDLER keyHandler;
 
 public:
+	Camera* camera;
 	void InitKeyboard(LPKEYEVENTHANDLER handler);
-	void Init(HWND hWnd);
+	void Init(HWND hWnd, int width, int height);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom);
 
 	int IsKeyDown(int KeyCode);
@@ -52,6 +56,7 @@ public:
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
 	static CGame * GetInstance();
+	void SetCamPos(CMainObject* main);
 
 	~CGame();
 };

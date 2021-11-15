@@ -1,7 +1,7 @@
 #include "AutoEnemy.h"
 #include "debug.h"
 #include <stdio.h>
-
+#include "Textures.h"
 
 
 void AutoEnemy::Update(DWORD dt)
@@ -88,8 +88,62 @@ void AutoEnemy::SetState(int state)
 		break;
 		break;
 	}
-
-
-
 }
 
+void AutoEnemy::LoadResources()
+{
+	CTextures* textures = CTextures::GetInstance();
+
+	/*textures->Add(ID_TEX_MAINOBJECT_RIGHT, L"textures\\CarAndMainRight.png", D3DCOLOR_XRGB(176, 224, 248));
+	textures->Add(ID_TEX_MAINOBJECT_LEFT, L"textures\\CarAndMainLeft.png", D3DCOLOR_XRGB(176, 224, 248));*/
+
+	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
+
+	/*LPDIRECT3DTEXTURE9 texMainObjectRight = textures->Get(ID_TEX_MAINOBJECT_RIGHT);
+	LPDIRECT3DTEXTURE9 texMainObjectLeft = textures->Get(ID_TEX_MAINOBJECT_LEFT);
+
+	sprites->Add(10001, 146, 5, 172, 23, texMainObjectRight);
+
+	sprites->Add(10002, 178, 5, 204, 23, texMainObject);
+	sprites->Add(10003, 211, 5, 237, 23, texMainObject);
+	sprites->Add(10004, 241, 5, 267, 23, texMainObject);
+
+	sprites->Add(10011, 109, 5, 135, 23, texMainObject);
+
+	sprites->Add(10012, 77, 5, 103, 23, texMainObject);
+	sprites->Add(10013, 44, 5, 70, 23, texMainObject);
+	sprites->Add(10014, 13, 5, 39, 23, texMainObject);*/
+
+
+	LPANIMATION ani;
+
+	ani = new CAnimation(100);
+	ani->Add(10001);
+	animations->Add(400, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(10011);
+	animations->Add(401, ani);
+
+
+	ani = new CAnimation(100);
+	ani->Add(10001);
+	ani->Add(10002);
+	ani->Add(10003);
+	ani->Add(10004);
+	animations->Add(500, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(10011);
+	ani->Add(10012);
+	ani->Add(10013);
+	ani->Add(10014);
+	animations->Add(501, ani);
+
+	AutoEnemy::AddAnimation(400);		// idle right
+	AutoEnemy::AddAnimation(401);		// idle left
+	AutoEnemy::AddAnimation(500);		// walk right
+	AutoEnemy::AddAnimation(501);		// walk left
+
+}

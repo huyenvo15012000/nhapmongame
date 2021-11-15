@@ -45,7 +45,6 @@ class CGame
 	unordered_map<int, LPSCENE> scenes;
 	int current_scene; 
 
-	//Camera* camera;
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
