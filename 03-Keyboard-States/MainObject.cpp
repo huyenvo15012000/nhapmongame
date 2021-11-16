@@ -39,11 +39,11 @@ void CMainObject::Render()
 	if (nx>0) ani = MAINOBJECT_ANI_IDLE_RIGHT;
 	else ani = MAINOBJECT_ANI_IDLE_LEFT;
 	animations[ani]->Render(x, y);
-	WheelLeft->Render(x-10,y+10);
-	WheelRight->Render(x+10,y+10);
+	WheelLeft->Render(x-8,y+10);
+	WheelRight->Render(x+8,y+10);
 	connector->Render(x, y+5);
-	MainGun->Render(x+100, y-100);
-	//DebugOut(L"Main render: %d  %d", x, " ", y);
+	MainGun->Render(x+15, y);
+	DebugOut(L"Main render: %d  %d", x, " ", y);
 }
 
 void CMainObject::SetState(int state)
@@ -73,8 +73,6 @@ void CMainObject::SetState(int state)
 		vy = vx = 0;
 		break;
 	}
-
-
 }
 float CMainObject::GetX()
 {
