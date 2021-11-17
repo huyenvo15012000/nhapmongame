@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "Textures.h"
 
+
 #define ID_TEX_WHEEL_RIGHT			40
 #define ID_TEX_WHEEL_LEFT 			41
 
@@ -15,8 +16,12 @@ void Wheel::Update(DWORD dt)
 void Wheel::Render(float a, float b)
 {
 	int ani;
-	if (nx > 0) ani = WHEEL_ANI_IDLE_RIGHT;
-	else ani = WHEEL_ANI_IDLE_LEFT;
+	if (vx == 0) ani = WHEEL_ANI_IDLE;
+	else
+		if (vx > 0)
+			ani = WHEEL_ANI_WALKING_RIGHT;
+		else
+			ani = WHEEL_ANI_WALKING_LEFT;
 	animations[ani]->Render(a, b);
 }
 
@@ -105,4 +110,9 @@ void Wheel::LoadResources()
 	Wheel::AddAnimation(500);		// walk right
 	Wheel::AddAnimation(501);		// walk left
 
+}
+
+Rect Wheel::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), WHEEL_WIDTH - 1, WHEEL_HEIGHT - 1);
 }

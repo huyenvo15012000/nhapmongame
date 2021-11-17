@@ -1,8 +1,12 @@
 #pragma once
 #include "GameObject.h"
+#include "Rect.h"
+#include "Point.h"
 
-#define WHEEL_ANI_IDLE_RIGHT		2
-#define WHEEL_ANI_IDLE_LEFT			3
+#define WHEEL_HEIGHT	8
+#define WHEEL_WIDTH		8
+
+#define WHEEL_ANI_IDLE		2
 #define WHEEL_ANI_WALKING_RIGHT		4
 #define WHEEL_ANI_WALKING_LEFT		5
 
@@ -21,5 +25,6 @@ public:
 	void Update(DWORD dt);
 	void Render(float a, float b);
 	void SetState(int state);
+	Rect GetBoundingBox();
 };
 

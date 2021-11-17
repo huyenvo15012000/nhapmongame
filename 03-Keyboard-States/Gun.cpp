@@ -17,7 +17,7 @@ void Gun::Render(float a, float b)
 	int ani;
 	if (nx > 0) ani = GUN_ANI_IDLE_RIGHT;
 	else ani = GUN_ANI_IDLE_LEFT;
-	animations[10]->Render(a, b);
+	animations[ani]->Render(a, b);
 }
 
 void Gun::SetState(int state)
@@ -92,4 +92,8 @@ void Gun::LoadResources()
 	//CGun::AddAnimation(500);		// walk right
 	//CGun::AddAnimation(501);		// walk left
 
+}
+Rect Gun::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), GUN_WIDTH - 1, GUN_HEIGHT - 1);
 }

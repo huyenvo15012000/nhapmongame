@@ -1,5 +1,5 @@
 #include "Portal.h"
-
+#include "Rect.h"
 
 CPortal::CPortal(float l, float t, float r, float b, int scene_id )
 {
@@ -21,4 +21,8 @@ void CPortal::GetBoundingBox(float &l, float &t, float &r, float &b)
 	t = y;
 	r = x + width;
 	b = y + height;
+}
+Rect CPortal::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), 0, 0);
 }

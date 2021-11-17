@@ -147,3 +147,7 @@ void AutoEnemy::LoadResources()
 	AutoEnemy::AddAnimation(501);		// walk left
 
 }
+Rect AutoEnemy::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), ENEMY_WIDTH - 1, ENEMY_HEIGHT - 1);
+}

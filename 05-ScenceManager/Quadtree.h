@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "Rect.h"
 #include "Game.h"
-#include "MainObject.h"
 
 #define MAX_LEVEL                25
 #define MAX_OBJECT_IN_REGION     4

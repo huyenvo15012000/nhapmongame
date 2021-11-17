@@ -219,3 +219,7 @@ void CMario::Reset()
 	SetSpeed(0, 0);
 }
 
+Rect CMario::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), 0, 0);
+}

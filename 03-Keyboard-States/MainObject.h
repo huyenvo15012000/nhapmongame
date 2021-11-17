@@ -3,6 +3,8 @@
 #include "Gun.h"
 #include "Wheel.h"
 #include "Connector.h"
+#include "Rect.h"
+#include "Point.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.1f
 #define MAINOBJECT_JUMP_SPEED_Y		0.1f
@@ -46,6 +48,7 @@ public:
 	void SetState(int state);
 	float GetX();
 	float GetY();
+	Rect GetBoundingBox();
 };
 
 

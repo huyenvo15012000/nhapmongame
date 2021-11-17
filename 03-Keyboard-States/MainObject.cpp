@@ -36,14 +36,21 @@ void CMainObject::Update(DWORD dt)
 void CMainObject::Render()
 {
 	int ani;
-	if (nx>0) ani = MAINOBJECT_ANI_IDLE_RIGHT;
-	else ani = MAINOBJECT_ANI_IDLE_LEFT;
+	if (nx > 0)
+	{
+		ani = MAINOBJECT_ANI_IDLE_RIGHT;
+		MainGun->Render(x + 15, y);
+	}
+	else 
+		if (nx < 0)
+		{
+			ani = MAINOBJECT_ANI_IDLE_LEFT;
+			MainGun->Render(x - 8, y);
+		}
 	animations[ani]->Render(x, y);
-	WheelLeft->Render(x-8,y+10);
-	WheelRight->Render(x+8,y+10);
-	connector->Render(x, y+5);
-	MainGun->Render(x+15, y);
-	DebugOut(L"Main render: %d  %d", x, " ", y);
+	WheelLeft->Render(x-5,y+12);
+	WheelRight->Render(x+11,y+12);
+	connector->Render(x+3, y+8);
 }
 
 void CMainObject::SetState(int state)
@@ -54,16 +61,24 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_RIGHT:
 		vx = MAINOBJECT_WALKING_SPEED;
 		nx = 1;
+		WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
+		WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
+		MainGun->SetState(GUN_STATE_RIGHT);
 		break;
 	case MAINOBJECT_STATE_WALKING_LEFT: 
 		vx = -MAINOBJECT_WALKING_SPEED;
 		nx = -1;
+		WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
+		WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
+		MainGun->SetState(GUN_STATE_LEFT);
 		break;
 	case MAINOBJECT_STATE_JUMP: 
 		vy = -MAINOBJECT_JUMP_SPEED_Y;
 
 	case MAINOBJECT_STATE_IDLE: 
 		vx = 0;
+		WheelLeft->SetState(WHEEL_STATE_IDLE);
+		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
 
 	case MAINOBJECT_STATE_DOWN:
@@ -71,6 +86,8 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;
+		WheelLeft->SetState(WHEEL_STATE_IDLE);
+		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
 	}
 }
@@ -130,4 +147,9 @@ CMainObject::~CMainObject()
 	delete WheelRight;
 	delete connector;
 	delete MainGun;
+}
+
+Rect CMainObject::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), MAINOBJECT_WIDTH - 1, MAINOBJECT_HEIGHT - 1);
 }

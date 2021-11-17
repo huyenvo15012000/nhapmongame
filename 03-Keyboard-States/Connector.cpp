@@ -32,7 +32,7 @@ void Connector::LoadResources()
 
 	LPDIRECT3DTEXTURE9 texConnector = textures->Get(ID_TEX_CONNECTOR);
 
-	sprites->Add(20001, 390, 21, 398, 29, texConnector);
+	sprites->Add(20001, 39, 21, 47, 29, texConnector);
 
 	LPANIMATION ani;
 
@@ -41,4 +41,8 @@ void Connector::LoadResources()
 	animations->Add(2400, ani);
 	Connector::AddAnimation(2400);
 	
+}
+Rect Connector::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), CONNECTOR_WIDTH - 1, CONNECTOR_HEIGHT - 1);
 }

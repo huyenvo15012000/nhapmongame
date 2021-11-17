@@ -9,6 +9,10 @@
 
 using namespace std;
 
+class CGameObject;
+typedef CGameObject* LPGAMEOBJECT;
+
+
 class CGameObject
 {
 protected:
@@ -39,5 +43,6 @@ public:
 
 	void Update(DWORD dt);
 	void Render();
+	virtual Rect GetBoundingBox() = 0;
 	~CGameObject();
 };

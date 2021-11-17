@@ -6,7 +6,7 @@
 
 #include "Sprites.h"
 #include "Animations.h"
-
+#include "Rect.h"
 
 using namespace std;
 
@@ -92,7 +92,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
+	virtual Rect GetBoundingBox() = 0;
 
 	~CGameObject();
 };

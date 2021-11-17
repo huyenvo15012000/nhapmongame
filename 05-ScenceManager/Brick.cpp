@@ -1,4 +1,5 @@
 #include "Brick.h"
+#include "Rect.h"
 
 void CBrick::Render()
 {
@@ -12,4 +13,8 @@ void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 	t = y;
 	r = x + BRICK_BBOX_WIDTH;
 	b = y + BRICK_BBOX_HEIGHT;
+}
+Rect CBrick::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), BRICK_BBOX_WIDTH - 1, BRICK_BBOX_HEIGHT - 1);
 }

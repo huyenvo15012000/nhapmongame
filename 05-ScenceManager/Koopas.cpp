@@ -1,4 +1,5 @@
 #include "Koopas.h"
+#include "Rect.h"
 
 CKoopas::CKoopas()
 {
@@ -65,4 +66,8 @@ void CKoopas::SetState(int state)
 		vx = KOOPAS_WALKING_SPEED;
 	}
 
+}
+Rect CKoopas::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), KOOPAS_BBOX_WIDTH - 1, KOOPAS_BBOX_HEIGHT - 1);
 }

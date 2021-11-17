@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+
 #define KOOPAS_WALKING_SPEED 0.03f;
 
 #define KOOPAS_BBOX_WIDTH 16
@@ -24,4 +25,5 @@ class CKoopas : public CGameObject
 public:
 	CKoopas();
 	virtual void SetState(int state);
+	virtual Rect GetBoundingBox();
 };

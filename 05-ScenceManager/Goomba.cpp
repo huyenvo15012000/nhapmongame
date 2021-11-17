@@ -1,4 +1,6 @@
 #include "Goomba.h"
+#include "Rect.h"
+
 CGoomba::CGoomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
@@ -61,4 +63,8 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
 	}
+}
+Rect CGoomba::GetBoundingBox()
+{
+	return Rect(Point(x, y + 6), GOOMBA_BBOX_WIDTH - 1, GOOMBA_BBOX_HEIGHT - 1);
 }

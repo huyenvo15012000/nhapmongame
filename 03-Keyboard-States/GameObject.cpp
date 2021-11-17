@@ -35,3 +35,8 @@ void CGameObject::AddAnimation(int aniId)
 CGameObject::~CGameObject()
 {
 }
+
+Rect CGameObject::GetBoundingBox()
+{
+
+}

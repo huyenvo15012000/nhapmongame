@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+
 #define GOOMBA_WALKING_SPEED 0.05f;
 
 #define GOOMBA_BBOX_WIDTH 16
@@ -22,4 +23,5 @@ class CGoomba : public CGameObject
 public: 	
 	CGoomba();
 	virtual void SetState(int state);
+	virtual Rect GetBoundingBox();
 };

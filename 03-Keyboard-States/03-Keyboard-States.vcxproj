@@ -131,7 +131,9 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="Point.cpp" />
     <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Wheel.cpp" />
@@ -145,7 +147,9 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Wheel.h" />
