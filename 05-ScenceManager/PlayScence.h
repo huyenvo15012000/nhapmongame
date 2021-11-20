@@ -7,6 +7,13 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
+#include "Quadtree.h"
+
+#define SCREEN_WIDTH 512
+#define SCREEN_HEIGHT 512
+
+#define BRICK_WIDTH 32
+#define BRICK_HEIGHT 32
 
 class CPlayScene: public CScene
 {
@@ -30,9 +37,14 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
-	CMario * GetPlayer() { return player; } 
+	Quadtree* CreateQuadtree(vector<LPGAMEOBJECT> list, Point p);
+	void UpdateActObj(Point p);
+	void UpdateObj(CGameObject* obj, DWORD dt);
+
+	CMario* GetPlayer() { return player; };
 	//Camera * GetCamera() { return camera; }
 	//friend class CPlayScenceKeyHandler;
+	
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

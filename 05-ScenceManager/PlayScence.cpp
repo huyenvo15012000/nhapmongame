@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include "Quadtree.h"
 
 using namespace std;
 
@@ -37,6 +38,69 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define MAX_SCENE_LINE 1024
 
 
+vector<vector<int>> MapTile;
+vector<vector<vector<int>>> MapObj;
+vector<LPGAMEOBJECT> objects, screenObj, actObj, moveObj;
+vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
+
+LPDIRECT3DTEXTURE9 texMap1;
+int lx, ly;
+int Stage;
+Point tf, br;
+Quadtree* quadtree;
+
+Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> list, Point p)
+{
+	// Init base game region for detecting collision
+	Quadtree* quadtree = new Quadtree(1, new Rect(p - Point(5, 5) * 16, p + Point(5, 5) * 16));
+	for (auto i = list.begin(); i != list.end(); i++)
+		quadtree->Insert(*i);
+
+	return quadtree;
+}
+void CPlayScene::UpdateActObj(Point p) {
+	float cx = p.x, cy = p.y;
+	int stx = int(cx / BRICK_HEIGHT) - 5, sty = int(cy / BRICK_WIDTH) - 5;
+	if (stx < 0) stx = 0;
+	if (sty < 0) sty = 0;
+	actObj.clear();
+	for (int y = sty; y < sty + 5 + SCREEN_HEIGHT / BRICK_HEIGHT && y < MapTile.size(); y++) {
+		for (int x = stx; x < stx + 5 + SCREEN_WIDTH / BRICK_WIDTH && x < MapTile[y].size(); x++) {
+			for (int i = 0; i < MapObj[y][x].size(); i++)
+				if (MapObj[y][x][i] != -1)
+					actObj.push_back(objects.at(MapObj[y][x][i]));
+		}
+	}
+	//actObj.push_back(&trigg);
+}
+void CPlayScene::UpdateObj(CGameObject* obj, DWORD dt) {
+	vector<LPGAMEOBJECT>* _coObj = new vector<LPGAMEOBJECT>();
+
+	float cx, cy;
+	player->GetPosition(cx, cy);
+
+	float x, y;
+
+	obj->GetPosition(x, y);
+
+	UpdateActObj(Point(x, y));
+
+	quadtree = CreateQuadtree(actObj, Point(x, y));
+
+	quadtree->Retrieve(_coObj, obj);
+
+	//if (obj->type != g_star)
+	_coObj->push_back(player);
+	//_coObj->push_back(cannon);
+	//coObj->push_back(boom);
+	//_coObj->push_back(star);
+	/*Map::GetInstance()->updateMap(cx, cy, tf, br);
+	Map::GetInstance()->updateMapObject(_coObj);*/
+
+	obj->Update(dt, _coObj);
+
+	quadtree->~Quadtree();
+}
 void CPlayScene::_ParseSection_TEXTURES(string line)
 {
 	vector<string> tokens = split(line);
@@ -231,35 +295,46 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	vector<LPGAMEOBJECT> coObjects;
+	//vector<LPGAMEOBJECT> coObjects;
+	float cx, cy;
+	coObj->clear();
+	player->GetPosition(cx, cy);
+
+	UpdateActObj(Point(cx, cy));
+	quadtree = CreateQuadtree(actObj, Point(cx, cy));
+
+	quadtree->Retrieve(coObj, player);
+
+	player->GetPosition(cx, cy);
+	coObj->push_back(player);
 	for (size_t i = 1; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		coObj->push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		objects[i]->Update(dt, coObj);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
 
 	// Update camera to follow mario
-	float cx, cy;
-	player->GetPosition(cx, cy);
+	//float cx, cy;
 
-	CGame *game = CGame::GetInstance();
-	cx -= game->GetScreenWidth() / 2;
-	cy -= game->GetScreenHeight() / 2;
+	player->Update(dt, coObj);
+	player->GetPosition(cx, cy);
 
 	CGame::GetInstance()->SetCamPos(player);
 }
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (int i = 0; i < coObj->size(); i++) {
+		//coObj->at(i)->RenderBoundingBox();
+		coObj->at(i)->Render();
+	};
 }
 
 /*
