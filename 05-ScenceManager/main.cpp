@@ -20,13 +20,10 @@
 #include "GameObject.h"
 #include "Textures.h"
 
-#include "Mario.h"
 #include "Brick.h"
-#include "Goomba.h"
-
 #include "PlayScence.h"
 #include "Quadtree.h"
-
+#include "MainObject.h"
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"SAMPLE 05 - SCENCE MANAGER"
 

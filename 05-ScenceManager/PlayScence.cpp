@@ -5,7 +5,6 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-#include "Portal.h"
 #include "Quadtree.h"
 
 using namespace std;
@@ -28,7 +27,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
-#define OBJECT_TYPE_MARIO	0
+#define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_KOOPAS	3
@@ -206,28 +205,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
+	case OBJECT_TYPE_MAINOBJECT:
 		if (player!=NULL) 
 		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			DebugOut(L"[ERROR] MAINOBJECT object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
+		obj = new CMainObject(x,y); 
+		player = (CMainObject*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_PORTAL:
-		{	
-			float r = atof(tokens[4].c_str());
-			float b = atof(tokens[5].c_str());
-			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
-		}
-		break;
+	case OBJECT_TYPE_BRICK: obj = new CBrick(); DebugOut(L"[INFO] brick object created!\n"); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -237,6 +226,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	DebugOut(L"Ani set is: %d \n", ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
@@ -296,6 +286,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	//vector<LPGAMEOBJECT> coObjects;
+	DebugOut(L"Update function\n");
 	float cx, cy;
 	coObj->clear();
 	player->GetPosition(cx, cy);
@@ -331,10 +322,19 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
+	DebugOut(L"coObject len: %d", coObj->size());
 	for (int i = 0; i < coObj->size(); i++) {
 		//coObj->at(i)->RenderBoundingBox();
-		coObj->at(i)->Render();
+		try
+		{
+			coObj->at(i)->Render();
+		}
+		catch (exception e)
+		{
+			DebugOut(L"Render function\n", e);
+		}
 	};
+	DebugOut(L"Render function\n");
 }
 
 /*
@@ -355,14 +355,14 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	CMario *mario = ((CPlayScene*)scence)->GetPlayer();
+	CMainObject *mario = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+		mario->SetState(MAINOBJECT_STATE_JUMP);
 		break;
 	case DIK_A: 
-		mario->Reset();
+		//mario->Reset();
 		break;
 	}
 }
@@ -370,14 +370,14 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
-	CMario *mario = ((CPlayScene*)scence)->GetPlayer();
+	CMainObject *mario = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (mario->GetState() == MAINOBJECT_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		mario->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
+		mario->SetState(MAINOBJECT_STATE_WALKING_LEFT);
 	else
-		mario->SetState(MARIO_STATE_IDLE);
+		mario->SetState(MAINOBJECT_STATE_IDLE);
 }

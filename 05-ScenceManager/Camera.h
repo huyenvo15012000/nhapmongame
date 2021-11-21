@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #include <DirectXMath.h>
-#include "Mario.h"
+#include "MainObject.h"
 
 class Camera
 {
@@ -13,7 +13,7 @@ public:
 
 	//Game Functions
 	void Update();
-	void Follow(CMario* following);
+	void Follow(CMainObject* following);
 	void Unfollow();
 	bool IsFollowing() const;
 	void SetTransform(LPDIRECT3DDEVICE9 device) const;
@@ -26,7 +26,7 @@ private:
 	D3DXMATRIX identityMatrix;
 	D3DXMATRIX viewMatrix;
 
-	CMario* following;
+	CMainObject* following;
 
 	int width;
 	int height;

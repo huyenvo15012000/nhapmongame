@@ -6,7 +6,7 @@
 
 #include "PlayScence.h"
 #include "Camera.h"
-#include "Mario.h"
+#include "MainObject.h"
 
 
 CGame * CGame::__instance = NULL;
@@ -411,7 +411,7 @@ void CGame::SwitchScene(int scene_id)
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();	
 }
-void CGame::SetCamPos(CMario *main) {
+void CGame::SetCamPos(CMainObject *main) {
 	if (camera)
 		camera->Follow(main);
 	camera->Update();

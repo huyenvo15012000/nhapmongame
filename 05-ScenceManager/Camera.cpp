@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "Mario.h"
+#include "MainObject.h"
 
 Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactors)
 {
@@ -33,7 +33,7 @@ void Camera::Update()
 	);
 }
 
-void Camera::Follow(CMario* following)
+void Camera::Follow(CMainObject* following)
 {
 	this->following = following;
 }

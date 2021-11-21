@@ -4,9 +4,7 @@
 #include "Scence.h"
 #include "GameObject.h"
 #include "Brick.h"
-#include "Mario.h"
-#include "Goomba.h"
-#include "Koopas.h"
+#include "MainObject.h"
 #include "Quadtree.h"
 
 #define SCREEN_WIDTH 512
@@ -18,7 +16,7 @@
 class CPlayScene: public CScene
 {
 protected: 
-	CMario *player;					// A play scene has to have player, right? 
+	CMainObject *player;					// A play scene has to have player, right? 
 	//Camera *camera;
 	vector<LPGAMEOBJECT> objects;
 
@@ -41,7 +39,7 @@ public:
 	void UpdateActObj(Point p);
 	void UpdateObj(CGameObject* obj, DWORD dt);
 
-	CMario* GetPlayer() { return player; };
+	CMainObject* GetPlayer() { return player; };
 	//Camera * GetCamera() { return camera; }
 	//friend class CPlayScenceKeyHandler;
 	

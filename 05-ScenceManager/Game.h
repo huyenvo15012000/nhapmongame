@@ -13,6 +13,7 @@
 #include "Scence.h"
 
 #include "Camera.h"
+#include "MainObject.h"
 
 using namespace std;
 
@@ -84,7 +85,7 @@ public:
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
-	void SetCamPos(CMario* main);
+	void SetCamPos(CMainObject* main);
 
 	static CGame * GetInstance();
 
