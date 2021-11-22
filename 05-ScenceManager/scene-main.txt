@@ -1,6 +1,6 @@
 [TEXTURES]
-0	textures\car.png	255	255	255
-101	textures\CarAndMainRight.png	255	255	255
+0	textures\tank.png	255	255	255
+101	textures\carright.png	255	255	255
 100	textures\CarAndMainLeft.png	255	255	255
 [SPRITES]
 #Gun 
@@ -66,7 +66,7 @@
 #sung
 3	20	24
 [OBJECTS]
-#mainobject
+#tank
 0	0	115	0
 #lan
 2	0	2	1

@@ -55,8 +55,7 @@ void CMainObject::Render()
 			//MainGun->Render(x - 8, y);
 		}
 
-	animation_set->at(0)->Render(x, y);
-	DebugOut(L"No aniset \n");
+	animation_set->at(ani)->Render(x, y);
 	//WheelLeft->Render(x - 5, y + 12);
 	//WheelRight->Render(x + 11, y + 12);
 	//connector->Render(x + 3, y + 8);
@@ -83,7 +82,7 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_JUMP:
 		vy = -MAINOBJECT_JUMP_SPEED_Y;
-
+		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
 		/*WheelLeft->SetState(WHEEL_STATE_IDLE);

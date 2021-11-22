@@ -6,6 +6,9 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Quadtree.h"
+#include "Gun.h"
+#include "Wheel.h"
+#include "Connector.h"
 
 using namespace std;
 
@@ -29,8 +32,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_GUN	2
+#define OBJECT_TYPE_CONNECTOR	3
+#define OBJECT_TYPE_WHEEL	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -217,6 +221,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); DebugOut(L"[INFO] brick object created!\n"); break;
+	case OBJECT_TYPE_GUN: obj = new Gun(); DebugOut(L"[INFO] gun object created!\n"); break;
+	case OBJECT_TYPE_CONNECTOR: obj = new Connector(); DebugOut(L"[INFO] connect object created!\n"); break;
+	case OBJECT_TYPE_WHEEL: obj = new Wheel(); DebugOut(L"[INFO] wheel object created!\n"); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -322,19 +329,9 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	DebugOut(L"coObject len: %d", coObj->size());
 	for (int i = 0; i < coObj->size(); i++) {
-		//coObj->at(i)->RenderBoundingBox();
-		try
-		{
-			coObj->at(i)->Render();
-		}
-		catch (exception e)
-		{
-			DebugOut(L"Render function\n", e);
-		}
+		coObj->at(i)->Render();
 	};
-	DebugOut(L"Render function\n");
 }
 
 /*
@@ -355,16 +352,30 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	CMainObject *mario = ((CPlayScene*)scence)->GetPlayer();
+	CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
-		mario->SetState(MAINOBJECT_STATE_JUMP);
+	case DIK_UP:
+		main->SetState(MAINOBJECT_STATE_JUMP);
 		break;
-	case DIK_A: 
-		//mario->Reset();
+	case DIK_DOWN:
+		main->SetState(MAINOBJECT_STATE_DOWN);
+		break;
+	case DIK_RIGHT:
+		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
+		break;
+	case DIK_LEFT:
+		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
 		break;
 	}
+}
+
+void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
+{
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+
+	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
+	main->SetState(MAINOBJECT_STATE_STOP);
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
