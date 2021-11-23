@@ -47,10 +47,14 @@ public:
 	virtual void Render();
 
 	void SetState(int state);
+	void addGun(Gun* gunF);
+	void addConnector(Connector* connectorF);
+	void addWheel(Wheel* wheelF);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual Rect GetBoundingBox();
 	CMainObject(float x = 0.0f, float y = 0.0f);
+	
 
 };
 
