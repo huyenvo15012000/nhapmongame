@@ -69,24 +69,24 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_RIGHT:
 		vx = MAINOBJECT_WALKING_SPEED;
 		nx = 1;
-		/*WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
+		WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
 		WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
-		MainGun->SetState(GUN_STATE_RIGHT);*/
+		MainGun->SetState(GUN_STATE_RIGHT);
 		break;
 	case MAINOBJECT_STATE_WALKING_LEFT:
 		vx = -MAINOBJECT_WALKING_SPEED;
 		nx = -1;
-		/*WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
+		WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
 		WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
-		MainGun->SetState(GUN_STATE_LEFT);*/
+		MainGun->SetState(GUN_STATE_LEFT);
 		break;
 	case MAINOBJECT_STATE_JUMP:
 		vy = -MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
-		/*WheelLeft->SetState(WHEEL_STATE_IDLE);
-		WheelRight->SetState(WHEEL_STATE_IDLE);*/
+		WheelLeft->SetState(WHEEL_STATE_IDLE);
+		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
 
 	case MAINOBJECT_STATE_DOWN:
@@ -94,8 +94,8 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;
-		/*WheelLeft->SetState(WHEEL_STATE_IDLE);
-		WheelRight->SetState(WHEEL_STATE_IDLE);*/
+		WheelLeft->SetState(WHEEL_STATE_IDLE);
+		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
 	}
 }
