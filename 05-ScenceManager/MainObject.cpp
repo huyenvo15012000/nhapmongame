@@ -46,19 +46,19 @@ void CMainObject::Render()
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
-		//MainGun->Render(x + 15, y);
+		MainGun->Render(x + 15, y);
 	}
 	else
 		if (nx < 0)
 		{
 			ani = MAINOBJECT_ANI_IDLE_LEFT;
-			//MainGun->Render(x - 8, y);
+			MainGun->Render(x - 8, y);
 		}
 
 	animation_set->at(ani)->Render(x, y);
-	//WheelLeft->Render(x - 5, y + 12);
-	//WheelRight->Render(x + 11, y + 12);
-	//connector->Render(x + 3, y + 8);
+	WheelLeft->Render(x - 5, y + 12);
+	WheelRight->Render(x + 11, y + 12);
+	connector->Render(x + 3, y + 8);
 }
 
 void CMainObject::SetState(int state)
@@ -100,7 +100,20 @@ void CMainObject::SetState(int state)
 	}
 }
 
+void CMainObject::addGun(Gun* gunf)
+{
+	MainGun = gunF;
+}
 
+void CMainObject::addConnector(Connector* connectorf)
+{
+	connector = connectorf;
+}
+
+void CMainObject::addWheel(Wheel* wheelF)
+{
+	WheelLeft = WheelRight = wheelF;
+}
 CMainObject::~CMainObject()
 {
 	delete WheelLeft;
