@@ -51,6 +51,9 @@ int lx, ly;
 int Stage;
 Point tf, br;
 Quadtree* quadtree;
+Gun* gun;
+Connector* connector;
+Wheel* wheel;
 
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> list, Point p)
 {
@@ -220,10 +223,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); DebugOut(L"[INFO] brick object created!\n"); break;
-	case OBJECT_TYPE_GUN: obj = new Gun(); DebugOut(L"[INFO] gun object created!\n"); break;
-	case OBJECT_TYPE_CONNECTOR: obj = new Connector(); DebugOut(L"[INFO] connect object created!\n"); break;
-	case OBJECT_TYPE_WHEEL: obj = new Wheel(); DebugOut(L"[INFO] wheel object created!\n"); break;
+	case OBJECT_TYPE_BRICK: 
+			obj = new CBrick(); 
+			DebugOut(L"[INFO] Gun object created!\n"); 
+			break;
+	case OBJECT_TYPE_GUN: 
+			obj = new Gun(); 
+			gun = (Gun*)obj; 
+			player->addGun(gun);
+			DebugOut(L"[INFO] gun object created!\n"); 
+			break;
+	case OBJECT_TYPE_CONNECTOR: 
+			obj = new Connector(); 
+			connector = (Connector*)obj; 
+			player->addConnector(connector);
+			DebugOut(L"[INFO] connect object created!\n"); break;
+	case OBJECT_TYPE_WHEEL: 
+			obj = new Wheel(); 
+			whell = (Wheel*)obj; 
+			player->addWheel(whell);
+			DebugOut(L"[INFO] wheel object created!\n"); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
