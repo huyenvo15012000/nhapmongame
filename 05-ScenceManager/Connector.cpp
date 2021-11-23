@@ -12,7 +12,7 @@ void Connector::Update(DWORD dt)
 
 void Connector::Render()
 {
-
+	animation_set->at(0)->Render(x, y, 255);
 }
 
 void Connector::Render(float a, float b)

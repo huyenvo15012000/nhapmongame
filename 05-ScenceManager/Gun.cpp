@@ -7,12 +7,14 @@
 void Gun::Update(DWORD dt)
 {
 	CGameObject::Update(dt);
-	/*x += GUN_WALKING_SPEED * dt;
-	y += GUN_WALKING_SPEED * dt;*/
+	x += GUN_WALKING_SPEED * dt;
+	y += GUN_WALKING_SPEED * dt;
 }
 
 void Gun::Render(float a, float b)
 {
+	x += GUN_WALKING_SPEED * dt;
+	y += GUN_WALKING_SPEED * dt;
 	int ani;
 	if (nx > 0) ani = GUN_ANI_IDLE_RIGHT;
 	else ani = GUN_ANI_IDLE_LEFT;
@@ -42,8 +44,8 @@ Rect Gun::GetBoundingBox()
 
 void Gun::Render()
 {
-	animation_set->at(0)->Render(x, y);
-	RenderBoundingBox();
+	animation_set->at(0)->Render(x, y,255);
+	//RenderBoundingBox();
 }
 
 void Gun::GetBoundingBox(float& l, float& t, float& r, float& b)
