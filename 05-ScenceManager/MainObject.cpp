@@ -7,7 +7,7 @@
 
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
-	SetState(MAINOBJECT_STATE_IDLE);
+	//SetState(MAINOBJECT_STATE_IDLE);
 
 	this->x = x;
 	this->y = y;
@@ -34,10 +34,10 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//simple screen edge collision!!!
 	x += vx * dt;
 	y += vy * dt;
-	/*if (vx > 0 && x > RIGHT_BORDER) x = RIGHT_BORDER;
+	if (vx > 0 && x > RIGHT_BORDER) x = RIGHT_BORDER;
 	if (vx < 0 && x < LEFT_BORDER) x = LEFT_BORDER;
 	if (vy < 0 && y < TOP_BORDER) y = TOP_BORDER;
-	if (vy > 0 && y > BOTTOM_BORDER) y = BOTTOM_BORDER;*/
+	if (vy > 0 && y > BOTTOM_BORDER) y = BOTTOM_BORDER;
 }
 
 void CMainObject::Render()
@@ -102,7 +102,7 @@ void CMainObject::SetState(int state)
 
 void CMainObject::addGun(Gun* gunf)
 {
-	MainGun = gunF;
+	MainGun = gunf;
 }
 
 void CMainObject::addConnector(Connector* connectorf)

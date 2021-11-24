@@ -6,21 +6,21 @@
 void Connector::Update(DWORD dt)
 {
 	CGameObject::Update(dt);
-	//x += vx * dt;
-	//y += vy * dt;
+	x += vx * dt;
+	y += vy * dt;
 }
 
 void Connector::Render()
 {
-	animation_set->at(0)->Render(x, y, 255);
+	//animation_set->at(0)->Render(x, y, 255);
 }
 
 void Connector::Render(float a, float b)
 {
 	int alpha = 255;
-	animation_set->at(0)->Render(x, y, alpha);
+	animation_set->at(0)->Render(a, b, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 Rect Connector::GetBoundingBox()

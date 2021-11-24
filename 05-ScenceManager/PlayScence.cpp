@@ -225,23 +225,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BRICK: 
 			obj = new CBrick(); 
-			DebugOut(L"[INFO] Gun object created!\n"); 
+			DebugOut(L"[INFO] Brick object created!\n"); 
 			break;
 	case OBJECT_TYPE_GUN: 
 			obj = new Gun(); 
-			gun = (Gun*)obj; 
-			player->addGun(gun);
+			//gun = (Gun*)obj; 
+			player->addGun((Gun*)obj);
 			DebugOut(L"[INFO] gun object created!\n"); 
 			break;
 	case OBJECT_TYPE_CONNECTOR: 
 			obj = new Connector(); 
-			connector = (Connector*)obj; 
-			player->addConnector(connector);
+			//connector = (Connector*)obj; 
+			player->addConnector((Connector*)obj);
 			DebugOut(L"[INFO] connect object created!\n"); break;
 	case OBJECT_TYPE_WHEEL: 
 			obj = new Wheel(); 
-			whell = (Wheel*)obj; 
-			player->addWheel(whell);
+			//wheel = (Wheel*)obj; 
+			player->addWheel((Wheel*)obj);
 			DebugOut(L"[INFO] wheel object created!\n"); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -252,10 +252,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-	DebugOut(L"Ani set is: %d \n", ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	switch (object_type)
+	{
+	case OBJECT_TYPE_GUN:
+		break;
+	case OBJECT_TYPE_CONNECTOR:
+	case OBJECT_TYPE_WHEEL:
+	default:
+		objects.push_back(obj);
+		return;
+	}
+
+	
 }
 
 void CPlayScene::Load()
@@ -324,12 +334,12 @@ void CPlayScene::Update(DWORD dt)
 
 	player->GetPosition(cx, cy);
 	coObj->push_back(player);
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size()-1; i++)
 	{
 		coObj->push_back(objects[i]);
 	}
 
-	for (size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size()-1; i++)
 	{
 		objects[i]->Update(dt, coObj);
 	}
@@ -342,7 +352,6 @@ void CPlayScene::Update(DWORD dt)
 
 	player->Update(dt, coObj);
 	player->GetPosition(cx, cy);
-
 	CGame::GetInstance()->SetCamPos(player);
 }
 

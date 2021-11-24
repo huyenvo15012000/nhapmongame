@@ -13,12 +13,10 @@ void Gun::Update(DWORD dt)
 
 void Gun::Render(float a, float b)
 {
-	x += GUN_WALKING_SPEED * dt;
-	y += GUN_WALKING_SPEED * dt;
 	int ani;
 	if (nx > 0) ani = GUN_ANI_IDLE_RIGHT;
 	else ani = GUN_ANI_IDLE_LEFT;
-	animation_set->at(ani)->Render(a, b);
+	animation_set->at(0)->Render(a, b, 255);
 }
 
 void Gun::SetState(int state)
