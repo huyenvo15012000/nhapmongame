@@ -6,8 +6,8 @@
 #define GUN_HEIGHT	8
 #define GUN_WIDTH	8
 
-#define GUN_ANI_IDLE_RIGHT		10
-#define GUN_ANI_IDLE_LEFT		11
+#define GUN_ANI_IDLE_RIGHT		0
+#define GUN_ANI_IDLE_LEFT		1
 
 #define GUN_STATE_RIGHT		0
 #define GUN_STATE_LEFT		1

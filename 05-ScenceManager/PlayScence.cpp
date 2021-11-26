@@ -322,7 +322,6 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	//vector<LPGAMEOBJECT> coObjects;
-	DebugOut(L"Update function\n");
 	float cx, cy;
 	coObj->clear();
 	player->GetPosition(cx, cy);

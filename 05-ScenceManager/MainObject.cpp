@@ -4,13 +4,15 @@
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
+#define BRICK_BBOX_WIDTH			8
+#define BRICK_BBOX_HEIGHT 			8
 
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	//SetState(MAINOBJECT_STATE_IDLE);
 
 	this->x = x;
-	this->y = y;
+	this->y = 496 - int(y);
 }
 
 CMainObject::CMainObject() {
@@ -32,8 +34,11 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}*/
 
 	//simple screen edge collision!!!
+	//DebugOut(L"Main Update %d \n ", int(y));
 	x += vx * dt;
-	y += vy * dt;
+	this->y += vy * dt;
+	//this->y = 496 - this->y;
+	//DebugOut(L"Y sau là : %d \n", int(this->y));
 	if (vx > 0 && x > RIGHT_BORDER) x = RIGHT_BORDER;
 	if (vx < 0 && x < LEFT_BORDER) x = LEFT_BORDER;
 	if (vy < 0 && y < TOP_BORDER) y = TOP_BORDER;
@@ -42,23 +47,30 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMainObject::Render()
 {
+
+	/*float z = 496 - int(y);
+	if (z < 0)
+		z *= -1;*/
+	DebugOut(L"Main render");
+	float xRender, yRender;
+	GetPosition(xRender, yRender);
 	int ani;
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
-		MainGun->Render(x + 15, y);
+		MainGun->Render(xRender + 15, yRender);
 	}
 	else
 		if (nx < 0)
 		{
 			ani = MAINOBJECT_ANI_IDLE_LEFT;
-			MainGun->Render(x - 8, y);
+			MainGun->Render(xRender - 8, yRender);
 		}
-
-	animation_set->at(ani)->Render(x, y);
-	WheelLeft->Render(x - 5, y + 12);
-	WheelRight->Render(x + 11, y + 12);
-	connector->Render(x + 3, y + 8);
+	DebugOut(L"Render at: %d \n", int(yRender));
+	animation_set->at(ani)->Render(xRender, yRender);
+	WheelLeft->Render(xRender - 5, yRender + 12);
+	WheelRight->Render(xRender + 11, yRender + 12);
+	connector->Render(xRender + 3, yRender + 8);
 }
 
 void CMainObject::SetState(int state)
@@ -81,7 +93,7 @@ void CMainObject::SetState(int state)
 		MainGun->SetState(GUN_STATE_LEFT);
 		break;
 	case MAINOBJECT_STATE_JUMP:
-		vy = -MAINOBJECT_JUMP_SPEED_Y;
+		vy = MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
@@ -90,7 +102,7 @@ void CMainObject::SetState(int state)
 		break;
 
 	case MAINOBJECT_STATE_DOWN:
-		vy = MAINOBJECT_JUMP_SPEED_Y;
+		vy = -MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;
@@ -131,6 +143,6 @@ void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	//r = x + BRICK_BBOX_WIDTH;
-	//b = y + BRICK_BBOX_HEIGHT;
+	r = x + BRICK_BBOX_WIDTH;
+	b = y + BRICK_BBOX_HEIGHT;
 }
