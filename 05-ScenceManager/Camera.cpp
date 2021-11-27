@@ -24,14 +24,14 @@ void Camera::Update()
 	{
 		this->following->GetPosition(camX, camY);
 	}
-	if (camX < 170)
-		camX = 170;
-	if (camY < 120)
-		camY = 120;
-	if (camX > 1232-170)
-		camX = 1232-170;
-	if (camY > 496 -120)
-		camY = 496 -120;
+	//if (camX < 170)
+	//	camX = 170;
+	//if (camY < 120)
+	//	camY = 120;
+	//if (camX > 1232-170)
+	//	camX = 1232-170;
+	//if (camY > 496 -120)
+	//	camY = 496 -120;
 	this->viewMatrix = D3DXMATRIX(
 		scaleFactors.x * cos(angle), scaleFactors.x * sin(angle), 0, 0,
 		-scaleFactors.y * sin(angle), scaleFactors.y * cos(angle), 0, 0,
