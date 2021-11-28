@@ -22,7 +22,7 @@ void Camera::Update()
 	float camX, camY = 0;
 	if (this->following)
 	{
-		this->following->GetPosition(camX, camY);
+		this->following->GetRealPosition(camX, camY);
 	}
 	//if (camX < 170)
 	//	camX = 170;

@@ -83,11 +83,11 @@ void CPlayScene::UpdateObj(CGameObject* obj, DWORD dt) {
 	vector<LPGAMEOBJECT>* _coObj = new vector<LPGAMEOBJECT>();
 
 	float cx, cy;
-	player->GetPosition(cx, cy);
+	player->GetGamePosition(cx, cy);
 
 	float x, y;
 
-	obj->GetPosition(x, y);
+	obj->GetGamePosition(x, y);
 
 	UpdateActObj(Point(x, y));
 
@@ -324,14 +324,14 @@ void CPlayScene::Update(DWORD dt)
 	//vector<LPGAMEOBJECT> coObjects;
 	float cx, cy;
 	coObj->clear();
-	player->GetPosition(cx, cy);
+	player->GetGamePosition(cx, cy);
 
 	UpdateActObj(Point(cx, cy));
 	quadtree = CreateQuadtree(actObj, Point(cx, cy));
 
 	quadtree->Retrieve(coObj, player);
 
-	player->GetPosition(cx, cy);
+	player->GetGamePosition(cx, cy);
 	coObj->push_back(player);
 	for (size_t i = 0; i < objects.size()-1; i++)
 	{
@@ -350,7 +350,7 @@ void CPlayScene::Update(DWORD dt)
 	//float cx, cy;
 
 	player->Update(dt, coObj);
-	player->GetPosition(cx, cy);
+	player->GetGamePosition(cx, cy);
 	CGame::GetInstance()->SetCamPos(player);
 }
 

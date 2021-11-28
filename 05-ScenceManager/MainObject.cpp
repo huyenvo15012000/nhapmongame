@@ -1,6 +1,7 @@
 #include "MainObject.h"
 #include "Textures.h"
 #include "Utils.h"
+#include "Game.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
@@ -10,18 +11,21 @@
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	//SetState(MAINOBJECT_STATE_IDLE);
-
+	untouchable = 0;
 	this->x = x;
 	this->y = y;
 	this->yWorld = 496 - y - MAINOBJECT_HEIGHT;
 }
 
 CMainObject::CMainObject() {
+	untouchable = 0;
 	WheelLeft = new Wheel();
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
-
+	this->x = x;
+	this->y = y;
+	this->yWorld = 496 - y - MAINOBJECT_HEIGHT;
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -134,7 +138,7 @@ void CMainObject::Render()
 		z *= -1;*/
 	DebugOut(L"Main render");
 	float xRender, yRender;
-	GetPosition(xRender, yRender);
+	GetRealPosition(xRender, yRender);
 	int ani;
 	if (nx > 0)
 	{
@@ -147,7 +151,7 @@ void CMainObject::Render()
 			ani = MAINOBJECT_ANI_IDLE_LEFT;
 			MainGun->Render(xRender - 8, yRender);
 		}
-	DebugOut(L"Render at: %d \n", int(y));
+	RenderBoundingBox();
 	animation_set->at(ani)->Render(xRender, yRender);
 	WheelLeft->Render(xRender - 5, yRender + 12);
 	WheelRight->Render(xRender + 11, yRender + 12);
@@ -217,13 +221,34 @@ CMainObject::~CMainObject()
 
 Rect CMainObject::GetBoundingBox()
 {
-	return Rect(Point(x, y + 6), MAINOBJECT_WIDTH - 1, MAINOBJECT_HEIGHT - 1);
+	DebugOut(L"Boud 1 \n");
+	return Rect(Point(x, y+6), MAINOBJECT_WIDTH - 1, MAINOBJECT_HEIGHT - 1);
 }
 
 void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + MAINOBJECT_BBOX_WIDTH;
-	b = y + MAINOBJECT_BBOX_HEIGHT;
+	r = x + 30;
+	b = y + 25;
 }
+
+void CMainObject::RenderBoundingBox()
+{
+	DebugOut(L"Main render bb");
+	D3DXVECTOR3 p(x, y, 0);
+	RECT rect;
+
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+
+	float l, t, r, b;
+
+	GetBoundingBox(l, t, r, b);
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = (int)r - (int)l;
+	rect.bottom = (int)b - (int)t;
+
+	CGame::GetInstance()->Draw(x-15, y+30, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
+}
+

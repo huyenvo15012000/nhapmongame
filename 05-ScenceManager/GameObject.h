@@ -11,10 +11,15 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
+#define BRICK_WIDTH	8
+#define BRICK_HEIGHT	8
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
 
+enum Style {
+	normal_brick, sophia, jason
+};
 struct CCollisionEvent;
 typedef CCollisionEvent * LPCOLLISIONEVENT;
 struct CCollisionEvent
@@ -33,6 +38,7 @@ struct CCollisionEvent
 		this->dy = dy;
 		this->obj = obj; 
 	}
+	CCollisionEvent(float t, float nx, float ny, LPGAMEOBJECT obj = NULL) { this->t = t; this->nx = nx; this->ny = ny; this->obj = obj; }
 
 	static bool compare(const LPCOLLISIONEVENT &a, LPCOLLISIONEVENT &b)
 	{
@@ -56,6 +62,9 @@ public:
 	float vy;
 
 	int nx;	 
+	int ny;
+
+	int maxx, maxy, minx, miny;
 
 	int state;
 
@@ -66,12 +75,13 @@ public:
 public: 
 	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y - 40; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
-	void GetPosition(float &x, float &y) { x = this->x; y = this->yWorld; }
+	void GetGamePosition(float &x, float &y) { x = this->x; y = this->y; }
+	void GetRealPosition(float& x, float& y) { x = this->x; y = this->yWorld; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
 	int GetState() { return this->state; }
 
-	void RenderBoundingBox();
+	virtual void RenderBoundingBox();
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 

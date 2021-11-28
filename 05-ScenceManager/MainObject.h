@@ -28,7 +28,7 @@
 
 #define MAINOBJECT_HEIGHT				60
 #define MAINOBJECT_WIDTH 				40
-#define MAINOBJECT_BBOX_HEIGHT			60
+#define MAINOBJECT_BBOX_HEIGHT			40
 #define MAINOBJECT_BBOX_WIDTH 			40
 
 #define TOP_BORDER  40
@@ -43,6 +43,8 @@ protected:
 	Gun* MainGun;
 	Connector* connector;
 	~CMainObject();
+	int untouchable;
+	DWORD untouchable_start;
 public:
 	CMainObject();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -56,7 +58,9 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual Rect GetBoundingBox();
 	CMainObject(float x = 0.0f, float y = 0.0f);
-	
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	virtual void RenderBoundingBox();
+	void Reset();
 
 };
 
