@@ -2,6 +2,7 @@
 #include "Textures.h"
 #include "Utils.h"
 #include "Game.h"
+#include "Brick.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
@@ -28,118 +29,98 @@ CMainObject::CMainObject() {
 	this->yWorld = 496 - y - MAINOBJECT_HEIGHT;
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
+{	// Calculate dx, dy 
+
+	dx = dy = 0;
+
+	float x0 = x, y0 = y;
+
 	CGameObject::Update(dt);
 
-	// simple fall down
-	/*vy += MAINOBJECT_GRAVITY;
-	if (y > 100)
-	{
-		vy = 0; y = 100.0f;
-	}*/
+	// Simple fall down
+	//vy += MARIO_GRAVITY * dt;
 
-	//simple screen edge collision!!!
-	//DebugOut(L"Main Update %d \n ", int(y));
-	
-	//this->y = 496 - this->y;
-	//DebugOut(L"Y sau là : %d \n", int(this->y));
-	if (vx > 0 && x > RIGHT_BORDER) x = RIGHT_BORDER;
-	if (vx < 0 && x < LEFT_BORDER) x = LEFT_BORDER;
-	if (vy < 0 && y < TOP_BORDER) y = TOP_BORDER;
-	if (vy > 0 && y > BOTTOM_BORDER) y = BOTTOM_BORDER;
+	if (coObjects != NULL) {
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
+		vector<LPGAMEOBJECT>* return_list = new vector<LPGAMEOBJECT>();
 
-	coEvents.clear();
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
 
-	// turn off collision when die 
-	if (state != MAINOBJECT_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
-
-	// reset untouchable timer if untouchable time has passed
-	/*if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
-	{
-		untouchable_start = 0;
-		untouchable = 0;
-	}*/
-
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-		yWorld = 496 - y - MAINOBJECT_HEIGHT;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		float rdx = 0;
-		float rdy = 0;
-
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
-
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		// Collision logic with Goombas
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		if (GetTickCount() - untouchable_start > MAINOBJECT_UNTOUCHABLE_TIME)
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-			//{
-			//	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
-			//	// jump on top >> kill Goomba and deflect a bit 
-			//	if (e->ny < 0)
-			//	{
-			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//		{
-			//			goomba->SetState(GOOMBA_STATE_DIE);
-			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
-			//		}
-			//	}
-			//	else if (e->nx != 0)
-			//	{
-			//		if (untouchable == 0)
-			//		{
-			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//			{
-			//				if (level > MARIO_LEVEL_SMALL)
-			//				{
-			//					level = MARIO_LEVEL_SMALL;
-			//					StartUntouchable();
-			//				}
-			//				else
-			//					SetState(MARIO_STATE_DIE);
-			//			}
-			//		}
-			//	}
-			}
+			untouchable_start = 0;
+			untouchable = 0;
 		}
+
+		coEvents.clear();
+
+		if (state != MAINOBJECT_STATE_DIE)
+			CalcPotentialCollisions(coObjects, coEvents);
+
+		int count = 0;
+
+		for (int i = 0; i < coEvents.size(); i++)
+			if (coEvents[i]->t > 0)
+				count++;
+
+		if (count == 0)
+		{
+			x0 += dx;
+			y0 += dy;
+			yWorld = 495 - y - MAINOBJECT_HEIGHT;
+		}
+		else {
+			float min_tx, min_ty, nx = 0, ny;
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+			// block 
+			x0 += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+			y0 += min_ty * dy + ny * 0.4f;
+
+			if (ny == -1) {
+				this->count = 0;
+			}
+
+			if (nx != 0)
+				vx = 0;
+			if (ny != 0) vy = 0;
+		}
+
+		for (UINT i = 0; i < coEvents.size(); i++) {
+			LPCOLLISIONEVENT e = coEvents[i];
+			//if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Goomba 
+			//{
+			CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+				float a, b;
+				if (e->obj)
+					e->obj->GetRealPosition(a, b);
+				DebugOut(L"Collide at mainX: %d, mainY: %d, brickX: %d, brickY: %d \n", int(this->x), int(this->yWorld), int(a), int(b));
+			/*};*/
+			for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			x = x0;
+			y = y0;
+		}
+	}
+}
+
+bool check(Rect r, int vx, int vy, Rect obj, int& nx, int& ny, int dt) {
+	Rect lr = r + Point(vx, vy) * dt;
+	if (lr.IsCollide(obj)) {
+		if (vx > 0)
+			nx = obj.tf.x - lr.br.x;
+		if (vy >= 0)
+			ny = obj.tf.y - lr.br.y;
+		return true;
+	}
+	return false;
 }
 
 void CMainObject::Render()
 {
-
-	/*float z = 496 - int(y);
-	if (z < 0)
-		z *= -1;*/
-	DebugOut(L"Main render");
 	float xRender, yRender;
 	GetRealPosition(xRender, yRender);
-	int ani;
+	int ani = 0;
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
@@ -152,7 +133,9 @@ void CMainObject::Render()
 			MainGun->Render(xRender - 8, yRender);
 		}
 	RenderBoundingBox();
-	animation_set->at(ani)->Render(xRender, yRender);
+	int alpha = 255;
+	if (untouchable) alpha = 128;
+	animation_set->at(ani)->Render(xRender, yRender, alpha);
 	WheelLeft->Render(xRender - 5, yRender + 12);
 	WheelRight->Render(xRender + 11, yRender + 12);
 	connector->Render(xRender + 3, yRender + 8);
@@ -166,6 +149,7 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_RIGHT:
 		vx = MAINOBJECT_WALKING_SPEED;
 		nx = 1;
+		ny = 0;
 		WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
 		WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
 		MainGun->SetState(GUN_STATE_RIGHT);
@@ -173,12 +157,15 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_LEFT:
 		vx = -MAINOBJECT_WALKING_SPEED;
 		nx = -1;
+		ny = 0;
 		WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
 		WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
 		MainGun->SetState(GUN_STATE_LEFT);
 		break;
 	case MAINOBJECT_STATE_JUMP:
 		vy = MAINOBJECT_JUMP_SPEED_Y;
+		nx = 0;
+		ny = 1;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
@@ -188,9 +175,13 @@ void CMainObject::SetState(int state)
 
 	case MAINOBJECT_STATE_DOWN:
 		vy = -MAINOBJECT_JUMP_SPEED_Y;
+		ny = -1;
+		nx = 0;
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;
+		//ny = 1;
+		//nx = 0;
 		WheelLeft->SetState(WHEEL_STATE_IDLE);
 		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
@@ -221,7 +212,6 @@ CMainObject::~CMainObject()
 
 Rect CMainObject::GetBoundingBox()
 {
-	DebugOut(L"Boud 1 \n");
 	return Rect(Point(x, y+6), MAINOBJECT_WIDTH - 1, MAINOBJECT_HEIGHT - 1);
 }
 
@@ -229,14 +219,13 @@ void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + 30;
+	r = x + 25;
 	b = y + 25;
 }
 
 void CMainObject::RenderBoundingBox()
 {
-	DebugOut(L"Main render bb");
-	D3DXVECTOR3 p(x, y, 0);
+	D3DXVECTOR3 p(x, yWorld, 0);
 	RECT rect;
 
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
@@ -248,7 +237,9 @@ void CMainObject::RenderBoundingBox()
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
-
-	CGame::GetInstance()->Draw(x-15, y+30, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
+	CGame::GetInstance()->Draw(x-5, yWorld, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
 }
-
+void CMainObject::Reset()
+{
+	vx = vy = 0;
+}

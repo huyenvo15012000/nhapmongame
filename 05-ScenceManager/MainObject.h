@@ -9,6 +9,7 @@
 #define MAINOBJECT_WALKING_SPEED		0.1f
 #define MAINOBJECT_JUMP_SPEED_Y		0.1f
 #define MAINOBJECT_GRAVITY			0.1f
+#define MAINOBJECT_UNTOUCHABLE_TIME		5000
 
 #define MAINOBJECT_STATE_IDLE			0
 #define MAINOBJECT_STATE_WALKING_RIGHT	100
@@ -45,6 +46,11 @@ protected:
 	~CMainObject();
 	int untouchable;
 	DWORD untouchable_start;
+	int count = 0;
+
+
+	float start_x;			// initial position of Sophia at scene
+	float start_y;
 public:
 	CMainObject();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -54,15 +60,18 @@ public:
 	void addGun(Gun* gunF);
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
-
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y - MAINOBJECT_HEIGHT; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual Rect GetBoundingBox();
 	CMainObject(float x = 0.0f, float y = 0.0f);
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	virtual void RenderBoundingBox();
 	void Reset();
 
 };
+
+bool check(Rect r, int dx, int dy, Rect obj, int& nx, int& ny, int dt);
+
 
 
 

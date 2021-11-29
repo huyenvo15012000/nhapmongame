@@ -61,8 +61,15 @@ public:
 	float vx;
 	float vy;
 
+	int width;
+	int height;
+
 	int nx;	 
 	int ny;
+	bool enable = true;
+
+	bool penetrable;
+
 
 	int maxx, maxy, minx, miny;
 
@@ -72,38 +79,42 @@ public:
 
 	LPANIMATION_SET animation_set;
 
+	Style type;
+
 public: 
-	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y - 40; }
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetGamePosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetRealPosition(float& x, float& y) { x = this->x; y = this->yWorld; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
-
+	void SetPenetrable(bool b) { this->penetrable = b; }
+	bool GetPenetrable() { return this->penetrable; }
+	void SetWidthHeight(int w, int h) { this->width = w; this->height = h; }
 	int GetState() { return this->state; }
 
-	virtual void RenderBoundingBox();
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 
-	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
+	vector<LPCOLLISIONEVENT> SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 	void FilterCollision(
-		vector<LPCOLLISIONEVENT> &coEvents, 
-		vector<LPCOLLISIONEVENT> &coEventsResult, 
-		float &min_tx, 
-		float &min_ty, 
-		float &nx, 
-		float &ny, 
-		float &rdx, 
-		float &rdy);
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny);
 
 	CGameObject();
 
+	virtual void RenderBoundingBox();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual Rect GetBoundingBox() = 0;
+	void SetStyle(Style style) { this->type = style; }
+	Style getType() { return this->type; }
 
 	~CGameObject();
 };

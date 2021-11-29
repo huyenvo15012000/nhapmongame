@@ -133,6 +133,7 @@
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rect.h" />
+    <ClInclude Include="Trigger.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

@@ -18,3 +18,17 @@ Rect CBrick::GetBoundingBox()
 {
 	return Rect(Point(x, y + 6), BRICK_BBOX_WIDTH - 1, BRICK_BBOX_HEIGHT - 1);
 }
+
+
+void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL)
+{
+	dx = dy = 0;
+
+	if (x >= maxx || x <= minx) {
+		vx *= -1;
+	}
+	if (y >= maxy || y <= miny)
+		vy *= -1;
+
+	CGameObject::Update(dt, coObjects);
+}

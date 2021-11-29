@@ -74,12 +74,13 @@ public:
 		float dx,			// 
 		float dy,			// 
 		float sl,			// static left
-		float st, 
-		float sr, 
+		float st,
+		float sr,
 		float sb,
-		float &t, 
-		float &nx, 
-		float &ny);
+		float& tx,
+		float& nx,
+		float& ny,
+		bool penetrable);
 
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
