@@ -35,10 +35,6 @@ void Gun::SetState(int state)
 
 }
 
-Rect Gun::GetBoundingBox()
-{
-	return Rect(Point(x, y + 6), GUN_WIDTH - 1, GUN_HEIGHT - 1);
-}
 
 void Gun::Render()
 {

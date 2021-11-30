@@ -23,10 +23,6 @@ void Connector::Render(float a, float b)
 	//RenderBoundingBox();
 }
 
-Rect Connector::GetBoundingBox()
-{
-	return Rect(Point(x, y + 6), CONNECTOR_WIDTH - 1, CONNECTOR_HEIGHT - 1);
-}
 void Connector::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;

@@ -13,7 +13,6 @@ public:
 	void Update(DWORD dt);
 	virtual void Render();
 	virtual void SetState(int state) { this->state = state; }
-	virtual Rect GetBoundingBox();
 	void Render(float a, float b);
 };
 

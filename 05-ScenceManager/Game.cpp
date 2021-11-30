@@ -223,13 +223,18 @@ CGame::~CGame()
 	Standard sweptAABB implementation
 	Source: GameDev.net
 */
-void CGame::SweptAABB(float ml, float mt, float mr, float mb, float dx, float dy, float sl, float st, float sr, float sb, float& t, float& nx, float& ny, bool penetrable)
+void CGame::SweptAABB(
+	float ml, float mt,	float mr, float mb,			
+	float dx, float dy,			
+	float sl, float st, float sr, float sb,
+	float &t, float &nx, float &ny)
 {
+
 	float dx_entry, dx_exit, tx_entry, tx_exit;
 	float dy_entry, dy_exit, ty_entry, ty_exit;
 
-	float t_entry;
-	float t_exit;
+	float t_entry; 
+	float t_exit; 
 
 	t = -1.0f;			// no collision
 	nx = ny = 0;
@@ -243,18 +248,20 @@ void CGame::SweptAABB(float ml, float mt, float mr, float mb, float dx, float dy
 	float br = dx > 0 ? mr + dx : mr;
 	float bb = dy > 0 ? mb + dy : mb;
 
-	if (dx == 0 && dy == 0) return;		// moving object is not moving > obvious no collision
 	if (br < sl || bl > sr || bb < st || bt > sb) return;
+
+
+	if (dx == 0 && dy == 0) return;		// moving object is not moving > obvious no collision
 
 	if (dx > 0)
 	{
-		dx_entry = sl - mr;
+		dx_entry = sl - mr; 
 		dx_exit = sr - ml;
 	}
 	else if (dx < 0)
 	{
 		dx_entry = sr - ml;
-		dx_exit = sl - mr;
+		dx_exit = sl- mr;
 	}
 
 
@@ -269,62 +276,49 @@ void CGame::SweptAABB(float ml, float mt, float mr, float mb, float dx, float dy
 		dy_exit = st - mb;
 	}
 
-
-
-
 	if (dx == 0)
 	{
-		tx_entry = -99999999999;
-		tx_exit = 99999999999;
+		tx_entry = -999999.0f;
+		tx_exit = 999999.0f;
 	}
 	else
 	{
 		tx_entry = dx_entry / dx;
 		tx_exit = dx_exit / dx;
 	}
-
+	
 	if (dy == 0)
 	{
-		ty_entry = -99999999999;
-		ty_exit = 99999999999;
+		ty_entry = -99999.0f;
+		ty_exit = 99999.0f;
 	}
 	else
 	{
 		ty_entry = dy_entry / dy;
 		ty_exit = dy_exit / dy;
 	}
+	
 
+	if (  (tx_entry < 0.0f && ty_entry < 0.0f) || tx_entry > 1.0f || ty_entry > 1.0f) return;
 
-	if ((tx_entry < 0.0f && ty_entry < 0.0f) || tx_entry > 1.0f || ty_entry > 1.0f) {
-		if (tx_entry > -1.0f && tx_entry < 0.0f) {
-			t = tx_entry;
-			ny = 0;
-			dx > 0 ? nx = (int)-1 : nx = (int)1.0;
-		}
-		if (ty_entry > -1.0f && ty_entry < 0.0f) {
-			t = ty_entry;
-			nx = (int)0;
-			dy > 0 ? ny = (int)-1 : ny = (int)1.0;
-		}
-		return;
-	}
 	t_entry = max(tx_entry, ty_entry);
 	t_exit = min(tx_exit, ty_exit);
+	
+	if (t_entry > t_exit) return; 
 
-	if (t_entry > t_exit) return;
-
-	t = t_entry;
+	t = t_entry; 
 
 	if (tx_entry > ty_entry)
 	{
-		ny = (int)0;
-		dx > 0 ? nx = (int)-1 : nx = (int)1.0;
+		ny = 0.0f;
+		dx > 0 ? nx = -1.0f : nx = 1.0f;
 	}
-	else
+	else 
 	{
-		nx = (int)0;
-		dy > 0 ? ny = (int)-1 : ny = (int)1.0;
+		nx = 0.0f;
+		dy > 0?ny = -1.0f:ny = 1.0f;
 	}
+
 }
 
 CGame *CGame::GetInstance()

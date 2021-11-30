@@ -22,7 +22,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	x += dx;
 	y += dy;
-
 	if (vx < 0 && x < 0) {
 		x = 0; vx = -vx;
 	}
@@ -39,7 +38,7 @@ void CGoomba::Render()
 		ani = GOOMBA_ANI_DIE;
 	}
 
-	animations[ani]->Render(x,y);
+	animations[ani]->Render(x, y);
 	//RenderBoundingBox();
 }
 

@@ -69,9 +69,6 @@
     <ClCompile Include="Quadtree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Trigger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -126,9 +123,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Quadtree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Trigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

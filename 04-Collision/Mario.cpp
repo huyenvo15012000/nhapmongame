@@ -155,7 +155,7 @@ void CMario::SetState(int state)
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
-	top = y; 
+	top = y;
 
 	if (level==MARIO_LEVEL_BIG)
 	{

@@ -8,8 +8,7 @@
 
 #define MAINOBJECT_WALKING_SPEED		0.1f
 #define MAINOBJECT_JUMP_SPEED_Y		0.1f
-#define MAINOBJECT_GRAVITY			0.1f
-#define MAINOBJECT_UNTOUCHABLE_TIME		5000
+#define MAINOBJECT_GRAVITY			-0.1f
 
 #define MAINOBJECT_STATE_IDLE			0
 #define MAINOBJECT_STATE_WALKING_RIGHT	100
@@ -29,8 +28,9 @@
 
 #define MAINOBJECT_HEIGHT				60
 #define MAINOBJECT_WIDTH 				40
-#define MAINOBJECT_BBOX_HEIGHT			40
-#define MAINOBJECT_BBOX_WIDTH 			40
+#define MAINOBJECT_BBOX_HEIGHT			25
+#define MAINOBJECT_BBOX_WIDTH 			30
+#define MAINOBJECT_UNTOUCHABLE_TIME 			5000
 
 #define TOP_BORDER  40
 #define LEFT_BORDER  15
@@ -43,14 +43,12 @@ protected:
 	Wheel* WheelLeft, * WheelRight;
 	Gun* MainGun;
 	Connector* connector;
-	~CMainObject();
 	int untouchable;
 	DWORD untouchable_start;
-	int count = 0;
 
-
-	float start_x;			// initial position of Sophia at scene
+	float start_x;			// initial position of Mario at scene
 	float start_y;
+	~CMainObject();
 public:
 	CMainObject();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -60,18 +58,14 @@ public:
 	void addGun(Gun* gunF);
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
-	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y - MAINOBJECT_HEIGHT; }
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual Rect GetBoundingBox();
-	CMainObject(float x = 0.0f, float y = 0.0f);
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	virtual void RenderBoundingBox();
+
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+
 	void Reset();
-
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	CMainObject(float x = 0.0f, float y = 0.0f);
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y; }
 };
-
-bool check(Rect r, int dx, int dy, Rect obj, int& nx, int& ny, int dt);
-
 
 
 

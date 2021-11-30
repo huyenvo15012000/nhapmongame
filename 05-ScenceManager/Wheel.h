@@ -27,7 +27,6 @@ public:
 	void SetState(int state);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual Rect GetBoundingBox();
 	void Render(float x, float y);
 };
 

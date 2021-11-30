@@ -52,10 +52,6 @@ void Wheel::SetState(int state)
 
 }
 
-Rect Wheel::GetBoundingBox()
-{
-	return Rect(Point(x, y + 6), WHEEL_WIDTH - 1, WHEEL_HEIGHT - 1);
-}
 
 void Wheel::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
