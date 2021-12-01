@@ -128,6 +128,13 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Connector.cpp" />
+    <ClCompile Include="Enemy1.cpp" />
+    <ClCompile Include="Enemy2.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
+    <ClCompile Include="Enemy4.cpp" />
+    <ClCompile Include="Enemy5.cpp" />
+    <ClCompile Include="Enemy6.cpp" />
+    <ClCompile Include="Enemy7.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="Point.cpp" />
@@ -148,6 +155,13 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Connector.h" />
+    <ClInclude Include="Enemy1.h" />
+    <ClInclude Include="Enemy2.h" />
+    <ClInclude Include="Enemy3.h" />
+    <ClInclude Include="Enemy4.h" />
+    <ClInclude Include="Enemy5.h" />
+    <ClInclude Include="Enemy6.h" />
+    <ClInclude Include="Enemy7.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="MainObject.h" />
     <ClInclude Include="Point.h" />

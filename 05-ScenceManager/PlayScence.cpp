@@ -9,6 +9,13 @@
 #include "Gun.h"
 #include "Wheel.h"
 #include "Connector.h"
+#include "Enemy1.h"
+#include "Enemy2.h"
+#include "Enemy3.h"
+#include "Enemy4.h"
+#include "Enemy5.h"
+#include "Enemy6.h"
+#include "Enemy7.h"
 
 using namespace std;
 
@@ -35,6 +42,13 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_GUN	2
 #define OBJECT_TYPE_CONNECTOR	3
 #define OBJECT_TYPE_WHEEL	4
+#define OBJECT_TYPE_ENEMY1	5
+#define OBJECT_TYPE_ENEMY2	6
+#define OBJECT_TYPE_ENEMY3	7
+#define OBJECT_TYPE_ENEMY4	8
+#define OBJECT_TYPE_ENEMY5	9
+#define OBJECT_TYPE_ENEMY6	10
+#define OBJECT_TYPE_ENEMY7	11
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -243,6 +257,34 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			//wheel = (Wheel*)obj; 
 			player->addWheel((Wheel*)obj);
 			DebugOut(L"[INFO] wheel object created!\n"); break;
+	case OBJECT_TYPE_ENEMY1:
+		obj = new Enemy1();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY2:
+		obj = new Enemy3();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY3:
+		obj = new Enemy3();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY4:
+		obj = new Enemy4();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY5:
+		obj = new Enemy5();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY6:
+		obj = new Enemy6();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_ENEMY7:
+		obj = new Enemy7();
+		DebugOut(L"[INFO] Brick object created!\n");
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

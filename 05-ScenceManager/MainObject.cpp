@@ -49,8 +49,8 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-		yWorld = 496 - y - MAINOBJECT_HEIGHT;
-
+		yWorld = 496 - y;
+		IsCollide = false;
 	}
 	else
 	{
