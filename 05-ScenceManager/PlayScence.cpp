@@ -379,22 +379,22 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
-	switch (KeyCode)
-	{
-	case DIK_UP:
-		main->SetState(MAINOBJECT_STATE_JUMP);
-		break;
-	case DIK_DOWN:
-		main->SetState(MAINOBJECT_STATE_DOWN);
-		break;
-	case DIK_RIGHT:
-		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
-		break;
-	case DIK_LEFT:
-		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
-		break;
-	}
+	//CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
+	//switch (KeyCode)
+	//{
+	//case DIK_UP:
+	//	main->SetState(MAINOBJECT_STATE_JUMP);
+	//	break;
+	//case DIK_DOWN:
+	//	main->SetState(MAINOBJECT_STATE_DOWN);
+	//	break;
+	//case DIK_RIGHT:
+	//	main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
+	//	break;
+	//case DIK_LEFT:
+	//	main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
+	//	break;
+	//}
 }
 
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
@@ -416,6 +416,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		mario->SetState(MAINOBJECT_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_UP))
+		mario->SetState(MAINOBJECT_STATE_JUMP);
+	else if (game->IsKeyDown(DIK_DOWN))
+		mario->SetState(MAINOBJECT_STATE_DOWN);
 	else
 		mario->SetState(MAINOBJECT_STATE_IDLE);
 }

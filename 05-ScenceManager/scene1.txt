@@ -4603,7 +4603,7 @@
 #Jason			
 1	600	296	6
 #mainobject			
-0	170	200	0
+0	170	300	0
 #gun			
 2	185	376	1
 #connector			

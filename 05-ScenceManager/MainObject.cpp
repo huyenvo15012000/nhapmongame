@@ -54,12 +54,12 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		float min_tx, min_ty, nx = 0, ny = 0;
+		float min_tx, min_ty, nx = 0, nyy;
 		float rdx = 0;
 		float rdy = 0;
 
 		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, nyy, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 		//if (rdx != 0 && rdx!=dx)
@@ -67,12 +67,11 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-		yWorld = 496 - y;
-
+		y += min_ty * dy + nyy * 0.4f;
+		IsCollide = true;
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-		
+		if (nyy != 0) vy = 0;
+
 
 		//
 		// Collision logic with other objects
@@ -164,7 +163,8 @@ void CMainObject::SetState(int state)
 		MainGun->SetState(GUN_STATE_LEFT);
 		break;
 	case MAINOBJECT_STATE_JUMP:
-		vy = MAINOBJECT_JUMP_SPEED_Y;
+		if (!IsCollide)
+			vy = MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
@@ -177,7 +177,8 @@ void CMainObject::SetState(int state)
 		break;
 
 	case MAINOBJECT_STATE_DOWN:
-		vy = -MAINOBJECT_JUMP_SPEED_Y;
+		if (!IsCollide)
+			vy = -MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;

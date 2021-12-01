@@ -11,8 +11,8 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
-#define BRICK_BBOX_WIDTH			8
-#define BRICK_BBOX_HEIGHT 			8
+#define BRICK_BBOX_WIDTH			16
+#define BRICK_BBOX_HEIGHT 			16
 
 
 class CGameObject; 

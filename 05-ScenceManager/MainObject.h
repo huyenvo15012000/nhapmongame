@@ -45,6 +45,7 @@ protected:
 	Connector* connector;
 	int untouchable;
 	DWORD untouchable_start;
+	bool IsCollide = false;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
