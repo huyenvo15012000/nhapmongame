@@ -1,4 +1,5 @@
 #include "Enemy1.h"
+#include "Utils.h"
 Enemy1::Enemy1()
 {
 }
@@ -51,6 +52,7 @@ void Enemy1::SetState(int state)
 	case ENEMY1_STATE_DIE:
 		vx = 0;
 		vy = 0;
+		DebugOut(L"Enemy1 die");
 		break;
 	}
 }

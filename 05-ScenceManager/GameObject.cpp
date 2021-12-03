@@ -67,7 +67,7 @@ void CGameObject::CalcPotentialCollisions(
 	vector<LPGAMEOBJECT> *coObjects, 
 	vector<LPCOLLISIONEVENT> &coEvents)
 {
-	for (UINT i = 0; i < coObjects->size(); i++)
+	for (UINT i = 1; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
@@ -124,7 +124,7 @@ void CGameObject::RenderBoundingBox()
 	float l,t,r,b; 
 
 	GetBoundingBox(l, t, r, b);
-	rect.left = 0;
+	rect.left = 7;
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;

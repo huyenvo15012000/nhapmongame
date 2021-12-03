@@ -1,4 +1,5 @@
 #include "Enemy2.h"
+#include "Utils.h"
 Enemy2::Enemy2()
 {
 	SetState(ENEMY2_STATE_WALKING);
@@ -6,10 +7,13 @@ Enemy2::Enemy2()
 
 void Enemy2::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + ENEMY2_BBOX_WIDTH;
-	bottom = y + ENEMY2_BBOX_HEIGHT;
+	if (this->GetState() != ENEMY2_STATE_DIE)
+	{
+		left = x;
+		top = yWorld;
+		right = x + ENEMY2_BBOX_WIDTH;
+		bottom = yWorld + ENEMY2_BBOX_HEIGHT;
+	}
 }
 
 void Enemy2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -19,29 +23,22 @@ void Enemy2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
+	//yWorld = 496 - y;
 
-	x += dx;
-	y += dy;
-
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
-	}
-
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
-	}
 }
 
 void Enemy2::Render()
 {
+	DebugOut(L"State: %d \n", this->GetState());
+
 	int ani = ENEMY2_ANI_WALKING;
-	if (state == ENEMY2_STATE_DIE) {
-		ani = ENEMY2_ANI_DIE;
-	}
+	if (this->GetState()!=ENEMY2_STATE_DIE)
+		animation_set->at(ani)->Render(x, yWorld);
+	//else
+	//{
 
-	animation_set->at(ani)->Render(x, y);
-
-	//RenderBoundingBox();
+	//};
+	////RenderBoundingBox();
 }
 
 void Enemy2::SetState(int state)
@@ -53,7 +50,5 @@ void Enemy2::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-	case ENEMY2_STATE_WALKING:
-		vx = -ENEMY2_WALKING_SPEED;
 	}
 }

@@ -16,6 +16,7 @@
 #include "Enemy5.h"
 #include "Enemy6.h"
 #include "Enemy7.h"
+#include "Background.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_ENEMY5	9
 #define OBJECT_TYPE_ENEMY6	10
 #define OBJECT_TYPE_ENEMY7	11
+#define OBJECT_TYPE_BACKGROUND	20
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -103,7 +105,7 @@ void CPlayScene::UpdateObj(CGameObject* obj, DWORD dt) {
 
 	obj->GetPosition(x, y);
 
-	UpdateActObj(Point(x, y));
+	//UpdateActObj(Point(x, y));
 
 	quadtree = CreateQuadtree(actObj, Point(x, y));
 
@@ -237,9 +239,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
+	case OBJECT_TYPE_BACKGROUND:
+		obj = new Background();
+		DebugOut(L"[INFO] Background object created!\n");
+		break;
 	case OBJECT_TYPE_BRICK: 
 			obj = new CBrick(); 
-			DebugOut(L"[INFO] Brick object created!\n"); 
 			break;
 	case OBJECT_TYPE_GUN: 
 			obj = new Gun(); 
@@ -262,7 +267,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY2:
-		obj = new Enemy3();
+		obj = new Enemy2();
+		obj->SetState(ENEMY2_STATE_WALKING);
 		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY3:
@@ -368,7 +374,7 @@ void CPlayScene::Update(DWORD dt)
 	coObj->clear();
 	player->GetPosition(cx, cy);
 
-	UpdateActObj(Point(cx, cy));
+	//UpdateActObj(Point(cx, cy));
 	quadtree = CreateQuadtree(actObj, Point(cx, cy));
 
 	quadtree->Retrieve(coObj, player);

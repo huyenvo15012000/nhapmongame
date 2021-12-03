@@ -2,6 +2,7 @@
 #include "Textures.h"
 #include "Utils.h"
 #include "Brick.h"
+#include "Enemy2.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
@@ -72,13 +73,17 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (nyy != 0) vy = 0;
 
-
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<Enemy2*>(e->obj))
+				{
+					Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
+					e2->SetState(ENEMY2_STATE_DIE);
+				}
 			//	// jump on top >> kill Goomba and deflect a bit 
 			//	if (e->ny < 0)
 			//	{
@@ -115,6 +120,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
 }
 
 void CMainObject::Render()
@@ -212,9 +218,9 @@ CMainObject::~CMainObject()
 void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
-	t = yWorld;
-	r = x + MAINOBJECT_BBOX_WIDTH;
-	b = yWorld + MAINOBJECT_BBOX_HEIGHT;
+	t = yWorld+6;
+	r = x + MAINOBJECT_BBOX_WIDTH - 1;
+	b = yWorld + MAINOBJECT_BBOX_HEIGHT - 1;
 }
 void CMainObject::Reset()
 {
