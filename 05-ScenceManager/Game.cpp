@@ -73,6 +73,8 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 	{
 		camera->SetTransform(this->GetDirect3DDevice());
 	}
+
+	camera->FlipY(y);
 	D3DXVECTOR3 p(x-camera->GetPosition().x, y-camera->GetPosition().y, 0);
 	RECT r; 
 	r.left = left;

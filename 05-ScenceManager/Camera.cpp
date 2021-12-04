@@ -24,6 +24,7 @@ void Camera::Update()
 	{
 		this->following->GetPosition(camX, camY);
 	}
+	FlipY(camY);
 	//if (camX < 170)
 	//	camX = 170;
 	//if (camY < 120)

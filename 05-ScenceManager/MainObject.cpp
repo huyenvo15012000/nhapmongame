@@ -27,7 +27,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	//vy = MAINOBJECT_GRAVITY * dt;
+	vy = MAINOBJECT_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -50,7 +50,6 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-		yWorld = 496 - y;
 		IsCollide = false;
 	}
 	else
@@ -120,32 +119,29 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
 }
 
 void CMainObject::Render()
 {
-	float xRender, yRender;
-	GetPosition(xRender, yRender);
 	int ani;
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
-		MainGun->Render(xRender + 15, yRender);
+		MainGun->Render(x + 15, y);
 	}
 	else
 		if (nx < 0)
 		{
 			ani = MAINOBJECT_ANI_IDLE_LEFT;
-			MainGun->Render(xRender - 8, yRender);
+			MainGun->Render(x - 8, y);
 		}
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	animation_set->at(ani)->Render(x, yRender, alpha);
-	WheelLeft->Render(xRender - 5, yRender + 12);
-	WheelRight->Render(xRender + 11, yRender + 12);
-	connector->Render(xRender + 3, yRender + 8);
+	animation_set->at(ani)->Render(x, y, alpha);
+	WheelLeft->Render(x - 5, y - 12);
+	WheelRight->Render(x + 11, y - 12);
+	connector->Render(x + 3, y - 8);
 	RenderBoundingBox();
 }
 
@@ -218,9 +214,9 @@ CMainObject::~CMainObject()
 void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
-	t = yWorld+6;
+	t = y - 10;
 	r = x + MAINOBJECT_BBOX_WIDTH - 1;
-	b = yWorld + MAINOBJECT_BBOX_HEIGHT - 1;
+	b = y + MAINOBJECT_BBOX_HEIGHT - 11;
 }
 void CMainObject::Reset()
 {

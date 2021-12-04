@@ -10,9 +10,9 @@ void Enemy2::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	if (this->GetState() != ENEMY2_STATE_DIE)
 	{
 		left = x;
-		top = yWorld;
+		top = y;
 		right = x + ENEMY2_BBOX_WIDTH;
-		bottom = yWorld + ENEMY2_BBOX_HEIGHT;
+		bottom = y + ENEMY2_BBOX_HEIGHT;
 	}
 }
 
@@ -33,7 +33,7 @@ void Enemy2::Render()
 
 	int ani = ENEMY2_ANI_WALKING;
 	if (this->GetState()!=ENEMY2_STATE_DIE)
-		animation_set->at(ani)->Render(x, yWorld);
+		animation_set->at(ani)->Render(x, y);
 	//else
 	//{
 

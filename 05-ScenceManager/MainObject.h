@@ -7,8 +7,8 @@
 #include "Point.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.1f
-#define MAINOBJECT_JUMP_SPEED_Y		0.01f
-#define MAINOBJECT_GRAVITY			-0.1f
+#define MAINOBJECT_JUMP_SPEED_Y		0.1f
+#define MAINOBJECT_GRAVITY			-0.01f
 
 #define MAINOBJECT_STATE_IDLE			0
 #define MAINOBJECT_STATE_WALKING_RIGHT	100
@@ -65,7 +65,7 @@ public:
 	void Reset();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	CMainObject(float x = 0.0f, float y = 0.0f);
-	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; this->yWorld = 496 - y; }
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y;}
 };
 
 

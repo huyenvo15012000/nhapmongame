@@ -17,6 +17,9 @@ public:
 	void Unfollow();
 	bool IsFollowing() const;
 	void SetTransform(LPDIRECT3DDEVICE9 device) const;
+	void FlipY(float& y) {
+		y = 496 - y;
+	}
 	D3DVECTOR GetPosition();
 
 private:
