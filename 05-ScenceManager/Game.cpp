@@ -418,3 +418,7 @@ void CGame::SetCamPos(CMainObject *main) {
 		camera->Follow(main);
 	camera->Update();
 }
+void CGame::GetCamPos(float &x, float &y) {
+	x = this->camera->GetPosition().x;
+	y = this->camera->GetPosition().y;
+}

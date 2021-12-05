@@ -7,7 +7,7 @@
 #include "Point.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.1f
-#define MAINOBJECT_JUMP_SPEED_Y		0.1f
+#define MAINOBJECT_JUMP_SPEED_Y		0.5f
 #define MAINOBJECT_GRAVITY			-0.01f
 
 #define MAINOBJECT_STATE_IDLE			0
