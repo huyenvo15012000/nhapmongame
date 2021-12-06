@@ -7,6 +7,8 @@
 5	textures\jason.jpeg	255	255	255
 
 [SPRITES]
+#Bullet
+123	91	20	115	28	100
 #BigJasonBack					
 700	62	43	82	74	5
 701	88	42	108	74	5
@@ -1188,6 +1190,8 @@
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+#Bullet
+133	123	100
 #BigJasonBack								
 7001	700	100	701	100	702	100
 #BigJasonFront								
@@ -2342,6 +2346,8 @@
 9106	8015	100	8016	100	8017	100	8018	100
 
 [ANIMATION_SETS]
+#Bullet
+143	133
 #enemy1
 9200	9100
 #enemy2
@@ -4612,6 +4618,7 @@
 10	150	200	9205
 #enemy7
 11	200	350	9206
-
+#bullet
+21	0	0	143
 
 

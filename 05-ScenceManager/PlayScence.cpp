@@ -17,6 +17,7 @@
 #include "Enemy6.h"
 #include "Enemy7.h"
 #include "Background.h"
+#include "Bullet.h"
 
 using namespace std;
 
@@ -51,6 +52,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_ENEMY6	10
 #define OBJECT_TYPE_ENEMY7	11
 #define OBJECT_TYPE_BACKGROUND	20
+#define OBJECT_TYPE_BULLET	21
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -61,6 +63,7 @@ vector<vector<int>> MapTile;
 vector<vector<vector<int>>> MapObj;
 vector<LPGAMEOBJECT> objects, screenObj, actObj, moveObj;
 vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
+Bullet* bullet;
 
 LPDIRECT3DTEXTURE9 texMap1;
 int lx, ly;
@@ -241,7 +244,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
-		DebugOut(L"[INFO] Background object created!\n");
 		break;
 	case OBJECT_TYPE_BRICK: 
 			obj = new CBrick(); 
@@ -250,46 +252,38 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new Gun(); 
 			//gun = (Gun*)obj; 
 			player->addGun((Gun*)obj);
-			DebugOut(L"[INFO] gun object created!\n"); 
 			break;
 	case OBJECT_TYPE_CONNECTOR: 
 			obj = new Connector(); 
-			//connector = (Connector*)obj; 
-			player->addConnector((Connector*)obj);
-			DebugOut(L"[INFO] connect object created!\n"); break;
+			player->addConnector((Connector*)obj); break;
 	case OBJECT_TYPE_WHEEL: 
 			obj = new Wheel(); 
 			//wheel = (Wheel*)obj; 
-			player->addWheel((Wheel*)obj);
-			DebugOut(L"[INFO] wheel object created!\n"); break;
+			player->addWheel((Wheel*)obj); break;
 	case OBJECT_TYPE_ENEMY1:
 		obj = new Enemy1();
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY2:
 		obj = new Enemy2();
 		obj->SetState(ENEMY2_STATE_WALKING);
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY3:
 		obj = new Enemy3();
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY4:
 		obj = new Enemy4();
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY5:
 		obj = new Enemy5();
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY6:
 		obj = new Enemy6();
-		DebugOut(L"[INFO] Brick object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY7:
 		obj = new Enemy7();
-		DebugOut(L"[INFO] Brick object created!\n");
+		break;
+	case OBJECT_TYPE_BULLET:
+		obj = new Bullet();
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -307,13 +301,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GUN:
 		break;
 	case OBJECT_TYPE_CONNECTOR:
+		break;
 	case OBJECT_TYPE_WHEEL:
+		break;
+	case OBJECT_TYPE_BULLET:
+		bullets.push_back(obj);
+		bullet = (Bullet*)obj;
+		break;
 	default:
 		objects.push_back(obj);
 		return;
 	}
 
 	
+}
+
+Bullet* CPlayScene::CreateBullet()
+{
+	Bullet *bullet = new Bullet();
+	//bullet->SetAnimationSet(bullet_ani_set);
+	return bullet;
 }
 
 void CPlayScene::Load()
@@ -394,10 +401,14 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	// Update camera to follow mario
+	// Update camera to follow main
 	//float cx, cy;
 
 	player->Update(dt, coObj);
+	if (bullets.size()>0)
+		for (int i = 0; i < bullets.size(); i++) {
+			bullets[i]->Update(dt, coObj);
+		};
 	player->GetPosition(cx, cy);
 	CGame::GetInstance()->SetCamPos(player);
 }
@@ -407,6 +418,10 @@ void CPlayScene::Render()
 	for (int i = 0; i < coObj->size(); i++) {
 		coObj->at(i)->Render();
 	};
+	if (bullets.size()>0)
+		for (int i = 0; i < bullets.size(); i++) {
+			bullets[i]->Render();
+		};
 }
 
 /*
@@ -425,24 +440,6 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
-	//CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
-	//switch (KeyCode)
-	//{
-	//case DIK_UP:
-	//	main->SetState(MAINOBJECT_STATE_JUMP);
-	//	break;
-	//case DIK_DOWN:
-	//	main->SetState(MAINOBJECT_STATE_DOWN);
-	//	break;
-	//case DIK_RIGHT:
-	//	main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
-	//	break;
-	//case DIK_LEFT:
-	//	main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
-	//	break;
-	//}
 }
 
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
@@ -456,18 +453,26 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
-	CMainObject *mario = ((CPlayScene*)scence)->GetPlayer();
-
+	CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
+	vector<LPGAMEOBJECT> bullets = ((CPlayScene*)scence)->GetBullets();
 	// disable control key when Mario die 
-	if (mario->GetState() == MAINOBJECT_STATE_DIE) return;
+	if (main->GetState() == MAINOBJECT_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
+		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MAINOBJECT_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_UP))
-		mario->SetState(MAINOBJECT_STATE_JUMP);
-	else if (game->IsKeyDown(DIK_DOWN))
-		mario->SetState(MAINOBJECT_STATE_DOWN);
+		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_SPACE))
+		main->SetState(MAINOBJECT_STATE_JUMP);
+	else if (game->IsKeyDown(DIK_A))
+	{
+		float bulletX, bulletY;
+		main->GetPosition(bulletX, bulletY);
+		Bullet *b = new Bullet();
+		b->SetAnimationSet(bullet->animation_set);
+		b->SetPosition(bulletX, bulletY);
+		bullets.push_back(b);
+		DebugOut(L"Size: %d", (int)bullets.size());
+	}
 	else
-		mario->SetState(MAINOBJECT_STATE_IDLE);
+		main->SetState(MAINOBJECT_STATE_IDLE);
 }
