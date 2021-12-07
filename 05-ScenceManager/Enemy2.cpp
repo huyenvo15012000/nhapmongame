@@ -29,7 +29,6 @@ void Enemy2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Enemy2::Render()
 {
-	DebugOut(L"State: %d \n", this->GetState());
 
 	int ani = ENEMY2_ANI_WALKING;
 	if (this->GetState()!=ENEMY2_STATE_DIE)

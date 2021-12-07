@@ -6,7 +6,6 @@
 #include "Brick.h"
 #include "MainObject.h"
 #include "Quadtree.h"
-#include "Bullet.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512
@@ -19,9 +18,7 @@ class CPlayScene: public CScene
 {
 protected: 
 	CMainObject *player;					// A play scene has to have player, right? 
-	//Camera *camera;
 	vector<LPGAMEOBJECT> objects;
-	vector<LPGAMEOBJECT> bullets;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -43,10 +40,6 @@ public:
 	void UpdateObj(CGameObject* obj, DWORD dt);
 
 	CMainObject* GetPlayer() { return player; };
-	vector<LPGAMEOBJECT> GetBullets() { return bullets; };
-	Bullet* CreateBullet();
-	//Camera * GetCamera() { return camera; }
-	//friend class CPlayScenceKeyHandler;
 	
 };
 

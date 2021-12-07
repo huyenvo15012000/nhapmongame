@@ -19,13 +19,15 @@ CMainObject::CMainObject() {
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
+	bullet = new Bullet(nx);
 
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	for (int i = 0; i < bullets.size(); i++)
+		bullets[i]->Update(dt, coObjects);
 	// Simple fall down
 	vy = MAINOBJECT_GRAVITY * dt;
 
@@ -144,6 +146,8 @@ void CMainObject::Render()
 	WheelLeft->Render(x - 5, y - 12);
 	WheelRight->Render(x + 11, y - 12);
 	connector->Render(x + 3, y - 8);
+	for (int i = 0; i < bullets.size();i++)
+		bullets[i]->Render();
 	RenderBoundingBox();
 }
 
@@ -183,6 +187,10 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_DOWN:
 		//if (!IsCollide)
 			vy = -MAINOBJECT_JUMP_SPEED_Y;
+		break;
+	case MAINOBJECT_STATE_FIRE:
+		//if (!IsCollide)
+		this->Fire();
 		break;
 	case MAINOBJECT_STATE_STOP:
 		vy = vx = 0;
@@ -225,4 +233,17 @@ void CMainObject::Reset()
 	SetState(MAINOBJECT_STATE_IDLE);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
+}
+void CMainObject::addBullet(Bullet* bulletF)
+{
+	bullet = bulletF;
+}
+void CMainObject::Fire()
+{
+	Bullet* newBullet = new Bullet(nx);
+	newBullet->SetAnimationSet(bullet->animation_set);
+	newBullet->SetPosition(x, y);
+	bullets.push_back(newBullet);
+	this->SetState(MAINOBJECT_STATE_IDLE);
+	//DebugOut(L"Size: %d \n", (int)bullets.size());
 }

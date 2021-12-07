@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#pragma warning
+
 #include <DirectXMath.h>
 #include "MainObject.h"
 

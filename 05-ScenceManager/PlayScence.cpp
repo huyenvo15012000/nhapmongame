@@ -283,7 +283,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Enemy7();
 		break;
 	case OBJECT_TYPE_BULLET:
-		obj = new Bullet();
+		obj = new Bullet(0);
+		player->addBullet((Bullet*)obj);
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -305,8 +306,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WHEEL:
 		break;
 	case OBJECT_TYPE_BULLET:
-		bullets.push_back(obj);
-		bullet = (Bullet*)obj;
 		break;
 	default:
 		objects.push_back(obj);
@@ -314,13 +313,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	
-}
-
-Bullet* CPlayScene::CreateBullet()
-{
-	Bullet *bullet = new Bullet();
-	//bullet->SetAnimationSet(bullet_ani_set);
-	return bullet;
 }
 
 void CPlayScene::Load()
@@ -405,10 +397,6 @@ void CPlayScene::Update(DWORD dt)
 	//float cx, cy;
 
 	player->Update(dt, coObj);
-	if (bullets.size()>0)
-		for (int i = 0; i < bullets.size(); i++) {
-			bullets[i]->Update(dt, coObj);
-		};
 	player->GetPosition(cx, cy);
 	CGame::GetInstance()->SetCamPos(player);
 }
@@ -418,10 +406,6 @@ void CPlayScene::Render()
 	for (int i = 0; i < coObj->size(); i++) {
 		coObj->at(i)->Render();
 	};
-	if (bullets.size()>0)
-		for (int i = 0; i < bullets.size(); i++) {
-			bullets[i]->Render();
-		};
 }
 
 /*
@@ -454,7 +438,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
 	CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
-	vector<LPGAMEOBJECT> bullets = ((CPlayScene*)scence)->GetBullets();
 	// disable control key when Mario die 
 	if (main->GetState() == MAINOBJECT_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
@@ -464,15 +447,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	else if (game->IsKeyDown(DIK_SPACE))
 		main->SetState(MAINOBJECT_STATE_JUMP);
 	else if (game->IsKeyDown(DIK_A))
-	{
-		float bulletX, bulletY;
-		main->GetPosition(bulletX, bulletY);
-		Bullet *b = new Bullet();
-		b->SetAnimationSet(bullet->animation_set);
-		b->SetPosition(bulletX, bulletY);
-		bullets.push_back(b);
-		DebugOut(L"Size: %d", (int)bullets.size());
-	}
+		main->SetState(MAINOBJECT_STATE_FIRE);
 	else
 		main->SetState(MAINOBJECT_STATE_IDLE);
 }

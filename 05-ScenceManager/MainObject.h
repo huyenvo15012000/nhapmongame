@@ -1,10 +1,12 @@
 #pragma once
+#pragma warning
 #include "GameObject.h"
 #include "Gun.h"
 #include "Wheel.h"
 #include "Connector.h"
 #include "Rect.h"
 #include "Point.h"
+#include "Bullet.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.1f
 #define MAINOBJECT_JUMP_SPEED_Y		0.5f
@@ -19,6 +21,7 @@
 #define MAINOBJECT_HAVE_GUN				600
 #define MAINOBJECT_NO_GUN				700
 #define MAINOBJECT_STATE_DIE			800
+#define MAINOBJECT_STATE_FIRE		900
 
 #define MAINOBJECT_ANI_IDLE_RIGHT		1
 #define MAINOBJECT_ANI_IDLE_LEFT		0
@@ -43,12 +46,14 @@ protected:
 	Wheel* WheelLeft, * WheelRight;
 	Gun* MainGun;
 	Connector* connector;
+	Bullet* bullet;
 	int untouchable;
 	DWORD untouchable_start;
 	bool IsCollide = false;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
+	vector<LPGAMEOBJECT> bullets;
 	~CMainObject();
 public:
 	CMainObject();
@@ -59,6 +64,9 @@ public:
 	void addGun(Gun* gunF);
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
+	void addBullet(Bullet* bulletF);
+	
+	void Fire();
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
