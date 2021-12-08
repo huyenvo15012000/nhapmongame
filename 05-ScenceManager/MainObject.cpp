@@ -27,6 +27,9 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	for (int i = 0; i < bullets.size(); i++)
+		if (bullets[i]->GetState() == BULLET_STATE_DIE)
+			bullets.erase(bullets.begin()+i);
+	for (int i = 0; i < bullets.size(); i++)
 		bullets[i]->Update(dt, coObjects);
 	// Simple fall down
 	vy = MAINOBJECT_GRAVITY * dt;
@@ -41,7 +44,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > MAINOBJECT_UNTOUCHABLE_TIME)
+	if (GetTickCount64() - untouchable_start > MAINOBJECT_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
@@ -190,6 +193,7 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_FIRE:
 		//if (!IsCollide)
+		create_bullet_count = MAINOBJECT_AMOUNT_BULLET;
 		this->Fire();
 		break;
 	case MAINOBJECT_STATE_STOP:
@@ -240,10 +244,13 @@ void CMainObject::addBullet(Bullet* bulletF)
 }
 void CMainObject::Fire()
 {
+	int bullet_first = bullets.size();
 	Bullet* newBullet = new Bullet(nx);
 	newBullet->SetAnimationSet(bullet->animation_set);
 	newBullet->SetPosition(x, y);
 	bullets.push_back(newBullet);
-	this->SetState(MAINOBJECT_STATE_IDLE);
+	if (bullets.size() - bullet_first > MAINOBJECT_AMOUNT_BULLET)
+		bullets.erase(bullets.begin() + bullets.size() - 1 - MAINOBJECT_AMOUNT_BULLET, bullets.end());
+	DebugOut(L"Size: %d \n", (int)bullets.size());
 	//DebugOut(L"Size: %d \n", (int)bullets.size());
 }

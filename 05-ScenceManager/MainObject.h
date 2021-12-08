@@ -34,6 +34,7 @@
 #define MAINOBJECT_BBOX_HEIGHT			20
 #define MAINOBJECT_BBOX_WIDTH 			25
 #define MAINOBJECT_UNTOUCHABLE_TIME 			5000
+#define MAINOBJECT_AMOUNT_BULLET				1
 
 #define TOP_BORDER  40
 #define LEFT_BORDER  15
@@ -50,6 +51,7 @@ protected:
 	int untouchable;
 	DWORD untouchable_start;
 	bool IsCollide = false;
+	int create_bullet_count;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -68,7 +70,7 @@ public:
 	
 	void Fire();
 
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void Reset();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

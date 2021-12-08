@@ -36,9 +36,9 @@ void Enemy4::Render()
 {
 	int ani = ENEMY4_ANI_WALKING;
 	if (state == ENEMY4_STATE_DIE) {
-		ani = ENEMY4_ANI_DIE;
+		//ani = ENEMY4_ANI_DIE;
 	}
-
+	else
 	animation_set->at(ani)->Render(x, y);
 
 	//RenderBoundingBox();
