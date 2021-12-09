@@ -21,7 +21,7 @@ void Enemy3::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// 
 
 	x += dx;
-	y += dy;
+	y = 100*sin(3*x);
 
 	if (vx < 0 && x < 0) {
 		x = 0; vx = -vx;

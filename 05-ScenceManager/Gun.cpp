@@ -1,6 +1,6 @@
 #include "Gun.h"
 #include "Textures.h"
-
+#include "Utils.h"
 #define ID_TEX_GUN_RIGHT			30
 #define ID_TEX_GUN_LEFT 			31
 
@@ -13,9 +13,12 @@ void Gun::Update(DWORD dt)
 
 void Gun::Render(float a, float b)
 {
+	DebugOut(L"State: %d \n", state);
 	int ani;
-	if (nx > 0) ani = GUN_ANI_IDLE_RIGHT;
+	if (state == GUN_STATE_RIGHT) ani = GUN_ANI_IDLE_RIGHT;
 	else ani = GUN_ANI_IDLE_LEFT;
+	if (state == GUN_STATE_UP)
+		ani = GUN_ANI_IDLE_UP;
 	animation_set->at(ani)->Render(a, b, 255);
 }
 
@@ -30,6 +33,7 @@ void Gun::SetState(int state)
 	case GUN_STATE_LEFT:
 		nx = -1;
 		break;
+
 	}
 
 

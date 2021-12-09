@@ -9,9 +9,10 @@
 #include "Enemy7.h"
 #include "Brick.h"
 
-Bullet::Bullet(int nx)
+Bullet::Bullet(int nx, int ny)
 {
-	vx = 0.9*nx;
+	vx = BULLET_SPEED*nx;
+	vy = BULLET_SPEED * ny;
 }
 void Bullet::Render()
 {/*
@@ -112,7 +113,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<Enemy4*>(e->obj))
 			{
 				Enemy4* e4 = dynamic_cast<Enemy4*>(e->obj);
-				e4->SetState(ENEMY4_STATE_DIE);
+				e4->SetState(ENEMY4_STATE_ITEM);
 				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy5*>(e->obj))

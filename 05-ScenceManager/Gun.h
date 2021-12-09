@@ -8,9 +8,11 @@
 
 #define GUN_ANI_IDLE_RIGHT		0
 #define GUN_ANI_IDLE_LEFT		1
+#define GUN_ANI_IDLE_UP		2
 
 #define GUN_STATE_RIGHT		0
 #define GUN_STATE_LEFT		1
+#define GUN_STATE_UP		2
 
 #define GUN_WALKING_SPEED		0.1f
 

@@ -283,7 +283,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Enemy7();
 		break;
 	case OBJECT_TYPE_BULLET:
-		obj = new Bullet(0);
+		obj = new Bullet(0,0);
 		player->addBullet((Bullet*)obj);
 		break;
 	default:
@@ -424,11 +424,15 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
+
+	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_A:
-		CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 		main->Fire();
+		break;
+	case DIK_SPACE:
+		main->SetState(MAINOBJECT_STATE_JUMP);
 		break;
 	}
 }
@@ -451,10 +455,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_SPACE))
-		main->SetState(MAINOBJECT_STATE_JUMP);/*
-	else if (game->IsKeyDown(DIK_A))
-		main->Fire();*/
+	else if (game->IsKeyDown(DIK_UP))
+		main->SetState(MAINOBJECT_STATE_FIRE_UP);
 	else
 		main->SetState(MAINOBJECT_STATE_IDLE);
 }

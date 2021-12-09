@@ -1,4 +1,5 @@
 #include "Enemy4.h"
+#include "Utils.h"
 Enemy4::Enemy4()
 {
 	SetState(ENEMY4_STATE_WALKING);
@@ -6,10 +7,13 @@ Enemy4::Enemy4()
 
 void Enemy4::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + ENEMY4_BBOX_WIDTH;
-	bottom = y + ENEMY4_BBOX_HEIGHT;
+	if (state != ENEMY4_STATE_DIE)
+	{
+		left = x;
+		top = y;
+		right = x + ENEMY4_BBOX_WIDTH;
+		bottom = y + ENEMY4_BBOX_HEIGHT;
+	}
 }
 
 void Enemy4::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -20,8 +24,8 @@ void Enemy4::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
 
-	x += dx;
-	y += dy;
+	/*x += dx;
+	y += dy;*/
 
 	if (vx < 0 && x < 0) {
 		x = 0; vx = -vx;
@@ -35,11 +39,20 @@ void Enemy4::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void Enemy4::Render()
 {
 	int ani = ENEMY4_ANI_WALKING;
-	if (state == ENEMY4_STATE_DIE) {
-		//ani = ENEMY4_ANI_DIE;
+	switch (state)
+	{
+		case ENEMY4_STATE_ITEM:
+			ani = ENEMY4_ANI_ITEM;
+			break;
+		case ENEMY4_STATE_DIE:
+			ani = -1;
+			break;
 	}
-	else
-	animation_set->at(ani)->Render(x, y);
+	if (state == ENEMY4_STATE_DIE)
+	{
+
+	}
+	else animation_set->at(ani)->Render(x, y);
 
 	//RenderBoundingBox();
 }

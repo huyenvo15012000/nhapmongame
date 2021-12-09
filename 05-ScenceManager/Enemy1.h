@@ -6,8 +6,9 @@
 
 #define ENEMY1_STATE_IDLE 200
 #define ENEMY1_STATE_DIE 100
+#define ENEMY1_STATE_ITEM 300
 
-#define ENEMY1_ANI_DIE 1
+#define ENEMY1_ANI_ITEM 1
 #define ENEMY1_ANI_IDLE 0
 class Enemy1 : public CGameObject
 {

@@ -22,6 +22,7 @@
 #define MAINOBJECT_NO_GUN				700
 #define MAINOBJECT_STATE_DIE			800
 #define MAINOBJECT_STATE_FIRE		900
+#define MAINOBJECT_STATE_FIRE_UP		1000
 
 #define MAINOBJECT_ANI_IDLE_RIGHT		1
 #define MAINOBJECT_ANI_IDLE_LEFT		0
@@ -52,6 +53,7 @@ protected:
 	DWORD untouchable_start;
 	bool IsCollide = false;
 	int create_bullet_count;
+	int bullet_ny;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;

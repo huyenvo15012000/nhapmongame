@@ -19,7 +19,7 @@ CMainObject::CMainObject() {
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
-	bullet = new Bullet(nx);
+	bullet = new Bullet(nx, bullet_ny);
 
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -130,7 +130,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMainObject::Render()
 {
-	int ani;
+	int ani = 0;
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
@@ -201,6 +201,9 @@ void CMainObject::SetState(int state)
 		WheelLeft->SetState(WHEEL_STATE_IDLE);
 		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
+	case MAINOBJECT_STATE_FIRE_UP:
+		bullet_ny = 1;
+		this->MainGun->SetState(GUN_ANI_IDLE_UP);
 	}
 }
 
@@ -244,13 +247,21 @@ void CMainObject::addBullet(Bullet* bulletF)
 }
 void CMainObject::Fire()
 {
-	int bullet_first = bullets.size();
-	Bullet* newBullet = new Bullet(nx);
-	newBullet->SetAnimationSet(bullet->animation_set);
-	newBullet->SetPosition(x, y);
-	bullets.push_back(newBullet);
-	if (bullets.size() - bullet_first > MAINOBJECT_AMOUNT_BULLET)
-		bullets.erase(bullets.begin() + bullets.size() - 1 - MAINOBJECT_AMOUNT_BULLET, bullets.end());
-	DebugOut(L"Size: %d \n", (int)bullets.size());
-	//DebugOut(L"Size: %d \n", (int)bullets.size());
+	for (int i = 0; i < MAINOBJECT_AMOUNT_BULLET;i++)
+	{
+		Bullet* newBullet = new Bullet(nx, bullet_ny);
+		newBullet->SetAnimationSet(bullet->animation_set);
+		if (bullets.size() == 0)
+			if (nx>0)
+				newBullet->SetPosition(x+10, y);
+			else 
+				newBullet->SetPosition(x - 10, y);
+		else
+		{
+			float a, b;
+			bullets[bullets.size() - 1]->GetPosition(a, b);
+			newBullet->SetPosition(a-10, y);
+		}
+		bullets.push_back(newBullet);
+	}
 }

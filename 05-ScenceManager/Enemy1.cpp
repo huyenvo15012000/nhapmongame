@@ -35,8 +35,8 @@ void Enemy1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void Enemy1::Render()
 {
 	int ani = ENEMY1_ANI_IDLE;
-	if (state == ENEMY1_STATE_DIE) {
-		ani = ENEMY1_ANI_DIE;
+	if (state == ENEMY1_STATE_ITEM) {
+		ani = ENEMY1_ANI_ITEM;
 	}
 
 	animation_set->at(ani)->Render(x, y);
