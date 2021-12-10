@@ -131,7 +131,18 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMainObject::Render()
 {
 	int ani = 0;
-	if (nx > 0)
+	if (state == MAINOBJECT_STATE_FIRE_UP)
+		if (nx > 0)
+		{
+			ani = MAINOBJECT_ANI_FIRE_UP_LEFT;
+			MainGun->Render(x , y+5);
+		}
+		else
+		{
+			ani = MAINOBJECT_ANI_FIRE_UP_RIGHT;
+			MainGun->Render(x, y + 5);
+		}
+	else if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
 		MainGun->Render(x + 15, y);
@@ -145,7 +156,7 @@ void CMainObject::Render()
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	animation_set->at(ani)->Render(x, y, alpha);
+	animation_set->at(2)->Render(x, y, alpha);
 	WheelLeft->Render(x - 5, y - 12);
 	WheelRight->Render(x + 11, y - 12);
 	connector->Render(x + 3, y - 8);
