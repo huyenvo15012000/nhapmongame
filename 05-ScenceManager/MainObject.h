@@ -22,14 +22,12 @@
 #define MAINOBJECT_NO_GUN				700
 #define MAINOBJECT_STATE_DIE			800
 #define MAINOBJECT_STATE_FIRE		900
-#define MAINOBJECT_STATE_FIRE_UP		1000
 
 #define MAINOBJECT_ANI_IDLE_RIGHT		1
 #define MAINOBJECT_ANI_IDLE_LEFT		0
 #define MAINOBJECT_ANI_WALKING_RIGHT	2
 #define MAINOBJECT_ANI_WALKING_LEFT		3
-#define MAINOBJECT_ANI_FIRE_UP_LEFT		4
-#define MAINOBJECT_ANI_FIRE_UP_RIGHT		5
+
 
 #define MAINOBJECT_HEIGHT				50
 #define MAINOBJECT_WIDTH 				40
@@ -54,7 +52,6 @@ protected:
 	DWORD untouchable_start;
 	bool IsCollide = false;
 	int create_bullet_count;
-	int bullet_ny;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -70,7 +67,7 @@ public:
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
 	void addBullet(Bullet* bulletF);
-	
+
 	void Fire();
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
@@ -78,8 +75,7 @@ public:
 	void Reset();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	CMainObject(float x = 0.0f, float y = 0.0f);
-	virtual void SetPosition(float x, float y) { this->x = x, this->y = y;}
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; }
 };
-
 
 

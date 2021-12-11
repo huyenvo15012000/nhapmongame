@@ -21,7 +21,7 @@
 
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath):
+CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	key_handler = new CPlayScenceKeyHandler(this);
@@ -158,7 +158,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -178,7 +178,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i+1].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -195,12 +195,12 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	LPANIMATION_SET s = new CAnimationSet();
 
-	CAnimations *animations = CAnimations::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
 
 	for (int i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
-		
+
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
@@ -209,7 +209,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 }
 
 /*
-	Parse a line in section [OBJECTS] 
+	Parse a line in section [OBJECTS]
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
@@ -225,41 +225,41 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
-	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
-	CGameObject *obj = NULL;
+	CGameObject* obj = NULL;
 
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MAINOBJECT:
-		if (player!=NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MAINOBJECT object was created before!\n");
 			return;
 		}
-		obj = new CMainObject(x,y); 
-		player = (CMainObject*)obj;  
+		obj = new CMainObject(x, y);
+		player = (CMainObject*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
 		break;
-	case OBJECT_TYPE_BRICK: 
-			obj = new CBrick(); 
-			break;
-	case OBJECT_TYPE_GUN: 
-			obj = new Gun(); 
-			//gun = (Gun*)obj; 
-			player->addGun((Gun*)obj);
-			break;
-	case OBJECT_TYPE_CONNECTOR: 
-			obj = new Connector(); 
-			player->addConnector((Connector*)obj); break;
-	case OBJECT_TYPE_WHEEL: 
-			obj = new Wheel(); 
-			//wheel = (Wheel*)obj; 
-			player->addWheel((Wheel*)obj); break;
+	case OBJECT_TYPE_BRICK:
+		obj = new CBrick();
+		break;
+	case OBJECT_TYPE_GUN:
+		obj = new Gun();
+		//gun = (Gun*)obj; 
+		player->addGun((Gun*)obj);
+		break;
+	case OBJECT_TYPE_CONNECTOR:
+		obj = new Connector();
+		player->addConnector((Connector*)obj); break;
+	case OBJECT_TYPE_WHEEL:
+		obj = new Wheel();
+		//wheel = (Wheel*)obj; 
+		player->addWheel((Wheel*)obj); break;
 	case OBJECT_TYPE_ENEMY1:
 		obj = new Enemy1();
 		break;
@@ -283,7 +283,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Enemy7();
 		break;
 	case OBJECT_TYPE_BULLET:
-		obj = new Bullet(0,0);
+		obj = new Bullet(0);
 		player->addBullet((Bullet*)obj);
 		break;
 	default:
@@ -312,7 +312,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 	}
 
-	
+
 }
 
 void CPlayScene::Load()
@@ -323,7 +323,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -333,26 +333,30 @@ void CPlayScene::Load()
 		if (line[0] == '#') continue;	// skip comment lines	
 
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
-		if (line == "[SPRITES]") { 
-			section = SCENE_SECTION_SPRITES; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
 		// data section
 		//
 		switch (section)
-		{ 
-			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
-			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
 	}
 
@@ -380,12 +384,12 @@ void CPlayScene::Update(DWORD dt)
 
 	player->GetPosition(cx, cy);
 	coObj->push_back(player);
-	for (size_t i = 0; i < objects.size()-1; i++)
+	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
 		coObj->push_back(objects[i]);
 	}
 
-	for (size_t i = 0; i < objects.size()-1; i++)
+	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
 		objects[i]->Update(dt, coObj);
 	}
@@ -424,15 +428,11 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-
-	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_A:
+		CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 		main->Fire();
-		break;
-	case DIK_SPACE:
-		main->SetState(MAINOBJECT_STATE_JUMP);
 		break;
 	}
 }
@@ -445,18 +445,20 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	main->SetState(MAINOBJECT_STATE_STOP);
 }
 
-void CPlayScenceKeyHandler::KeyState(BYTE *states)
+void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
-	CGame *game = CGame::GetInstance();
-	CMainObject *main = ((CPlayScene*)scence)->GetPlayer();
+	CGame* game = CGame::GetInstance();
+	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 	// disable control key when Mario die 
 	if (main->GetState() == MAINOBJECT_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
 		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_UP))
-		main->SetState(MAINOBJECT_STATE_FIRE_UP);
+	else if (game->IsKeyDown(DIK_SPACE))
+		main->SetState(MAINOBJECT_STATE_JUMP);/*
+	else if (game->IsKeyDown(DIK_A))
+		main->Fire();*/
 	else
 		main->SetState(MAINOBJECT_STATE_IDLE);
 }

@@ -6,6 +6,7 @@
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
+int cocount = 0;
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	SetState(MAINOBJECT_STATE_IDLE);
@@ -19,7 +20,7 @@ CMainObject::CMainObject() {
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
-	bullet = new Bullet(nx, bullet_ny);
+	bullet = new Bullet(nx);
 
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -28,11 +29,11 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	for (int i = 0; i < bullets.size(); i++)
 		if (bullets[i]->GetState() == BULLET_STATE_DIE)
-			bullets.erase(bullets.begin()+i);
+			bullets.erase(bullets.begin() + i);
 	for (int i = 0; i < bullets.size(); i++)
 		bullets[i]->Update(dt, coObjects);
 	// Simple fall down
-	vy = MAINOBJECT_GRAVITY * dt;
+	vy = MAINOBJECT_GRAVITY * 100;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -49,12 +50,12 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		x += dx;
 		y += dy;
+		DebugOut(L"Colli %d %d \n", (int)y, (int)vy);
 		IsCollide = false;
 	}
 	else
@@ -77,8 +78,8 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
-
-
+		cocount++;
+		DebugOut(L"Colli %d %d \n", (int)cocount, (int)vy);
 		//
 		// Collision logic with other objects
 		//
@@ -86,10 +87,10 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<Enemy2*>(e->obj))
-				{
-					Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
-					e2->SetState(ENEMY2_STATE_DIE);
-				}
+			{
+				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
+				e2->SetState(ENEMY2_STATE_DIE);
+			}
 			//	// jump on top >> kill Goomba and deflect a bit 
 			//	if (e->ny < 0)
 			//	{
@@ -130,19 +131,8 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMainObject::Render()
 {
-	int ani = 0;
-	if (state == MAINOBJECT_STATE_FIRE_UP)
-		if (nx > 0)
-		{
-			ani = MAINOBJECT_ANI_FIRE_UP_LEFT;
-			MainGun->Render(x , y+5);
-		}
-		else
-		{
-			ani = MAINOBJECT_ANI_FIRE_UP_RIGHT;
-			MainGun->Render(x, y + 5);
-		}
-	else if (nx > 0)
+	int ani;
+	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
 		MainGun->Render(x + 15, y);
@@ -156,7 +146,7 @@ void CMainObject::Render()
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	animation_set->at(2)->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 	WheelLeft->Render(x - 5, y - 12);
 	WheelRight->Render(x + 11, y - 12);
 	connector->Render(x + 3, y - 8);
@@ -186,11 +176,11 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_JUMP:
 		//if (!IsCollide)
-			vy = MAINOBJECT_JUMP_SPEED_Y;
+		vy = MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
-		vy = 0;
+		//vy = 0;
 		if (WheelLeft && WheelRight)
 		{
 			WheelLeft->SetState(WHEEL_STATE_IDLE);
@@ -200,7 +190,7 @@ void CMainObject::SetState(int state)
 
 	case MAINOBJECT_STATE_DOWN:
 		//if (!IsCollide)
-			vy = -MAINOBJECT_JUMP_SPEED_Y;
+		vy = -MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_FIRE:
 		//if (!IsCollide)
@@ -208,13 +198,10 @@ void CMainObject::SetState(int state)
 		this->Fire();
 		break;
 	case MAINOBJECT_STATE_STOP:
-		vy = vx = 0;
+		//vy = vx = 0;
 		WheelLeft->SetState(WHEEL_STATE_IDLE);
 		WheelRight->SetState(WHEEL_STATE_IDLE);
 		break;
-	case MAINOBJECT_STATE_FIRE_UP:
-		bullet_ny = 1;
-		this->MainGun->SetState(GUN_ANI_IDLE_UP);
 	}
 }
 
@@ -258,21 +245,13 @@ void CMainObject::addBullet(Bullet* bulletF)
 }
 void CMainObject::Fire()
 {
-	for (int i = 0; i < MAINOBJECT_AMOUNT_BULLET;i++)
-	{
-		Bullet* newBullet = new Bullet(nx, bullet_ny);
-		newBullet->SetAnimationSet(bullet->animation_set);
-		if (bullets.size() == 0)
-			if (nx>0)
-				newBullet->SetPosition(x+10, y);
-			else 
-				newBullet->SetPosition(x - 10, y);
-		else
-		{
-			float a, b;
-			bullets[bullets.size() - 1]->GetPosition(a, b);
-			newBullet->SetPosition(a-10, y);
-		}
-		bullets.push_back(newBullet);
-	}
+	int bullet_first = bullets.size();
+	Bullet* newBullet = new Bullet(nx);
+	newBullet->SetAnimationSet(bullet->animation_set);
+	newBullet->SetPosition(x, y);
+	bullets.push_back(newBullet);
+	if (bullets.size() - bullet_first > MAINOBJECT_AMOUNT_BULLET)
+		bullets.erase(bullets.begin() + bullets.size() - 1 - MAINOBJECT_AMOUNT_BULLET, bullets.end());
+	DebugOut(L"Size: %d \n", (int)bullets.size());
+	//DebugOut(L"Size: %d \n", (int)bullets.size());
 }

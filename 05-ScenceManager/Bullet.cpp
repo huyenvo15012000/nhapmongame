@@ -9,10 +9,9 @@
 #include "Enemy7.h"
 #include "Brick.h"
 
-Bullet::Bullet(int nx, int ny)
+Bullet::Bullet(int nx)
 {
-	vx = BULLET_SPEED*nx;
-	vy = BULLET_SPEED * ny;
+	vx = 0.9 * nx;
 }
 void Bullet::Render()
 {/*
@@ -20,7 +19,7 @@ void Bullet::Render()
 	CGame::GetInstance()->GetCamPos(_x, _y);
 	if (animation_set->empty()) return;
 	if (_x < x + BULLET_WIDTH && x + BULLET_WIDTH < _x + CGame::GetInstance()->GetScreenWidth() * BRICK_BBOX_WIDTH && _y < y && y < _y + CGame::GetInstance()->GetScreenHeight() * BRICK_BBOX_HEIGHT)*/
-		animation_set->at(0)->Render(x, y);
+	animation_set->at(0)->Render(x, y);
 	RenderBoundingBox();
 }
 
@@ -113,7 +112,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<Enemy4*>(e->obj))
 			{
 				Enemy4* e4 = dynamic_cast<Enemy4*>(e->obj);
-				e4->SetState(ENEMY4_STATE_ITEM);
+				e4->SetState(ENEMY4_STATE_DIE);
 				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy5*>(e->obj))

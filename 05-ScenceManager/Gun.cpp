@@ -13,7 +13,6 @@ void Gun::Update(DWORD dt)
 
 void Gun::Render(float a, float b)
 {
-	DebugOut(L"State: %d \n", state);
 	int ani;
 	if (state == GUN_STATE_RIGHT) ani = GUN_ANI_IDLE_RIGHT;
 	else ani = GUN_ANI_IDLE_LEFT;
