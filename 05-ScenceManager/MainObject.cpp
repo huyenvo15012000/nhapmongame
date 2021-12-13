@@ -12,7 +12,7 @@ int cocount = 0;
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	SetState(MAINOBJECT_STATE_IDLE);
-
+	type = 0;
 	this->x = x;
 	this->y = y;
 }
@@ -57,7 +57,6 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-		IsCollide = false;
 	}
 	else
 	{
@@ -86,43 +85,14 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (!dynamic_cast<CBrick*>(e->obj))
-			{
-				DebugOut(L"Colli %d %d \n", (int)cocount, (int)vy);
-			}
 			if (dynamic_cast<Enemy2*>(e->obj))
 			{
 				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
 				e2->SetState(ENEMY2_STATE_DIE);
 			}
-			//	// jump on top >> kill Goomba and deflect a bit 
-			//	if (e->ny < 0)
-			//	{
-			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//		{
-			//			goomba->SetState(GOOMBA_STATE_DIE);
-			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
-			//		}
-			//	}
-			//	else if (e->nx != 0)
-			//	{
-			//		if (untouchable == 0)
-			//		{
-			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//			{
-			//				if (level > MARIO_LEVEL_SMALL)
-			//				{
-			//					level = MARIO_LEVEL_SMALL;
-			//					StartUntouchable();
-			//				}
-			//				else
-			//					SetState(MARIO_STATE_DIE);
-			//			}
-			//		}
-			//	}
-			//} // if Goomba
-			else if (dynamic_cast<CPortal*>(e->obj))
+			if (dynamic_cast<CPortal*>(e->obj))
 			{
+				DebugOut(L"Okie \n");
 				CPortal* p = dynamic_cast<CPortal*>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
@@ -233,7 +203,7 @@ CMainObject::~CMainObject()
 void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
-	t = y - 10;
+	t = y - 11;
 	r = x + MAINOBJECT_BBOX_WIDTH - 1;
 	b = y + MAINOBJECT_BBOX_HEIGHT - 11;
 }

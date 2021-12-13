@@ -11,6 +11,7 @@
 
 Bullet::Bullet(int nx)
 {
+	type = 21;
 	vx = 0.9 * nx;
 }
 void Bullet::Render()

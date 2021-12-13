@@ -48,7 +48,7 @@ class CGameObject
 {
 public:
 
-	float x; 
+	float x;
 	float y;
 
 	float dx;	// dx = vx*dt
@@ -57,20 +57,20 @@ public:
 	float vx;
 	float vy;
 
-	int nx;	 
+	int nx;
 
 	int state;
-
-	DWORD dt; 
+	int type;
+	DWORD dt;
 
 	LPANIMATION_SET animation_set;
 
-public: 
-	virtual void SetPosition(float x, float y) { this->x = x, this->y = y;}
+public:
+	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
-	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
-	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
-
+	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
+	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
+	int GetType(){return type;}
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();

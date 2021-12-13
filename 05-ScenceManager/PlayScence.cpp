@@ -5,7 +5,6 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-#include "Quadtree.h"
 #include "Gun.h"
 #include "Wheel.h"
 #include "Connector.h"
@@ -39,7 +38,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
-#define OBJECT_TYPE_PORTAL	-1
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GUN	2
@@ -55,7 +53,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND	20
 #define OBJECT_TYPE_BULLET	21
 
-#define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_PORTAL	100
 
 #define MAX_SCENE_LINE 1024
 
@@ -75,57 +73,14 @@ Gun* gun;
 Connector* connector;
 Wheel* wheel;
 
-Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> list, Point p)
+Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
-	// Init base game region for detecting collision
-	Quadtree* quadtree = new Quadtree(1, new Rect(p - Point(5, 5) * 16, p + Point(5, 5) * 16));
-	for (auto i = list.begin(); i != list.end(); i++)
+	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 800, 800));
+	for (auto i = entity_list.begin(); i != entity_list.end(); i++)
+	{
 		quadtree->Insert(*i);
-
-	return quadtree;
-}
-void CPlayScene::UpdateActObj(Point p) {
-	float cx = p.x, cy = p.y;
-	int stx = int(cx / BRICK_HEIGHT) - 5, sty = int(cy / BRICK_WIDTH) - 5;
-	if (stx < 0) stx = 0;
-	if (sty < 0) sty = 0;
-	actObj.clear();
-	for (int y = sty; y < sty + 5 + SCREEN_HEIGHT / BRICK_HEIGHT && y < MapTile.size(); y++) {
-		for (int x = stx; x < stx + 5 + SCREEN_WIDTH / BRICK_WIDTH && x < MapTile[y].size(); x++) {
-			for (int i = 0; i < MapObj[y][x].size(); i++)
-				if (MapObj[y][x][i] != -1)
-					actObj.push_back(objects.at(MapObj[y][x][i]));
-		}
 	}
-	//actObj.push_back(&trigg);
-}
-void CPlayScene::UpdateObj(CGameObject* obj, DWORD dt) {
-	vector<LPGAMEOBJECT>* _coObj = new vector<LPGAMEOBJECT>();
-
-	float cx, cy;
-	player->GetPosition(cx, cy);
-
-	float x, y;
-
-	obj->GetPosition(x, y);
-
-	//UpdateActObj(Point(x, y));
-
-	quadtree = CreateQuadtree(actObj, Point(x, y));
-
-	quadtree->Retrieve(_coObj, obj);
-
-	//if (obj->type != g_star)
-	_coObj->push_back(player);
-	//_coObj->push_back(cannon);
-	//coObj->push_back(boom);
-	//_coObj->push_back(star);
-	/*Map::GetInstance()->updateMap(cx, cy, tf, br);
-	Map::GetInstance()->updateMapObject(_coObj);*/
-
-	obj->Update(dt, _coObj);
-
-	quadtree->~Quadtree();
+	return quadtree;
 }
 void CPlayScene::_ParseSection_TEXTURES(string line)
 {
@@ -218,7 +173,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
-	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+	if (tokens.size() < 3)		
+		return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
@@ -229,7 +185,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject* obj = NULL;
-
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MAINOBJECT:
@@ -241,7 +196,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMainObject(x, y);
 		player = (CMainObject*)obj;
 
-		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
@@ -384,41 +338,43 @@ void CPlayScene::Update(DWORD dt)
 	//vector<LPGAMEOBJECT> coObjects;
 	float cx, cy;
 	coObj->clear();
-	player->GetPosition(cx, cy);
-
-	//UpdateActObj(Point(cx, cy));
-	quadtree = CreateQuadtree(actObj, Point(cx, cy));
-
+	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
-
-	player->GetPosition(cx, cy);
 	coObj->push_back(player);
+	DebugOut(L"Count: %d", int(quadtree->count()));
+	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
-		coObj->push_back(objects[i]);
+		coObjects.push_back(objects[i]);
 	}
 
-	for (size_t i = 0; i < objects.size() - 1; i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, coObj);
+		objects[i]->Update(dt, &coObjects);
 	}
-
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	// Update camera to follow main
-	//float cx, cy;
-
-	player->Update(dt, coObj);
-	player->GetPosition(cx, cy);
+	//player->Update(dt, coObj);
 	CGame::GetInstance()->SetCamPos(player);
 }
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < coObj->size(); i++) {
-		coObj->at(i)->Render();
-	};
+	/*try
+	{
+		for (int i = 0; i < coObj->size(); i++) {
+			{
+				coObj->at(i)->Render();
+			}
+
+		};
+	}
+	catch (exception e)
+	{
+		DebugOut(L"Type: ");
+	}*/
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();
 }
 
 /*

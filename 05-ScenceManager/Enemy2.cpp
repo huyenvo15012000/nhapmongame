@@ -3,6 +3,7 @@
 Enemy2::Enemy2()
 {
 	SetState(ENEMY2_STATE_WALKING);
+	type = 6;
 }
 
 void Enemy2::GetBoundingBox(float& left, float& top, float& right, float& bottom)

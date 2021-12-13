@@ -35,9 +35,7 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
-	Quadtree* CreateQuadtree(vector<LPGAMEOBJECT> list, Point p);
-	void UpdateActObj(Point p);
-	void UpdateObj(CGameObject* obj, DWORD dt);
+	Quadtree* CreateQuadtree(vector<LPGAMEOBJECT> list);
 
 	CMainObject* GetPlayer() { return player; };
 	

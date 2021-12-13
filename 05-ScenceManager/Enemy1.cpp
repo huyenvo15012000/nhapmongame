@@ -2,6 +2,7 @@
 #include "Utils.h"
 Enemy1::Enemy1()
 {
+	type = 5;
 }
 
 void Enemy1::GetBoundingBox(float& left, float& top, float& right, float& bottom)
