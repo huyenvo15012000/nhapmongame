@@ -140,6 +140,7 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="MainObject.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Utils.h" />

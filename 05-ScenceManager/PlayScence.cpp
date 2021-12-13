@@ -18,7 +18,7 @@
 #include "Enemy7.h"
 #include "Background.h"
 #include "Bullet.h"
-
+#include "Portal.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -39,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
+#define OBJECT_TYPE_PORTAL	-1
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GUN	2
@@ -286,6 +287,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Bullet(0);
 		player->addBullet((Bullet*)obj);
 		break;
+	case OBJECT_TYPE_PORTAL:
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		int scene_id = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, scene_id);
+	}
+	break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

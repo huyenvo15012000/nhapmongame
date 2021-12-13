@@ -3,6 +3,8 @@
 #include "Utils.h"
 #include "Brick.h"
 #include "Enemy2.h"
+#include "Portal.h"
+#include "Game.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
@@ -33,7 +35,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (int i = 0; i < bullets.size(); i++)
 		bullets[i]->Update(dt, coObjects);
 	// Simple fall down
-	vy = MAINOBJECT_GRAVITY * 100;
+	vy = MAINOBJECT_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -55,7 +57,6 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-		DebugOut(L"Colli %d %d \n", (int)y, (int)vy);
 		IsCollide = false;
 	}
 	else
@@ -79,13 +80,16 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 		cocount++;
-		DebugOut(L"Colli %d %d \n", (int)cocount, (int)vy);
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (!dynamic_cast<CBrick*>(e->obj))
+			{
+				DebugOut(L"Colli %d %d \n", (int)cocount, (int)vy);
+			}
 			if (dynamic_cast<Enemy2*>(e->obj))
 			{
 				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
@@ -117,11 +121,11 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			//		}
 			//	}
 			//} // if Goomba
-			//else if (dynamic_cast<CPortal*>(e->obj))
-			//{
-			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
-			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			//}
+			else if (dynamic_cast<CPortal*>(e->obj))
+			{
+				CPortal* p = dynamic_cast<CPortal*>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
 		}
 	}
 
