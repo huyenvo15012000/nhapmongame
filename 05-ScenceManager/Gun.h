@@ -15,11 +15,14 @@
 #define GUN_STATE_UP		2
 
 #define GUN_WALKING_SPEED		0.1f
+#define GUN_UNTOUCHABLE_TIME	5000
 
 class Gun : public CGameObject
 {
+	int untouchable;
+	DWORD untouchable_start;
 public:
-	void Update(DWORD dt);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
 	void SetState(int state);

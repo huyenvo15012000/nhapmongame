@@ -10,6 +10,7 @@ class Camera
 {
 	vector<int> scenes_height;
 	int curent_scene_height;
+	int scene_id;
 public:
 	//Constructors and Destructor
 	Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactors);
@@ -24,6 +25,7 @@ public:
 	void FlipY(float& y) {
 		y = curent_scene_height - y;
 	}
+	void SetSceneHeight(int i) { this->curent_scene_height = scenes_height.at(i - 1); }
 	D3DVECTOR GetPosition();
 
 private:

@@ -3,7 +3,6 @@
 
 CPortal::CPortal(float l, float t, float r, float b, int scene_id)
 {
-	type = 100;
 	this->scene_id = scene_id;
 	x = l;
 	y = t;
@@ -13,7 +12,6 @@ CPortal::CPortal(float l, float t, float r, float b, int scene_id)
 
 void CPortal::Render()
 {
-	//animation_set->at(0)->Render(x, y, 255);
 	RenderBoundingBox();
 }
 

@@ -58,9 +58,8 @@ public:
 	float vy;
 
 	int nx;
-
+	bool isEnable = true;
 	int state;
-	int type;
 	DWORD dt;
 
 	LPANIMATION_SET animation_set;
@@ -70,9 +69,9 @@ public:
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
-	int GetType(){return type;}
+	bool IsEnable(){return isEnable;}
 	int GetState() { return this->state; }
-
+	void Disable() {isEnable = false; }
 	void RenderBoundingBox();
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }

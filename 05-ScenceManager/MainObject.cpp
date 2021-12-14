@@ -8,11 +8,10 @@
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
-int cocount = 0;
+int bullet_ny = 0;
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	SetState(MAINOBJECT_STATE_IDLE);
-	type = 0;
 	this->x = x;
 	this->y = y;
 }
@@ -22,7 +21,7 @@ CMainObject::CMainObject() {
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
-	bullet = new Bullet(nx);
+	bullet = new Bullet(nx, bullet_ny);
 
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -78,29 +77,34 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
-		cocount++;
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<Enemy2*>(e->obj))
-			{
-				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
-				e2->SetState(ENEMY2_STATE_DIE);
+			try {
+				if (dynamic_cast<Enemy2*>(e->obj))
+				{
+					Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
+					e2->SetState(ENEMY2_STATE_DIE);
+				}
+				else if (dynamic_cast<CPortal*>(e->obj))
+				{
+					DebugOut(L"Okie \n");
+					CPortal* p = dynamic_cast<CPortal*>(e->obj);
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				}
 			}
-			if (dynamic_cast<CPortal*>(e->obj))
-			{
-				DebugOut(L"Okie \n");
-				CPortal* p = dynamic_cast<CPortal*>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			catch (exception e) {
+
 			}
 		}
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	//DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
 }
 
 void CMainObject::Render()
@@ -109,13 +113,31 @@ void CMainObject::Render()
 	if (nx > 0)
 	{
 		ani = MAINOBJECT_ANI_IDLE_RIGHT;
-		MainGun->Render(x + 15, y);
+		if (bullet_ny == 0)
+		{
+			MainGun->Render(x + 15, y);
+			MainGun->SetState(GUN_STATE_RIGHT);
+		}			
+		else
+		{
+			MainGun->SetState(GUN_STATE_UP);
+			MainGun->Render(x, y+10);
+		}
 	}
 	else
 		if (nx < 0)
 		{
 			ani = MAINOBJECT_ANI_IDLE_LEFT;
-			MainGun->Render(x - 8, y);
+			if (bullet_ny == 0)
+			{
+				MainGun->Render(x - 8, y);
+				MainGun->SetState(GUN_STATE_RIGHT);
+			}
+			else
+			{
+				MainGun->SetState(GUN_STATE_UP);
+				MainGun->Render(x, y + 10);
+			}
 		}
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -137,16 +159,22 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_RIGHT:
 		vx = MAINOBJECT_WALKING_SPEED;
 		nx = 1;
-		WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
-		WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
-		MainGun->SetState(GUN_STATE_RIGHT);
+		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
+		{
+			WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
+			WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
+			MainGun->SetState(GUN_STATE_RIGHT);
+		}
 		break;
 	case MAINOBJECT_STATE_WALKING_LEFT:
 		vx = -MAINOBJECT_WALKING_SPEED;
 		nx = -1;
-		WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
-		WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
-		MainGun->SetState(GUN_STATE_LEFT);
+		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
+		{
+			MainGun->SetState(GUN_STATE_LEFT);
+			WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
+			WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
+		}
 		break;
 	case MAINOBJECT_STATE_JUMP:
 		//if (!IsCollide)
@@ -154,7 +182,7 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
-		//vy = 0;
+		bullet_ny = 0;
 		if (WheelLeft && WheelRight)
 		{
 			WheelLeft->SetState(WHEEL_STATE_IDLE);
@@ -163,20 +191,23 @@ void CMainObject::SetState(int state)
 		break;
 
 	case MAINOBJECT_STATE_DOWN:
-		//if (!IsCollide)
 		vy = -MAINOBJECT_JUMP_SPEED_Y;
 		break;
 	case MAINOBJECT_STATE_FIRE:
-		//if (!IsCollide)
 		create_bullet_count = MAINOBJECT_AMOUNT_BULLET;
 		this->Fire();
 		break;
 	case MAINOBJECT_STATE_STOP:
-		//vy = vx = 0;
-		WheelLeft->SetState(WHEEL_STATE_IDLE);
-		WheelRight->SetState(WHEEL_STATE_IDLE);
+		if (WheelLeft != NULL && WheelRight != NULL)
+		{
+			WheelLeft->SetState(WHEEL_STATE_IDLE);
+			WheelRight->SetState(WHEEL_STATE_IDLE);
+		}
 		break;
+	case MAINOBJECT_STATE_FIRE_UP:
+		bullet_ny = 1;
 	}
+	
 }
 
 void CMainObject::addGun(Gun* gunf)
@@ -220,12 +251,10 @@ void CMainObject::addBullet(Bullet* bulletF)
 void CMainObject::Fire()
 {
 	int bullet_first = bullets.size();
-	Bullet* newBullet = new Bullet(nx);
+	Bullet* newBullet = new Bullet(nx, bullet_ny);
 	newBullet->SetAnimationSet(bullet->animation_set);
 	newBullet->SetPosition(x, y);
 	bullets.push_back(newBullet);
 	if (bullets.size() - bullet_first > MAINOBJECT_AMOUNT_BULLET)
 		bullets.erase(bullets.begin() + bullets.size() - 1 - MAINOBJECT_AMOUNT_BULLET, bullets.end());
-	DebugOut(L"Size: %d \n", (int)bullets.size());
-	//DebugOut(L"Size: %d \n", (int)bullets.size());
 }

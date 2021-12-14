@@ -4,6 +4,8 @@
 #define BRICK_BBOX_WIDTH  8
 #define BRICK_BBOX_HEIGHT 8
 
+#define OBJECT_TYPE_BRICK	1
+
 class CBrick : public CGameObject
 {
 	

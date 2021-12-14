@@ -21,15 +21,15 @@ using namespace std;
 
 class CGame
 {
-	static CGame * __instance;
+	static CGame* __instance;
 	HWND hWnd;									// Window handle
 
 	LPDIRECT3D9 d3d = NULL;						// Direct3D handle
 	LPDIRECT3DDEVICE9 d3ddv = NULL;				// Direct3D device object
 
-	LPDIRECT3DSURFACE9 backBuffer = NULL;		
+	LPDIRECT3DSURFACE9 backBuffer = NULL;
 	LPD3DXSPRITE spriteHandler = NULL;			// Sprite helper library to help us draw 2D image on the screen 
-
+	int State;
 	LPDIRECTINPUT8       di;		// The DirectInput object         
 	LPDIRECTINPUTDEVICE8 didv;		// The keyboard device 
 
@@ -41,10 +41,10 @@ class CGame
 	Camera* camera;
 
 	int screen_width;
-	int screen_height; 
+	int screen_height;
 
 	unordered_map<int, LPSCENE> scenes;
-	int current_scene; 
+	int current_scene;
 
 
 	void _ParseSection_SETTINGS(string line);
@@ -55,7 +55,7 @@ public:
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd, int width, int height);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
-
+	int GetState(){return State;}
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
 

@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "MainObject.h"
+#include "Utils.h"
 
 Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactors)
 {
@@ -9,7 +10,7 @@ Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactor
 	this->scaleFactors = scaleFactors;
 	scenes_height.push_back(344);
 	scenes_height.push_back(496);
-	curent_scene_height = scenes_height.at(1);
+	curent_scene_height = scenes_height.at(0);
 	D3DXMatrixOrthoLH(&orthographicMatrix, width, -height, 0.0f, 1.0f);
 	D3DXMatrixIdentity(&identityMatrix);
 }
@@ -27,14 +28,14 @@ void Camera::Update()
 		this->following->GetPosition(camX, camY);
 	}
 	FlipY(camY);
-	/*if (camX < 170)
-		camX = 170;
-	if (camY < 120)
-		camY = 120;
+	if (camX < width/2)
+		camX = width / 2;
+	if (camY < height/2)
+		camY = height/2;
 	if (camX > 1232-170)
 		camX = 1232-170;
-	if (camY > 496 -120)
-		camY = 496 -120;*/
+	if (camY > curent_scene_height -height/2)
+		camY = curent_scene_height - height / 2;
 	this->viewMatrix = D3DXMATRIX(
 		scaleFactors.x * cos(angle), scaleFactors.x * sin(angle), 0, 0,
 		-scaleFactors.y * sin(angle), scaleFactors.y * cos(angle), 0, 0,

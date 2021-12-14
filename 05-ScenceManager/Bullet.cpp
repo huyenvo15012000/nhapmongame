@@ -9,18 +9,20 @@
 #include "Enemy7.h"
 #include "Brick.h"
 
-Bullet::Bullet(int nx)
+Bullet::Bullet(int nx, int ny)
 {
-	type = 21;
-	vx = 0.9 * nx;
+	this->nyy = ny;
+	this->nx = nx;
+	if (nyy != 0)
+		vy = nyy * 0.1f;
+	else vx = nx * 0.1f;
 }
 void Bullet::Render()
-{/*
-	float _x, _y;
-	CGame::GetInstance()->GetCamPos(_x, _y);
-	if (animation_set->empty()) return;
-	if (_x < x + BULLET_WIDTH && x + BULLET_WIDTH < _x + CGame::GetInstance()->GetScreenWidth() * BRICK_BBOX_WIDTH && _y < y && y < _y + CGame::GetInstance()->GetScreenHeight() * BRICK_BBOX_HEIGHT)*/
-	animation_set->at(0)->Render(x, y);
+{
+	if (nyy != 0)
+		animation_set->at(1)->Render(x, y+20);
+	else
+		animation_set->at(0)->Render(x, y);
 	RenderBoundingBox();
 }
 
@@ -29,8 +31,16 @@ void Bullet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + BULLET_WIDTH;
-	b = y + BULLET_HEIGHT;
+	if (nyy != 0)
+	{
+		r = x + BULLET_WIDTH_U;
+		b = y + BULLET_HEIGHT_U;
+	}
+	else
+	{
+		r = x + BULLET_WIDTH_H;
+		b = y + BULLET_HEIGHT_H;
+	}
 }
 
 void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -59,6 +69,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (coEvents.size() == 0)
 	{
 		x += dx;
+		y += dy;
 	}
 	else
 	{
@@ -80,59 +91,48 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
-
-
+		this->SetState(BULLET_STATE_DIE);
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CBrick*>(e->obj))
-			{
-				this->SetState(BULLET_STATE_DIE);
-			}
 			if (dynamic_cast<Enemy1*>(e->obj))
 			{
+				DebugOut(L"Enemy 1");
 				Enemy1* e1 = dynamic_cast<Enemy1*>(e->obj);
-				e1->SetState(ENEMY1_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
+				e1->SetState(ENEMY1_STATE_ITEM);
 			}
 			if (dynamic_cast<Enemy2*>(e->obj))
 			{
 				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
 				e2->SetState(ENEMY2_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy3*>(e->obj))
 			{
 				Enemy3* e3 = dynamic_cast<Enemy3*>(e->obj);
 				e3->SetState(ENEMY3_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy4*>(e->obj))
 			{
 				Enemy4* e4 = dynamic_cast<Enemy4*>(e->obj);
 				e4->SetState(ENEMY4_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy5*>(e->obj))
 			{
 				Enemy5* e5 = dynamic_cast<Enemy5*>(e->obj);
 				e5->SetState(ENEMY5_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy6*>(e->obj))
 			{
 				Enemy6* e6 = dynamic_cast<Enemy6*>(e->obj);
 				e6->SetState(ENEMY6_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy7*>(e->obj))
 			{
 				Enemy7* e7 = dynamic_cast<Enemy7*>(e->obj);
 				e7->SetState(ENEMY3_STATE_DIE);
-				this->SetState(BULLET_STATE_DIE);
 			}
 
 			//	// jump on top >> kill Goomba and deflect a bit 

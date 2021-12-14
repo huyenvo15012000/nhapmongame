@@ -4,7 +4,7 @@
 #define ID_TEX_GUN_RIGHT			30
 #define ID_TEX_GUN_LEFT 			31
 
-void Gun::Update(DWORD dt)
+void Gun::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL)
 {
 	CGameObject::Update(dt);
 	x += GUN_WALKING_SPEED * dt;
@@ -49,6 +49,6 @@ void Gun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	//r = x + BRICK_BBOX_WIDTH;
-	//b = y + BRICK_BBOX_HEIGHT;
+	r = x + BRICK_BBOX_WIDTH;
+	b = y + BRICK_BBOX_HEIGHT;
 }

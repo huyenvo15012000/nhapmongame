@@ -5,7 +5,7 @@
 
 #define CONNECTOR_HEIGHT	8
 #define CONNECTOR_WIDTH		8
-
+#define OBJECT_TYPE_CONNECTOR	3
 class Connector : public CGameObject
 {
 public:

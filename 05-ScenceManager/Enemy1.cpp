@@ -2,7 +2,7 @@
 #include "Utils.h"
 Enemy1::Enemy1()
 {
-	type = 5;
+	state = ENEMY1_STATE_IDLE;
 }
 
 void Enemy1::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -17,32 +17,18 @@ void Enemy1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	//
-	// TO-DO: make sure Goomba can interact with the world and to each of them too!
-	// 
-
-	x += dx;
-	y += dy;
-
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
-	}
-
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
-	}
 }
 
 void Enemy1::Render()
 {
+	//DebugOut(L"State ene: %d \n", state);
 	int ani = ENEMY1_ANI_IDLE;
 	if (state == ENEMY1_STATE_ITEM) {
 		ani = ENEMY1_ANI_ITEM;
 	}
-
+	RenderBoundingBox();
 	animation_set->at(ani)->Render(x, y);
 
-	//RenderBoundingBox();
 }
 
 void Enemy1::SetState(int state)
@@ -51,8 +37,6 @@ void Enemy1::SetState(int state)
 	switch (state)
 	{
 	case ENEMY1_STATE_DIE:
-		vx = 0;
-		vy = 0;
 		DebugOut(L"Enemy1 die");
 		break;
 	}

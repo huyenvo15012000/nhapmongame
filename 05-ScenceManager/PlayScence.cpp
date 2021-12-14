@@ -57,22 +57,17 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define MAX_SCENE_LINE 1024
 
-
-vector<vector<int>> MapTile;
-vector<vector<vector<int>>> MapObj;
-vector<LPGAMEOBJECT> objects, screenObj, actObj, moveObj;
 vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
 Background* background;
 
 LPDIRECT3DTEXTURE9 texMap1;
 int lx, ly;
 int Stage;
-Point tf, br;
 Quadtree* quadtree;
 Gun* gun;
 Connector* connector;
 Wheel* wheel;
-
+int main_previous_state = 0;
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
 	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 1300, 1300));
@@ -195,6 +190,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMainObject(x, y);
 		player = (CMainObject*)obj;
+		if (main_previous_state != 0)
+			player->SetState(main_previous_state);
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
@@ -205,7 +202,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GUN:
 		obj = new Gun();
-		//gun = (Gun*)obj; 
 		player->addGun((Gun*)obj);
 		break;
 	case OBJECT_TYPE_CONNECTOR:
@@ -213,7 +209,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player->addConnector((Connector*)obj); break;
 	case OBJECT_TYPE_WHEEL:
 		obj = new Wheel();
-		//wheel = (Wheel*)obj; 
 		player->addWheel((Wheel*)obj); break;
 	case OBJECT_TYPE_ENEMY1:
 		obj = new Enemy1();
@@ -238,7 +233,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Enemy7();
 		break;
 	case OBJECT_TYPE_BULLET:
-		obj = new Bullet(0);
+		obj = new Bullet(0, 0);
 		player->addBullet((Bullet*)obj);
 		break;
 	case OBJECT_TYPE_PORTAL:
@@ -246,6 +241,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float r = atof(tokens[4].c_str());
 		float b = atof(tokens[5].c_str());
 		int scene_id = atoi(tokens[6].c_str());
+		Stage = scene_id;
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
 	break;
@@ -254,28 +250,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 	}
 
-	// General object setup
 	obj->SetPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	/*switch (object_type)
+	switch (object_type)
 	{
-	case OBJECT_TYPE_GUN:
-		break;
-	case OBJECT_TYPE_CONNECTOR:
-		break;
-	case OBJECT_TYPE_WHEEL:
-		break;
-	case OBJECT_TYPE_BULLET:
-		break;
-	default:
-		objects.push_back(obj);
-		return;
-	}*/
-	objects.push_back(obj);
-	//objects.push_back(player);
+		case OBJECT_TYPE_CONNECTOR:
+			break;
+		case OBJECT_TYPE_MAINOBJECT:
+			break;
+		case OBJECT_TYPE_GUN:
+			break;
+		case OBJECT_TYPE_WHEEL:
+			break;
+		case OBJECT_TYPE_BULLET:
+			break;
+		case OBJECT_TYPE_BACKGROUND:
+			break;
+		default:
+			objects.push_back(obj);
+			break;
+	}
+	//objects.push_back(obj);
 }
 
 void CPlayScene::Load()
@@ -340,17 +338,15 @@ void CPlayScene::Update(DWORD dt)
 	coObj->clear();
 	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
-	//coObj->push_back(player);
 	vector<LPGAMEOBJECT> coObjects;
-	//for (size_t i = 0; i < objects.size() - 1; i++)
-	//{
-	//	quadtree->Retrieve(coObj, objects[i]);
-	//}
-
-	for (size_t i = 0; i < coObj->size(); i++)
+	for (size_t i = 6; i < coObj->size(); i++)
 	{
-		coObj->at(i)->Update(dt, coObj);
+		if (coObj->at(i)->IsEnable())
+			coObj->at(i)->Update(dt, coObj);
+		else
+			coObj->erase(coObj->begin() + i);
 	}
+
 	if (player == NULL) return;
 
 	player->Update(dt, coObj);
@@ -359,21 +355,14 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	background->Render();
+	if (background)
+		background->Render();
 	player->Render();
-	try
-	{
-		for (int i = 0; i < coObj->size(); i++) {
-			{
-				coObj->at(i)->Render();
-			}
-
-		};
-	}
-	catch (exception e)
-	{
-		DebugOut(L"Type: ");
-	}
+	for (int i = 0; i < coObj->size(); i++)
+		if (coObj->at(i)->IsEnable())
+			coObj->at(i)->Render();
+		else
+			coObj->erase(coObj->begin() + i);
 	/*for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();*/
 }
@@ -383,8 +372,10 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
+	if (player != NULL)
+		main_previous_state = player->GetState();
 	for (int i = 0; i < objects.size(); i++)
-		delete objects[i];
+		objects[i]->Disable();
 
 	objects.clear();
 	player = NULL;
@@ -422,9 +413,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (game->IsKeyDown(DIK_LEFT))
 		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_SPACE))
-		main->SetState(MAINOBJECT_STATE_JUMP);/*
-	else if (game->IsKeyDown(DIK_A))
-		main->Fire();*/
+		main->SetState(MAINOBJECT_STATE_JUMP);
+	else if (game->IsKeyDown(DIK_UP))
+		main->SetState(MAINOBJECT_STATE_FIRE_UP);
 	else
 		main->SetState(MAINOBJECT_STATE_IDLE);
 }
