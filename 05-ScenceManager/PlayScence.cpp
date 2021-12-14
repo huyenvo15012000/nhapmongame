@@ -62,7 +62,7 @@ vector<vector<int>> MapTile;
 vector<vector<vector<int>>> MapObj;
 vector<LPGAMEOBJECT> objects, screenObj, actObj, moveObj;
 vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
-Bullet* bullet;
+Background* background;
 
 LPDIRECT3DTEXTURE9 texMap1;
 int lx, ly;
@@ -75,7 +75,7 @@ Wheel* wheel;
 
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
-	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 800, 800));
+	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 1300, 1300));
 	for (auto i = entity_list.begin(); i != entity_list.end(); i++)
 	{
 		quadtree->Insert(*i);
@@ -195,10 +195,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMainObject(x, y);
 		player = (CMainObject*)obj;
-
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
+		background = (Background*)obj;
 		break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
@@ -260,7 +260,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	switch (object_type)
+	/*switch (object_type)
 	{
 	case OBJECT_TYPE_GUN:
 		break;
@@ -273,9 +273,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	default:
 		objects.push_back(obj);
 		return;
-	}
-
-
+	}*/
+	objects.push_back(obj);
+	//objects.push_back(player);
 }
 
 void CPlayScene::Load()
@@ -340,27 +340,28 @@ void CPlayScene::Update(DWORD dt)
 	coObj->clear();
 	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
-	coObj->push_back(player);
-	DebugOut(L"Count: %d", int(quadtree->count()));
+	//coObj->push_back(player);
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < objects.size() - 1; i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
+	//for (size_t i = 0; i < objects.size() - 1; i++)
+	//{
+	//	quadtree->Retrieve(coObj, objects[i]);
+	//}
 
-	for (size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < coObj->size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		coObj->at(i)->Update(dt, coObj);
 	}
 	if (player == NULL) return;
 
-	//player->Update(dt, coObj);
+	player->Update(dt, coObj);
 	CGame::GetInstance()->SetCamPos(player);
 }
 
 void CPlayScene::Render()
 {
-	/*try
+	background->Render();
+	player->Render();
+	try
 	{
 		for (int i = 0; i < coObj->size(); i++) {
 			{
@@ -372,9 +373,9 @@ void CPlayScene::Render()
 	catch (exception e)
 	{
 		DebugOut(L"Type: ");
-	}*/
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	}
+	/*for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();*/
 }
 
 /*

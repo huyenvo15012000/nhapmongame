@@ -21,7 +21,7 @@ Camera::~Camera()
 
 void Camera::Update()
 {
-	float camX, camY = 0;
+	float camX = 0, camY = 0;
 	if (this->following)
 	{
 		this->following->GetPosition(camX, camY);

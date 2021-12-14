@@ -202,9 +202,9 @@ CMainObject::~CMainObject()
 }
 void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
+	l = x-5;
 	t = y - 11;
-	r = x + MAINOBJECT_BBOX_WIDTH - 1;
+	r = x + MAINOBJECT_BBOX_WIDTH-5;
 	b = y + MAINOBJECT_BBOX_HEIGHT - 11;
 }
 void CMainObject::Reset()
