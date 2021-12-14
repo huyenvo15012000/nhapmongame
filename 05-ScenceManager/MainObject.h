@@ -9,7 +9,7 @@
 #include "Bullet.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.15f
-#define MAINOBJECT_JUMP_SPEED_Y		0.5f
+#define MAINOBJECT_JUMP_SPEED_Y		0.4f
 #define MAINOBJECT_GRAVITY			-0.02f
 
 #define MAINOBJECT_STATE_IDLE			0

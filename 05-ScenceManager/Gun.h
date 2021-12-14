@@ -22,7 +22,7 @@ class Gun : public CGameObject
 	int untouchable;
 	DWORD untouchable_start;
 public:
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	void Update(DWORD dt);
 	virtual void Render();
 
 	void SetState(int state);

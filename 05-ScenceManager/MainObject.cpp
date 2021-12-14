@@ -104,7 +104,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
+	DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
 }
 
 void CMainObject::Render()

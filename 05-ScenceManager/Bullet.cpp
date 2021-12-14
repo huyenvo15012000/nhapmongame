@@ -20,9 +20,9 @@ Bullet::Bullet(int nx, int ny)
 void Bullet::Render()
 {
 	if (nyy != 0)
-		animation_set->at(1)->Render(x, y+20);
+		animation_set->at(1)->Render(x-5, y+20);
 	else
-		animation_set->at(0)->Render(x, y);
+		animation_set->at(0)->Render(x+nx*5, y);
 	RenderBoundingBox();
 }
 

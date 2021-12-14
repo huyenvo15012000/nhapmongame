@@ -24,15 +24,15 @@ void Enemy4::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
 
-	/*x += dx;
-	y += dy;*/
+	x += dx;
+	y = 300 - 60 * sin(8*x);
 
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
+	if (vx < 0 && x < 700) {
+		x = 700; vx = -vx;
 	}
 
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
+	if (vx > 0 && x > 900) {
+		x = 900; vx = -vx;
 	}
 }
 
