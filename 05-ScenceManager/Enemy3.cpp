@@ -24,12 +24,14 @@ void Enemy3::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	x += dx;
 	y = 350-20*sin(3*x);
 
-	if (vx < 0 && x < 850) {
-		x = 850; vx = -vx;
+	if (x0 == 0)
+		x0 = x;
+	if (vx < 0 && x < x0 - 50) {
+		x = x0 - 50; vx = -vx;
 	}
 
-	if (vx > 0 && x > 990) {
-		x = 990; vx = -vx;
+	if (vx > 0 && x > x0 + 50) {
+		x = x0 + 50; vx = -vx;
 	}
 }
 

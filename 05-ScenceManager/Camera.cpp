@@ -10,7 +10,7 @@ Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactor
 	this->scaleFactors = scaleFactors;
 	scenes_height.push_back(344);
 	scenes_height.push_back(496);
-	curent_scene_height = scenes_height.at(0);
+	curent_scene_height = scenes_height.at(1);
 	D3DXMatrixOrthoLH(&orthographicMatrix, width, -height, 0.0f, 1.0f);
 	D3DXMatrixIdentity(&identityMatrix);
 }

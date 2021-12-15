@@ -20,7 +20,7 @@ void Enemy5::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
 
-	x += dx;
+	/*x += dx;
 	y += dy;
 
 	if (vx < 0 && x < 0) {
@@ -29,7 +29,7 @@ void Enemy5::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (vx > 0 && x > 290) {
 		x = 290; vx = -vx;
-	}
+	}*/
 }
 
 void Enemy5::Render()

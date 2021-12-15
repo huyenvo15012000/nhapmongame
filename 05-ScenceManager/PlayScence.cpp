@@ -15,6 +15,9 @@
 #include "Enemy5.h"
 #include "Enemy6.h"
 #include "Enemy7.h"
+#include "Enemy8.h"
+#include "Enemy9.h"
+#include "Enemy10.h"
 #include "Background.h"
 #include "Bullet.h"
 #include "Portal.h"
@@ -50,6 +53,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ENEMY5	9
 #define OBJECT_TYPE_ENEMY6	10
 #define OBJECT_TYPE_ENEMY7	11
+#define OBJECT_TYPE_ENEMY8	12
+#define OBJECT_TYPE_ENEMY9	13
+#define OBJECT_TYPE_ENEMY10	14
 #define OBJECT_TYPE_BACKGROUND	20
 #define OBJECT_TYPE_BULLET	21
 
@@ -70,7 +76,7 @@ Wheel* wheel;
 int main_previous_state = 0;
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
-	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 1300, 1300));
+	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 1500, 1000));
 	for (auto i = entity_list.begin(); i != entity_list.end(); i++)
 	{
 		quadtree->Insert(*i);
@@ -232,6 +238,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENEMY7:
 		obj = new Enemy7();
 		break;
+	case OBJECT_TYPE_ENEMY8:
+		obj = new Enemy8();
+		break;
+	case OBJECT_TYPE_ENEMY9:
+		obj = new Enemy9();
+		break;
+	case OBJECT_TYPE_ENEMY10:
+		obj = new Enemy10();
+		break;
 	case OBJECT_TYPE_BULLET:
 		obj = new Bullet(0, 0);
 		player->addBullet((Bullet*)obj);
@@ -334,7 +349,6 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	//vector<LPGAMEOBJECT> coObjects;
-	float cx, cy;
 	coObj->clear();
 	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
@@ -351,20 +365,19 @@ void CPlayScene::Update(DWORD dt)
 
 	player->Update(dt, coObj);
 	CGame::GetInstance()->SetCamPos(player);
+	quadtree->~Quadtree();
 }
 
 void CPlayScene::Render()
 {
-	if (background)
-		background->Render();
+	/*if (background)
+		background->Render();*/
 	player->Render();
 	for (int i = 0; i < coObj->size(); i++)
 		if (coObj->at(i)->IsEnable())
 			coObj->at(i)->Render();
 		else
 			coObj->erase(coObj->begin() + i);
-	/*for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();*/
 }
 
 /*

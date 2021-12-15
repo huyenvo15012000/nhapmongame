@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #define ENEMY6_WALKING_SPEED 0.05f;
 
-#define ENEMY6_BBOX_WIDTH 16
-#define ENEMY6_BBOX_HEIGHT 15
+#define ENEMY6_BBOX_WIDTH 18
+#define ENEMY6_BBOX_HEIGHT 18
 #define ENEMY6_BBOX_HEIGHT_DIE 9
 
 #define ENEMY6_STATE_WALKING 100
@@ -13,6 +13,7 @@
 #define ENEMY6_ANI_DIE 1
 class Enemy6 : public CGameObject
 {
+	int x0;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

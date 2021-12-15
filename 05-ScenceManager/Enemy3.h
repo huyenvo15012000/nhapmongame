@@ -13,6 +13,7 @@
 #define ENEMY3_ANI_DIE 1
 class Enemy3 : public CGameObject
 {
+	int x0 = 0;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

@@ -1,4 +1,6 @@
 #include "Enemy6.h"
+#include "Utils.h"
+
 Enemy6::Enemy6()
 {
 	SetState(ENEMY6_STATE_WALKING);
@@ -19,16 +21,16 @@ void Enemy6::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
-
+	if (x0 == 0)
+		x0 = x;
 	x += dx;
-	y += dy;
 
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
+	if (vx < 0 && x < x0 - 70) {
+		x = x0 - 70; vx = -vx;
 	}
 
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
+	if (vx > 0 && x > x0 + 70) {
+		x = x0 + 70; vx = -vx;
 	}
 }
 
@@ -54,6 +56,6 @@ void Enemy6::SetState(int state)
 		vy = 0;
 		break;
 	case ENEMY6_STATE_WALKING:
-		vx = -ENEMY6_WALKING_SPEED;
+		vx = ENEMY6_WALKING_SPEED;
 	}
 }

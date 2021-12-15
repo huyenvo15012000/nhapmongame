@@ -99,6 +99,15 @@
     <ClCompile Include="Portal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy10.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -170,7 +179,7 @@
     <ClInclude Include="Enemy5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy6.h">
+    <ClInclude Include="Enemy9.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Enemy7.h">
@@ -183,6 +192,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Portal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy8.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy10.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
