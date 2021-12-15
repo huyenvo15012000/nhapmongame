@@ -18,6 +18,7 @@
 #include "Enemy8.h"
 #include "Enemy9.h"
 #include "Enemy10.h"
+#include "Brick2.h"
 #include "Background.h"
 #include "Bullet.h"
 #include "Portal.h"
@@ -43,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_BRICK2	1001
 #define OBJECT_TYPE_GUN	2
 #define OBJECT_TYPE_CONNECTOR	3
 #define OBJECT_TYPE_WHEEL	4
@@ -76,7 +78,7 @@ Wheel* wheel;
 int main_previous_state = 0;
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
-	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 1500, 1000));
+	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 2016, 2016));
 	for (auto i = entity_list.begin(); i != entity_list.end(); i++)
 	{
 		quadtree->Insert(*i);
@@ -219,6 +221,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
+		break;
+	case OBJECT_TYPE_BRICK2:
+		obj = new Brick2();
 		break;
 	case OBJECT_TYPE_GUN:
 		obj = new Gun();
