@@ -292,8 +292,8 @@ void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 	}
 	else
 	{
-		r = x + JASON_BBOX_WIDTH - 5;
-		b = y + JASON_BBOX_HEIGHT - 11;
+		r = x + JASON_BBOX_WIDTH+6;
+		b = y + JASON_BBOX_HEIGHT;
 	}
 }
 void CMainObject::Reset()

@@ -114,6 +114,9 @@
     <ClCompile Include="PenetrableBrick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Brick3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PenetrableBrick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,9 +19,11 @@
 #include "Enemy9.h"
 #include "Enemy10.h"
 #include "Brick2.h"
+#include "Brick3.h"
 #include "Background.h"
 #include "Bullet.h"
 #include "Portal.h"
+#include "PenetrableBrick.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -45,6 +47,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_BRICK2	1001
+#define OBJECT_TYPE_BRICK3	1002
+#define OBJECT_TYPE_PENETRABLEBRICK	1003
 #define OBJECT_TYPE_GUN	2
 #define OBJECT_TYPE_CONNECTOR	3
 #define OBJECT_TYPE_WHEEL	4
@@ -66,6 +70,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define MAX_SCENE_LINE 1024
 
 vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
+vector<LPGAMEOBJECT>*p = new vector<LPGAMEOBJECT>();
 Background* background;
 
 LPDIRECT3DTEXTURE9 texMap1;
@@ -217,13 +222,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
 		background = (Background*)obj;
-		DebugOut(L"BG creaet \n");
 		break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
 		break;
 	case OBJECT_TYPE_BRICK2:
 		obj = new Brick2();
+		break;
+	case OBJECT_TYPE_BRICK3:
+		obj = new Brick3();
+		break;
+	case OBJECT_TYPE_PENETRABLEBRICK:
+		obj = new PenetrableBrick();
 		break;
 	case OBJECT_TYPE_GUN:
 		obj = new Gun();
@@ -302,6 +312,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_WHEEL:
 			break;
 		case OBJECT_TYPE_BULLET:
+			break;
+		case OBJECT_TYPE_PENETRABLEBRICK:
+			p->push_back(obj);
 			break;
 		case OBJECT_TYPE_BACKGROUND:
 			break;
@@ -395,6 +408,11 @@ void CPlayScene::Render()
 		background->Render();
 	if (player)
 		player->Render();
+	for (int i = 0; i < p->size(); i++)
+		if (p->at(i)->IsEnable())
+			p->at(i)->Render();
+		else
+			p->erase(p->begin() + i);
 	for (int i = 0; i < coObj->size(); i++)
 		if (coObj->at(i)->IsEnable())
 			coObj->at(i)->Render();
