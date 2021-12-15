@@ -34,7 +34,8 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (int i = 0; i < bullets.size(); i++)
 		bullets[i]->Update(dt, coObjects);
 	// Simple fall down
-	vy = MAINOBJECT_GRAVITY * dt;
+	if (!IsJason())
+		vy = MAINOBJECT_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -112,25 +113,16 @@ void CMainObject::Render()
 	int ani;
 	if (nx > 0)
 	{
-		ani = MAINOBJECT_ANI_IDLE_RIGHT;
-		if (bullet_ny == 0)
-		{
-			MainGun->Render(x + 15, y);
-			MainGun->SetState(GUN_STATE_RIGHT);
-		}			
+		if (vx == 0)
+			ani = JASON_ANI_IDLE;
 		else
+			ani = MAINOBJECT_ANI_WALKING_RIGHT;
+		if (!IsJason())
 		{
-			MainGun->SetState(GUN_STATE_UP);
-			MainGun->Render(x, y+10);
-		}
-	}
-	else
-		if (nx < 0)
-		{
-			ani = MAINOBJECT_ANI_IDLE_LEFT;
+			ani = MAINOBJECT_ANI_IDLE_RIGHT;
 			if (bullet_ny == 0)
 			{
-				MainGun->Render(x - 8, y);
+				MainGun->Render(x + 15, y);
 				MainGun->SetState(GUN_STATE_RIGHT);
 			}
 			else
@@ -139,13 +131,40 @@ void CMainObject::Render()
 				MainGun->Render(x, y + 10);
 			}
 		}
+	}
+	else
+		if (nx < 0)
+		{
+			if (vx == 0)
+				ani = JASON_ANI_IDLE;
+			else
+				ani = MAINOBJECT_ANI_WALKING_LEFT;
+			if (!IsJason())
+			{
+				if (bullet_ny == 0)
+				{
+					ani = MAINOBJECT_ANI_IDLE_LEFT;
+					MainGun->Render(x - 8, y);
+					MainGun->SetState(GUN_STATE_RIGHT);
+				}
+				else
+				{
+					MainGun->SetState(GUN_STATE_UP);
+					MainGun->Render(x, y + 10);
+				}
+			}
+		}
 	int alpha = 255;
 	if (untouchable) alpha = 128;
-
+	if (ny > 0)
+		ani = JASON_ANI_BACK;
 	animation_set->at(ani)->Render(x, y, alpha);
-	WheelLeft->Render(x - 5, y - 12);
-	WheelRight->Render(x + 11, y - 12);
-	connector->Render(x + 3, y - 8);
+	if (!IsJason())
+	{
+		WheelLeft->Render(x - 5, y - 12);
+		WheelRight->Render(x + 11, y - 12);
+		connector->Render(x + 3, y - 8);
+	}
 	for (int i = 0; i < bullets.size();i++)
 		bullets[i]->Render();
 	RenderBoundingBox();
@@ -158,6 +177,8 @@ void CMainObject::SetState(int state)
 	{
 	case MAINOBJECT_STATE_WALKING_RIGHT:
 		vx = MAINOBJECT_WALKING_SPEED;
+		if (IsJason())
+			vy = 0;
 		nx = 1;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
@@ -168,7 +189,31 @@ void CMainObject::SetState(int state)
 		break;
 	case MAINOBJECT_STATE_WALKING_LEFT:
 		vx = -MAINOBJECT_WALKING_SPEED;
+		if (IsJason())
+			vy = 0;
 		nx = -1;
+		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
+		{
+			MainGun->SetState(GUN_STATE_LEFT);
+			WheelLeft->SetState(WHEEL_STATE_WALKING_LEFT);
+			WheelRight->SetState(WHEEL_STATE_WALKING_LEFT);
+		}
+		break;
+	case MAINOBJECT_STATE_WALKING_UP:
+		vy = MAINOBJECT_WALKING_SPEED;
+		vx = 0;
+		ny = 1;
+		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
+		{
+			WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
+			WheelRight->SetState(WHEEL_STATE_WALKING_RIGHT);
+			MainGun->SetState(GUN_STATE_RIGHT);
+		}
+		break;
+	case MAINOBJECT_STATE_WALKING_DOWN:
+		vy = -MAINOBJECT_WALKING_SPEED;
+		vx = 0;
+		ny = -1;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
 			MainGun->SetState(GUN_STATE_LEFT);
@@ -198,6 +243,11 @@ void CMainObject::SetState(int state)
 		this->Fire();
 		break;
 	case MAINOBJECT_STATE_STOP:
+		if (IsJason())
+		{
+			vx = 0;
+			vy = 0;
+		}
 		if (WheelLeft != NULL && WheelRight != NULL)
 		{
 			WheelLeft->SetState(WHEEL_STATE_IDLE);

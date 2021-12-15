@@ -10,6 +10,8 @@ Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactor
 	this->scaleFactors = scaleFactors;
 	scenes_height.push_back(344);
 	scenes_height.push_back(496);
+	scenes_height.push_back(304);
+	scenes_height.push_back(496);
 	curent_scene_height = scenes_height.at(1);
 	D3DXMatrixOrthoLH(&orthographicMatrix, width, -height, 0.0f, 1.0f);
 	D3DXMatrixIdentity(&identityMatrix);
@@ -28,14 +30,14 @@ void Camera::Update()
 		this->following->GetPosition(camX, camY);
 	}
 	FlipY(camY);
-	if (camX < width/2)
+	/*if (camX < width/2)
 		camX = width / 2;
 	if (camY < height/2)
 		camY = height/2;
 	if (camX > 1232-170)
 		camX = 1232-170;
 	if (camY > curent_scene_height -height/2)
-		camY = curent_scene_height - height / 2;
+		camY = curent_scene_height - height / 2;*/
 	this->viewMatrix = D3DXMATRIX(
 		scaleFactors.x * cos(angle), scaleFactors.x * sin(angle), 0, 0,
 		-scaleFactors.y * sin(angle), scaleFactors.y * cos(angle), 0, 0,

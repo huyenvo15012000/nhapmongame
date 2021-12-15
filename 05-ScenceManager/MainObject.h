@@ -9,12 +9,14 @@
 #include "Bullet.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.15f
-#define MAINOBJECT_JUMP_SPEED_Y		0.4f
-#define MAINOBJECT_GRAVITY			-0.02f
+#define MAINOBJECT_JUMP_SPEED_Y		0.5f
+#define MAINOBJECT_GRAVITY			-0.002f
 
 #define MAINOBJECT_STATE_IDLE			0
 #define MAINOBJECT_STATE_WALKING_RIGHT	100
 #define MAINOBJECT_STATE_WALKING_LEFT	200
+#define MAINOBJECT_STATE_WALKING_UP	101
+#define MAINOBJECT_STATE_WALKING_DOWN	201
 #define MAINOBJECT_STATE_JUMP			300
 #define MAINOBJECT_STATE_DOWN			400
 #define	MAINOBJECT_STATE_STOP			500
@@ -26,8 +28,10 @@
 
 #define MAINOBJECT_ANI_IDLE_RIGHT		1
 #define MAINOBJECT_ANI_IDLE_LEFT		0
-#define MAINOBJECT_ANI_WALKING_RIGHT	2
-#define MAINOBJECT_ANI_WALKING_LEFT		3
+#define JASON_ANI_IDLE		0
+#define JASON_ANI_BACK		1
+#define MAINOBJECT_ANI_WALKING_RIGHT	3
+#define MAINOBJECT_ANI_WALKING_LEFT		2
 
 
 #define MAINOBJECT_HEIGHT				50
@@ -45,6 +49,7 @@
 class CMainObject : public CGameObject
 {
 protected:
+	bool isJason = false;
 	Wheel* WheelLeft, * WheelRight;
 	Gun* MainGun;
 	Connector* connector;
@@ -53,16 +58,17 @@ protected:
 	DWORD untouchable_start;
 	bool IsCollide = false;
 	int create_bullet_count;
-
 	float start_x;			// initial position of Mario at scene
 	float start_y;
+	int ny;
 	vector<LPGAMEOBJECT> bullets;
 	~CMainObject();
 public:
 	CMainObject();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
-
+	void SetJason() { isJason = true; }
+	bool IsJason() { return isJason; }
 	void SetState(int state);
 	void addGun(Gun* gunF);
 	void addConnector(Connector* connectorF);

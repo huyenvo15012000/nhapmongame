@@ -1,0 +1,67 @@
+[TEXTURES]
+101	textures\CarAndMainRight.png	255	255	255
+100	textures\CarAndMainLeft.png	255	255	255
+3	textures\map3.png	0	0	0
+4	textures\map1.png	0	0	0
+50	textures\enemies3.png	255	255	255
+5	textures\jason.jpeg	255	255	255
+6	textures\items.png	255	255	255
+7	textures\lastmap.png	255	255	255
+[SPRITES]
+#BG
+10001	0	0	496	2016	7	
+#Bullet
+123	91	20	115	28	100
+124	117	20	123	42	100
+#BigJasonBack					
+700	62	43	82	74	5
+701	88	42	108	74	5
+702	114	43	134	74	5
+#BigJasonFront					
+703	139	43	159	74	5
+704	164	42	184	74	5
+705	188	43	208	74	5
+#BigJasonLeft					
+706	49	78	73	109	5
+707	77	78	101	109	5
+708	107	77	131	109	5
+#BigJasonRight					
+709	141	77	165	109	5
+710	171	78	195	109	5
+711	199	78	223	109	5
+#BigJasonDie					
+712	82	112	106	141	5
+713	110	114	133	141	5
+714	137	116	161	141	5
+715	165	125	189	141	5
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#Bullet
+133	123	100
+134	124	100
+#BigJasonBack								
+7001	700	100	701	100	702	100
+#BigJasonFront								
+7002	703	100	704	100	705	100
+#BigJasonLeft								
+7003	706	100	707	100	708	100
+#BigJasonRight					
+7004	709	100	710	100	711	100
+#BigJasonDie								
+7005	712	100	713	100	714	100	715	100
+#BG
+10	10001	100
+[ANIMATION_SETS]
+#Bullet
+143	133	134
+#Jason
+6	7002	7001	7003	7004	7005
+#BG
+4	10
+[OBJECTS]
+#Background
+20	0	2016	4
+#Jason
+1000	96	1952	6
+#bullet
+21	0	0	143

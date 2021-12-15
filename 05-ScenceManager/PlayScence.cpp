@@ -58,7 +58,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ENEMY10	14
 #define OBJECT_TYPE_BACKGROUND	20
 #define OBJECT_TYPE_BULLET	21
-
+#define OBJECT_TYPE_JASON	1000
 #define OBJECT_TYPE_PORTAL	100
 
 #define MAX_SCENE_LINE 1024
@@ -199,9 +199,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (main_previous_state != 0)
 			player->SetState(main_previous_state);
 		break;
+	case OBJECT_TYPE_JASON:
+		if (player != NULL)
+		{
+			DebugOut(L"[ERROR] MAINOBJECT object was created before!\n");
+			return;
+		}
+		DebugOut(L"Jason crea");
+		obj = new CMainObject(x, y);
+		player = (CMainObject*)obj;
+		player->SetJason();
+		if (main_previous_state != 0)
+			player->SetState(main_previous_state);
+		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
 		background = (Background*)obj;
+		DebugOut(L"BG creaet \n");
 		break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
@@ -273,6 +287,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 		case OBJECT_TYPE_CONNECTOR:
+			break;
+		case OBJECT_TYPE_JASON:
 			break;
 		case OBJECT_TYPE_MAINOBJECT:
 			break;
@@ -370,9 +386,10 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	/*if (background)
-		background->Render();*/
-	player->Render();
+	if (background)
+		background->Render();
+	if (player)
+		player->Render();
 	for (int i = 0; i < coObj->size(); i++)
 		if (coObj->at(i)->IsEnable())
 			coObj->at(i)->Render();
@@ -385,8 +402,8 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
-	if (player != NULL)
-		main_previous_state = player->GetState();
+	/*if (player != NULL)
+		main_previous_state = player->GetState();*/
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Disable();
 
@@ -398,10 +415,10 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
+	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
-	case DIK_A:
-		CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
+	case DIK_A:		
 		main->Fire();
 		break;
 	}
@@ -425,9 +442,13 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		main->SetState(MAINOBJECT_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		main->SetState(MAINOBJECT_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_UP))
+		main->SetState(MAINOBJECT_STATE_WALKING_UP);
+	else if (game->IsKeyDown(DIK_DOWN))
+		main->SetState(MAINOBJECT_STATE_WALKING_DOWN);
 	else if (game->IsKeyDown(DIK_SPACE))
 		main->SetState(MAINOBJECT_STATE_JUMP);
-	else if (game->IsKeyDown(DIK_UP))
+	else if (game->IsKeyDown(DIK_W))
 		main->SetState(MAINOBJECT_STATE_FIRE_UP);
 	else
 		main->SetState(MAINOBJECT_STATE_IDLE);
