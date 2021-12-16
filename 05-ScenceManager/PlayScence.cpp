@@ -24,6 +24,10 @@
 #include "Bullet.h"
 #include "Portal.h"
 #include "PenetrableBrick.h"
+#include "EnemyH.h"
+#include "EnemyZiczacY.h"
+#include "EnemyZiczacX.h"
+#include "EnemyBullet.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -62,8 +66,12 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ENEMY8	12
 #define OBJECT_TYPE_ENEMY9	13
 #define OBJECT_TYPE_ENEMY10	14
+#define OBJECT_TYPE_ENEMYH	15
+#define OBJECT_TYPE_ENEMYZICZACX	16
+#define OBJECT_TYPE_ENEMYZICZACY	17
 #define OBJECT_TYPE_BACKGROUND	20
 #define OBJECT_TYPE_BULLET	21
+#define OBJECT_TYPE_BULLETENEMY	30
 #define OBJECT_TYPE_JASON	1000
 #define OBJECT_TYPE_PORTAL	100
 
@@ -276,6 +284,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENEMY10:
 		obj = new Enemy10();
 		break;
+	case OBJECT_TYPE_ENEMYH:
+		obj = new EnemyH();
+		break;
+	case OBJECT_TYPE_ENEMYZICZACX:
+		obj = new EnemyZiczacX();
+		break;
+	case OBJECT_TYPE_ENEMYZICZACY:
+		obj = new EnemyZiczacY();
+		break;
+	case OBJECT_TYPE_BULLETENEMY:
+		obj = new EnemyBullet(0,0);
+		break;
 	case OBJECT_TYPE_BULLET:
 		obj = new Bullet(0, 0);
 		player->addBullet((Bullet*)obj);
@@ -313,9 +333,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			break;
 		case OBJECT_TYPE_BULLET:
 			break;
-		case OBJECT_TYPE_PENETRABLEBRICK:
+		/*case OBJECT_TYPE_PENETRABLEBRICK:
 			p->push_back(obj);
-			break;
+			break;*/
 		case OBJECT_TYPE_BACKGROUND:
 			break;
 		default:
@@ -408,11 +428,11 @@ void CPlayScene::Render()
 		background->Render();
 	if (player)
 		player->Render();
-	for (int i = 0; i < p->size(); i++)
+	/*for (int i = 0; i < p->size(); i++)
 		if (p->at(i)->IsEnable())
 			p->at(i)->Render();
 		else
-			p->erase(p->begin() + i);
+			p->erase(p->begin() + i);*/
 	for (int i = 0; i < coObj->size(); i++)
 		if (coObj->at(i)->IsEnable())
 			coObj->at(i)->Render();

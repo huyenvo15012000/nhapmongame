@@ -12,14 +12,13 @@
 #define OBJECT_TYPE_BULLET	21
 
 
-class Bullet : public CGameObject
+class EnemyBullet : public CGameObject
 {
 	int untouchable;
 	DWORD untouchable_start;
 	int nx, nyy;
 public:
-	bool IsJason = false;
-	Bullet(int nx, int ny);
+	EnemyBullet(int nx, int ny);
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -3,12 +3,19 @@
 #include "Utils.h"
 #include "Brick.h"
 #include "Enemy2.h"
+#include "PenetrableBrick.h"
+#include "Enemy3.h"
+#include "Enemy4.h"
+#include "Enemy5.h"
+#include "Enemy6.h"
+#include "Enemy7.h"
 #include "Portal.h"
 #include "Game.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
 int bullet_ny = 0;
+int old_ani;
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	SetState(MAINOBJECT_STATE_IDLE);
@@ -85,7 +92,12 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			try {
-				if (dynamic_cast<Enemy2*>(e->obj))
+				if (dynamic_cast<PenetrableBrick*>(e->obj))
+				{
+					x += dx;
+					y += dy;
+				}
+				else if (dynamic_cast<Enemy2*>(e->obj))
 				{
 					Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
 					e2->SetState(ENEMY2_STATE_DIE);
@@ -113,10 +125,8 @@ void CMainObject::Render()
 	int ani;
 	if (nx > 0)
 	{
-		if (vx == 0)
-			ani = JASON_ANI_IDLE;
-		else
-			ani = MAINOBJECT_ANI_WALKING_RIGHT;
+		ani = MAINOBJECT_ANI_WALKING_RIGHT;
+		old_ani = ani;
 		if (!IsJason())
 		{
 			ani = MAINOBJECT_ANI_IDLE_RIGHT;
@@ -135,10 +145,8 @@ void CMainObject::Render()
 	else
 		if (nx < 0)
 		{
-			if (vx == 0)
-				ani = JASON_ANI_IDLE;
-			else
-				ani = MAINOBJECT_ANI_WALKING_LEFT;
+			ani = MAINOBJECT_ANI_WALKING_LEFT;
+			old_ani = ani;
 			if (!IsJason())
 			{
 				if (bullet_ny == 0)
@@ -158,6 +166,8 @@ void CMainObject::Render()
 	if (untouchable) alpha = 128;
 	if (ny > 0)
 		ani = JASON_ANI_BACK;
+	if (ny < 0)
+		ani = JASON_ANI_IDLE;
 	animation_set->at(ani)->Render(x, y, alpha);
 	if (!IsJason())
 	{
@@ -180,6 +190,7 @@ void CMainObject::SetState(int state)
 		if (IsJason())
 			vy = 0;
 		nx = 1;
+		ny = 0;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
 			WheelLeft->SetState(WHEEL_STATE_WALKING_RIGHT);
@@ -192,6 +203,7 @@ void CMainObject::SetState(int state)
 		if (IsJason())
 			vy = 0;
 		nx = -1;
+		ny = 0;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
 			MainGun->SetState(GUN_STATE_LEFT);
@@ -202,6 +214,7 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_WALKING_UP:
 		vy = MAINOBJECT_WALKING_SPEED;
 		vx = 0;
+		nx = 0;
 		ny = 1;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
@@ -214,6 +227,7 @@ void CMainObject::SetState(int state)
 		vy = -MAINOBJECT_WALKING_SPEED;
 		vx = 0;
 		ny = -1;
+		nx = 0;
 		if (WheelLeft != NULL && WheelRight != NULL && MainGun != NULL)
 		{
 			MainGun->SetState(GUN_STATE_LEFT);
@@ -224,6 +238,7 @@ void CMainObject::SetState(int state)
 	case MAINOBJECT_STATE_JUMP:
 		//if (!IsCollide)
 		vy = MAINOBJECT_JUMP_SPEED_Y;
+		ny = 1;
 		break;
 	case MAINOBJECT_STATE_IDLE:
 		vx = 0;
@@ -305,14 +320,13 @@ void CMainObject::Reset()
 void CMainObject::addBullet(Bullet* bulletF)
 {
 	bullet = bulletF;
+	bullet->IsJason = IsJason();
 }
 void CMainObject::Fire()
 {
 	int bullet_first = bullets.size();
-	Bullet* newBullet = new Bullet(nx, bullet_ny);
+	Bullet* newBullet = new Bullet(nx, ny);
 	newBullet->SetAnimationSet(bullet->animation_set);
 	newBullet->SetPosition(x, y);
 	bullets.push_back(newBullet);
-	if (bullets.size() - bullet_first > MAINOBJECT_AMOUNT_BULLET)
-		bullets.erase(bullets.begin() + bullets.size() - 1 - MAINOBJECT_AMOUNT_BULLET, bullets.end());
 }

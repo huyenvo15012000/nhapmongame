@@ -65,6 +65,7 @@ public:
 	LPANIMATION_SET animation_set;
 
 public:
+	bool IsPenetrable = false;
 	virtual void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }

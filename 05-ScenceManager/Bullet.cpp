@@ -10,8 +10,12 @@
 #include "Enemy8.h"
 #include "Enemy9.h"
 #include "Enemy10.h"
-#include "Brick.h"
+#include "PenetrableBrick.h"
+#include "EnemyH.h"
+#include "EnemyZiczacY.h"
+#include "EnemyZiczacX.h"
 
+#include "Brick.h"
 Bullet::Bullet(int nx, int ny)
 {
 	this->nyy = ny;
@@ -22,10 +26,18 @@ Bullet::Bullet(int nx, int ny)
 }
 void Bullet::Render()
 {
-	if (nyy != 0)
-		animation_set->at(1)->Render(x-5, y+20);
-	else
-		animation_set->at(0)->Render(x+nx*5, y);
+	//if (IsJason)
+	//{
+	//	animation_set->at(0)->Render(x + nx * 5, y);
+	//}
+	//else
+	//{
+	//	/*if (nyy != 0)
+	//		animation_set->at(1)->Render(x - 5, y + 20);
+	//	else*/
+	//		animation_set->at(0)->Render(x + nx * 5, y);
+	//}	
+	animation_set->at(0)->Render(x + nx * 5, y);
 	RenderBoundingBox();
 }
 
@@ -152,37 +164,26 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				Enemy10* e10 = dynamic_cast<Enemy10*>(e->obj);
 				e10->SetState(ENEMY8_STATE_DIE);
 			}
-			//	// jump on top >> kill Goomba and deflect a bit 
-			//	if (e->ny < 0)
-			//	{
-			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//		{
-			//			goomba->SetState(GOOMBA_STATE_DIE);
-			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
-			//		}
-			//	}
-			//	else if (e->nx != 0)
-			//	{
-			//		if (untouchable == 0)
-			//		{
-			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//			{
-			//				if (level > MARIO_LEVEL_SMALL)
-			//				{
-			//					level = MARIO_LEVEL_SMALL;
-			//					StartUntouchable();
-			//				}
-			//				else
-			//					SetState(MARIO_STATE_DIE);
-			//			}
-			//		}
-			//	}
-			//} // if Goomba
-			//else if (dynamic_cast<CPortal*>(e->obj))
-			//{
-			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
-			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			//}
+			if (dynamic_cast<EnemyH*>(e->obj))
+			{
+				EnemyH* eH = dynamic_cast<EnemyH*>(e->obj);
+				eH->SetState(ENEMYH_STATE_DIE);
+			}
+			if (dynamic_cast<EnemyZiczacX*>(e->obj))
+			{
+				EnemyZiczacX* enemyZiczacX = dynamic_cast<EnemyZiczacX*>(e->obj);
+				enemyZiczacX->SetState(ENEMYZICZACX_STATE_DIE);
+			}
+			if (dynamic_cast<EnemyZiczacY*>(e->obj))
+			{
+				EnemyZiczacY* enemyZiczacY = dynamic_cast<EnemyZiczacY*>(e->obj);
+				enemyZiczacY->SetState(ENEMYZICZACY_STATE_DIE);
+			}
+			if (dynamic_cast<PenetrableBrick*>(e->obj))
+			{
+				x += dx;
+				y += dy;
+			}
 		}
 	}
 
