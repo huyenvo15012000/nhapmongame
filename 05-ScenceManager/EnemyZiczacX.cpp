@@ -20,7 +20,16 @@ void EnemyZiczacX::GetBoundingBox(float& left, float& top, float& right, float& 
 void EnemyZiczacX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-
+	if (x0 == 0)
+		x0 = x;
+	if (y0 == 0)
+		y0 = y;
+	x += vx * dt;
+	if (x < 30 && vx < 0)
+	{
+		x = 30;
+		vx = -vx;
+	}
 }
 
 void EnemyZiczacX::Render()

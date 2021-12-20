@@ -24,7 +24,7 @@ void Enemy10::Render()
 	//DebugOut(L"State ene: %d \n", state);
 	int ani = ENEMY10_ANI_WALKING;
 	if (state == ENEMY10_STATE_DIE) {
-		ani = ENEMY10_ANI_DIE;
+		return;
 	}
 	RenderBoundingBox();
 	animation_set->at(ani)->Render(x, y);

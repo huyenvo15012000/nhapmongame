@@ -1,5 +1,7 @@
 #include "EnemyH.h"
 #include "Utils.h"
+#include "Brick2.h"
+#include "PenetrableBrick.h"
 EnemyH::EnemyH()
 {
 	state = ENEMYH_STATE_IDLE;
@@ -19,8 +21,18 @@ void EnemyH::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void EnemyH::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt, coObjects);
-
+	CGameObject::Update(dt);
+	x += vx * dt;
+	if (x < 30 && vx < 0)
+	{
+		x = 30;
+		vx = -vx;
+	}
+	if (x > 200 && vx > 0)
+	{
+		x = 200;
+		vx = -vx;
+	}
 }
 
 void EnemyH::Render()

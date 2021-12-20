@@ -26,18 +26,19 @@ Bullet::Bullet(int nx, int ny)
 }
 void Bullet::Render()
 {
-	//if (IsJason)
-	//{
-	//	animation_set->at(0)->Render(x + nx * 5, y);
-	//}
-	//else
-	//{
-	//	/*if (nyy != 0)
-	//		animation_set->at(1)->Render(x - 5, y + 20);
-	//	else*/
-	//		animation_set->at(0)->Render(x + nx * 5, y);
-	//}	
-	animation_set->at(0)->Render(x + nx * 5, y);
+
+	
+	if (animation_set->size() ==1)
+	{
+		animation_set->at(0)->Render(x + nx * 5, y);
+	}
+	else
+	{
+		if (nyy != 0)
+			animation_set->at(1)->Render(x - 5, y + 20);
+		else
+			animation_set->at(0)->Render(x + nx * 5, y);
+	}	
 	RenderBoundingBox();
 }
 
@@ -46,15 +47,23 @@ void Bullet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	if (nyy != 0)
+	if (IsJason)
 	{
-		r = x + BULLET_WIDTH_U;
-		b = y + BULLET_HEIGHT_U;
+		r = x + JASON_BULLET_W;
+		b = y +JASON_BULLET_H;
 	}
 	else
 	{
-		r = x + BULLET_WIDTH_H;
-		b = y + BULLET_HEIGHT_H;
+		if (nyy != 0)
+		{
+			r = x + BULLET_WIDTH_U;
+			b = y + BULLET_HEIGHT_U;
+		}
+		else
+		{
+			r = x + BULLET_WIDTH_H;
+			b = y + BULLET_HEIGHT_H;
+		}
 	}
 }
 

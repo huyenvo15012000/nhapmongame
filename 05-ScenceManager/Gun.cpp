@@ -75,10 +75,18 @@ void Gun::Update(DWORD dt)
 void Gun::Render(float a, float b)
 {
 	int ani;
-	if (state == GUN_STATE_RIGHT) ani = GUN_ANI_IDLE_RIGHT;
-	else ani = GUN_ANI_IDLE_LEFT;
-	if (state == GUN_STATE_UP)
+	switch (state) 
+	{
+	case GUN_STATE_RIGHT:
+		ani = GUN_ANI_IDLE_RIGHT;
+		break;
+	case GUN_STATE_LEFT:
+		ani = GUN_ANI_IDLE_LEFT;
+		break;
+	case GUN_STATE_UP:
 		ani = GUN_ANI_IDLE_UP;
+		break;
+	}
 	animation_set->at(ani)->Render(a, b, 255);
 }
 
@@ -102,7 +110,7 @@ void Gun::SetState(int state)
 
 void Gun::Render()
 {
-	animation_set->at(0)->Render(x, y,255);
+	//animation_set->at(0)->Render(x, y,255);
 	//RenderBoundingBox();
 }
 

@@ -10,8 +10,12 @@
 
 #define ENEMYZICZACX_ANI_ITEM 1
 #define ENEMYZICZACX_ANI_IDLE 0
+
+#define ENEMY_SPEED 0.1f
 class EnemyZiczacX : public CGameObject
 {
+	int x0, y0 = 0;
+	float vx = vy = ENEMY_SPEED;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
