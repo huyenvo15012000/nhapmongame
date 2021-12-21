@@ -25,8 +25,8 @@
 #include "Portal.h"
 #include "PenetrableBrick.h"
 #include "EnemyH.h"
-#include "EnemyZiczacY.h"
-#include "EnemyZiczacX.h"
+#include "NotFireEnemy.h"
+#include "FireEnemy.h"
 #include "EnemyBullet.h"
 using namespace std;
 
@@ -67,8 +67,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ENEMY9	13
 #define OBJECT_TYPE_ENEMY10	14
 #define OBJECT_TYPE_ENEMYH	15
-#define OBJECT_TYPE_ENEMYZICZACX	16
-#define OBJECT_TYPE_ENEMYZICZACY	17
+#define OBJECT_TYPE_ENEMYHFIRE	18
+#define OBJECT_TYPE_FIREENEMY	16
+#define OBJECT_TYPE_NOTFIREENEMY	17
 #define OBJECT_TYPE_BACKGROUND	20
 #define OBJECT_TYPE_BULLET	21
 #define OBJECT_TYPE_BULLETENEMY	30
@@ -287,11 +288,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENEMYH:
 		obj = new EnemyH();
 		break;
-	case OBJECT_TYPE_ENEMYZICZACX:
-		obj = new EnemyZiczacX();
+	case OBJECT_TYPE_FIREENEMY:
+		obj = new FireEnemy();
 		break;
-	case OBJECT_TYPE_ENEMYZICZACY:
-		obj = new EnemyZiczacY();
+	case OBJECT_TYPE_NOTFIREENEMY:
+		obj = new NotFireEnemy();
 		break;
 	case OBJECT_TYPE_BULLETENEMY:
 		obj = new EnemyBullet(0,0);
@@ -406,7 +407,7 @@ void CPlayScene::Update(DWORD dt)
 	coObj->clear();
 	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
-	vector<LPGAMEOBJECT> coObjects;
+	coObj->push_back(player);
 	for (size_t i = 6; i < coObj->size(); i++)
 	{
 		if (coObj->at(i)->IsEnable())
@@ -414,7 +415,7 @@ void CPlayScene::Update(DWORD dt)
 		else
 			coObj->erase(coObj->begin() + i);
 	}
-
+	coObj->pop_back();
 	if (player == NULL) return;
 
 	player->Update(dt, coObj);

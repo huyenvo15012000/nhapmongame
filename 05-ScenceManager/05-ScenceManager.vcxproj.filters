@@ -123,10 +123,13 @@
     <ClCompile Include="EnemyBullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyZiczacX.cpp">
+    <ClCompile Include="FireEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyZiczacY.cpp">
+    <ClCompile Include="NotEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyHFire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,10 +242,13 @@
     <ClInclude Include="EnemyBullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyZiczacX.h">
+    <ClInclude Include="FireEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyZiczacY.h">
+    <ClInclude Include="NotFireEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHFire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

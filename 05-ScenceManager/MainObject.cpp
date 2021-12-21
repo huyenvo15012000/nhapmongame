@@ -107,7 +107,6 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
-					DebugOut(L"Okie \n");
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 				}
@@ -120,7 +119,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
+	//DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
 }
 
 void CMainObject::Render()

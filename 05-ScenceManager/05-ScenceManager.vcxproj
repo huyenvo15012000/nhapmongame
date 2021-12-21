@@ -144,8 +144,9 @@
     <ClCompile Include="Enemy9.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemyH.cpp" />
-    <ClCompile Include="EnemyZiczacX.cpp" />
-    <ClCompile Include="EnemyZiczacY.cpp" />
+    <ClCompile Include="EnemyHFire.cpp" />
+    <ClCompile Include="FireEnemy.cpp" />
+    <ClCompile Include="NotEnemy.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="PenetrableBrick.cpp" />
@@ -184,8 +185,9 @@
     <ClInclude Include="Enemy6.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemyH.h" />
-    <ClInclude Include="EnemyZiczacX.h" />
-    <ClInclude Include="EnemyZiczacY.h" />
+    <ClInclude Include="EnemyHFire.h" />
+    <ClInclude Include="FireEnemy.h" />
+    <ClInclude Include="NotFireEnemy.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="MainObject.h" />
     <ClInclude Include="PenetrableBrick.h" />

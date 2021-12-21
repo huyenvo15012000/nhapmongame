@@ -12,8 +12,8 @@
 #include "Enemy10.h"
 #include "PenetrableBrick.h"
 #include "EnemyH.h"
-#include "EnemyZiczacY.h"
-#include "EnemyZiczacX.h"
+#include "FireEnemy.h"
+#include "NotFireEnemy.h"
 
 #include "Brick.h"
 Bullet::Bullet(int nx, int ny)
@@ -178,15 +178,15 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				EnemyH* eH = dynamic_cast<EnemyH*>(e->obj);
 				eH->SetState(ENEMYH_STATE_DIE);
 			}
-			if (dynamic_cast<EnemyZiczacX*>(e->obj))
+			if (dynamic_cast<FireEnemy*>(e->obj))
 			{
-				EnemyZiczacX* enemyZiczacX = dynamic_cast<EnemyZiczacX*>(e->obj);
-				enemyZiczacX->SetState(ENEMYZICZACX_STATE_DIE);
+				FireEnemy* enemyZiczacX = dynamic_cast<FireEnemy*>(e->obj);
+				enemyZiczacX->SetState(FIREENEMY_STATE_DIE);
 			}
-			if (dynamic_cast<EnemyZiczacY*>(e->obj))
+			if (dynamic_cast<NotFireEnemy*>(e->obj))
 			{
-				EnemyZiczacY* enemyZiczacY = dynamic_cast<EnemyZiczacY*>(e->obj);
-				enemyZiczacY->SetState(ENEMYZICZACY_STATE_DIE);
+				NotFireEnemy* enemyZiczacY = dynamic_cast<NotFireEnemy*>(e->obj);
+				enemyZiczacY->SetState(NOTFIREENEMY_STATE_DIE);
 			}
 			if (dynamic_cast<PenetrableBrick*>(e->obj))
 			{
