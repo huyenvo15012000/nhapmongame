@@ -25,8 +25,8 @@ void Connector::Render(float a, float b)
 
 void Connector::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
+	//l = x;
+	//t = y;
 	/*r = x + BRICK_BBOX_WIDTH;
 	b = y + BRICK_BBOX_HEIGHT;*/
 }

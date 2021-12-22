@@ -28,6 +28,9 @@
 #include "NotFireEnemy.h"
 #include "FireEnemy.h"
 #include "EnemyBullet.h"
+#include "WallEnemy.h"
+#include "EnemyHFire.h"
+#include "EnemyBullet.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -75,6 +78,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BULLETENEMY	30
 #define OBJECT_TYPE_JASON	1000
 #define OBJECT_TYPE_PORTAL	100
+#define OBJECT_TYPE_WALLENEMY	999
 
 #define MAX_SCENE_LINE 1024
 
@@ -89,10 +93,11 @@ Quadtree* quadtree;
 Gun* gun;
 Connector* connector;
 Wheel* wheel;
+EnemyBullet* bullet;
 int main_previous_state = 0;
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
-	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 2016, 2016));
+	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 3016, 2016));
 	for (auto i = entity_list.begin(); i != entity_list.end(); i++)
 	{
 		quadtree->Insert(*i);
@@ -288,6 +293,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENEMYH:
 		obj = new EnemyH();
 		break;
+	case OBJECT_TYPE_ENEMYHFIRE:
+		obj = new EnemyHFire();
+		dynamic_cast<EnemyHFire*>(obj)->AddBullet(bullet);		
+		break;
+	case OBJECT_TYPE_WALLENEMY:
+		obj = new WallEnemy();
+		break;
 	case OBJECT_TYPE_FIREENEMY:
 		obj = new FireEnemy();
 		break;
@@ -296,6 +308,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BULLETENEMY:
 		obj = new EnemyBullet(0,0);
+		bullet = (EnemyBullet*)obj;
 		break;
 	case OBJECT_TYPE_BULLET:
 		obj = new Bullet(0, 0);
@@ -333,6 +346,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_WHEEL:
 			break;
 		case OBJECT_TYPE_BULLET:
+			break;
+		case OBJECT_TYPE_BULLETENEMY:
+			obj->Render();
 			break;
 		/*case OBJECT_TYPE_PENETRABLEBRICK:
 			p->push_back(obj);
@@ -408,8 +424,10 @@ void CPlayScene::Update(DWORD dt)
 	quadtree = CreateQuadtree(objects);
 	quadtree->Retrieve(coObj, player);
 	coObj->push_back(player);
-	for (size_t i = 6; i < coObj->size(); i++)
+	vector<LPGAMEOBJECT>* coObj2 = new vector<LPGAMEOBJECT>();
+	for (size_t i = 0; i < coObj->size(); i++)
 	{
+		//coObj2->erase(coObj2->begin() + i);
 		if (coObj->at(i)->IsEnable())
 			coObj->at(i)->Update(dt, coObj);
 		else
@@ -471,7 +489,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
 	CMainObject* main = ((CPlayScene*)scence)->GetPlayer();
 	main->SetState(MAINOBJECT_STATE_STOP);
 }

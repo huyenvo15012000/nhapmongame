@@ -10,8 +10,8 @@ void Brick2::Render()
 
 void Brick2::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x-2;
+	l = x;
 	t = y;
-	r = x + BRICK_BBOX_WIDTH - 7;
-	b = y + BRICK_BBOX_HEIGHT -3;
+	r = x + BRICK2_BBOX_WIDTH ;
+	b = y + BRICK2_BBOX_HEIGHT;
 }

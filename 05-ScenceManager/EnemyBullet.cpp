@@ -15,8 +15,9 @@ void EnemyBullet::Render()
 	///*if (nyy != 0)
 	//	animation_set->at(1)->Render(x - 5, y + 20);
 	//else*/
-	//	animation_set->at(0)->Render(x + nx * 5, y);
-	//RenderBoundingBox();
+	animation_set->at(0)->Render(x + nx * 5, y);
+	RenderBoundingBox();
+	DebugOut(L"EB x: %f, EB y: %f \n", x, y);
 }
 
 
@@ -41,9 +42,11 @@ void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//dx = dy = 0;
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	float player_x, player_y;
+	coObjects->at(coObjects->size() - 1)->GetPosition(player_x, player_y);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+	float l, t, r, b;
 
 	coEvents.clear();
 
@@ -57,13 +60,17 @@ void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-
+	//if (x>=player_x && x<=player_x+40 && y<=player_y && y>=)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		x += dx;
-		y += dy;
-	}
+		//x += 0.1*dt;
+		y += -0.09*dt;
+		if (y < 0)
+			this->SetState(BULLET_STATE_DIE);
+	}/*
+	if (y < 0)
+		this->SetState(BULLET_STATE_DIE);*/
 	else
 	{
 
@@ -84,6 +91,7 @@ void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+
 		this->SetState(BULLET_STATE_DIE);
 		//
 		// Collision logic with other objects

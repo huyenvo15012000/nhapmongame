@@ -146,7 +146,7 @@
     <ClCompile Include="EnemyH.cpp" />
     <ClCompile Include="EnemyHFire.cpp" />
     <ClCompile Include="FireEnemy.cpp" />
-    <ClCompile Include="NotEnemy.cpp" />
+    <ClCompile Include="NotFireEnemy.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="PenetrableBrick.cpp" />
@@ -162,6 +162,7 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="WallEnemy.cpp" />
     <ClCompile Include="Wheel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +204,7 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="WallEnemy.h" />
     <ClInclude Include="Wheel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

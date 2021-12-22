@@ -126,10 +126,13 @@
     <ClCompile Include="FireEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NotEnemy.cpp">
+    <ClCompile Include="NotFireEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EnemyHFire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WallEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -249,6 +252,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyHFire.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WallEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

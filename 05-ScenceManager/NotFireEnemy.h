@@ -11,7 +11,7 @@
 #define NOTFIREENEMY_ANI_ITEM 1
 #define NOTFIREENEMY_ANI_IDLE 0
 
-#define ENEMY_SPEED 0.1f
+#define ENEMY_SPEED 0.005f
 class NotFireEnemy : public CGameObject
 {
 	int x0, y0 = 0;

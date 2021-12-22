@@ -10,7 +10,7 @@
 
 #define MAINOBJECT_WALKING_SPEED		0.15f
 #define MAINOBJECT_JUMP_SPEED_Y		0.5f
-#define MAINOBJECT_GRAVITY			-0.02f
+#define MAINOBJECT_GRAVITY			-0.005f
 
 #define MAINOBJECT_STATE_IDLE			0
 #define MAINOBJECT_STATE_WALKING_RIGHT	100
@@ -34,9 +34,9 @@
 #define MAINOBJECT_ANI_WALKING_LEFT		2
 
 
-#define MAINOBJECT_HEIGHT				50
-#define MAINOBJECT_WIDTH 				40
-#define MAINOBJECT_BBOX_HEIGHT			20
+#define MAINOBJECT_HEIGHT				30
+#define MAINOBJECT_WIDTH 				30
+#define MAINOBJECT_BBOX_HEIGHT			17
 #define MAINOBJECT_BBOX_WIDTH 			25
 #define JASON_BBOX_HEIGHT			15
 #define JASON_BBOX_WIDTH 			15
@@ -62,7 +62,7 @@ protected:
 	int create_bullet_count;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
-	int ny;
+	int nyy;
 	vector<LPGAMEOBJECT> bullets;
 	~CMainObject();
 public:

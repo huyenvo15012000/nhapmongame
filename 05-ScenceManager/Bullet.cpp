@@ -14,7 +14,9 @@
 #include "EnemyH.h"
 #include "FireEnemy.h"
 #include "NotFireEnemy.h"
-
+#include "WallEnemy.h"
+#include "Brick3.h"
+#include "Brick2.h"
 #include "Brick.h"
 Bullet::Bullet(int nx, int ny)
 {
@@ -30,7 +32,7 @@ void Bullet::Render()
 	
 	if (animation_set->size() ==1)
 	{
-		animation_set->at(0)->Render(x + nx * 5, y);
+		animation_set->at(0)->Render(x + nx * 1, y-nyy*5);
 	}
 	else
 	{
@@ -115,7 +117,6 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
-		this->SetState(BULLET_STATE_DIE);
 		//
 		// Collision logic with other objects
 		//
@@ -127,71 +128,100 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				DebugOut(L"Enemy 1");
 				Enemy1* e1 = dynamic_cast<Enemy1*>(e->obj);
 				e1->SetState(ENEMY1_STATE_ITEM);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy2*>(e->obj))
 			{
 				Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
 				e2->SetState(ENEMY2_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy3*>(e->obj))
 			{
 				Enemy3* e3 = dynamic_cast<Enemy3*>(e->obj);
 				e3->SetState(ENEMY3_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy4*>(e->obj))
 			{
 				Enemy4* e4 = dynamic_cast<Enemy4*>(e->obj);
 				e4->SetState(ENEMY4_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy5*>(e->obj))
 			{
 				Enemy5* e5 = dynamic_cast<Enemy5*>(e->obj);
 				e5->SetState(ENEMY5_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy6*>(e->obj))
 			{
 				Enemy6* e6 = dynamic_cast<Enemy6*>(e->obj);
 				e6->SetState(ENEMY6_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy7*>(e->obj))
 			{
 				Enemy7* e7 = dynamic_cast<Enemy7*>(e->obj);
 				e7->SetState(ENEMY7_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy8*>(e->obj))
 			{
 				Enemy8* e8 = dynamic_cast<Enemy8*>(e->obj);
 				e8->SetState(ENEMY8_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy9*>(e->obj))
 			{
 				Enemy9* e9 = dynamic_cast<Enemy9*>(e->obj);
 				e9->SetState(ENEMY7_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<Enemy10*>(e->obj))
 			{
 				Enemy10* e10 = dynamic_cast<Enemy10*>(e->obj);
 				e10->SetState(ENEMY8_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<EnemyH*>(e->obj))
 			{
 				EnemyH* eH = dynamic_cast<EnemyH*>(e->obj);
 				eH->SetState(ENEMYH_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<FireEnemy*>(e->obj))
 			{
 				FireEnemy* enemyZiczacX = dynamic_cast<FireEnemy*>(e->obj);
 				enemyZiczacX->SetState(FIREENEMY_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<NotFireEnemy*>(e->obj))
 			{
 				NotFireEnemy* enemyZiczacY = dynamic_cast<NotFireEnemy*>(e->obj);
 				enemyZiczacY->SetState(NOTFIREENEMY_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
+			}
+			if (dynamic_cast<WallEnemy*>(e->obj))
+			{
+				 WallEnemy* e2 = dynamic_cast< WallEnemy*>(e->obj);
+				e2->SetState(WALLENEMY_STATE_DIE);
+				this->SetState(BULLET_STATE_DIE);
 			}
 			if (dynamic_cast<PenetrableBrick*>(e->obj))
 			{
 				x += dx;
 				y += dy;
+			}
+			if (dynamic_cast<Brick3*>(e->obj))
+			{
+				/*x += 0.01*dt;
+				y += 0.01*dt;*/
+				this->SetState(BULLET_STATE_DIE);
+			}
+			if (dynamic_cast<Brick2*>(e->obj))
+			{
+				this->SetState(BULLET_STATE_DIE);
 			}
 		}
 	}
