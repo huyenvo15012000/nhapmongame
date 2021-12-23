@@ -9,7 +9,7 @@ EnemyH::EnemyH()
 
 void EnemyH::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == ENEMYH_STATE_DIE)
+	if (state == STATE_DIE)
 	{
 		return;
 	}
@@ -38,11 +38,8 @@ void EnemyH::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void EnemyH::Render()
 {
 	//DebugOut(L"State ene: %d \n", state);
-	int ani = ENEMYH_ANI_IDLE;
-	if (state == ENEMYH_STATE_ITEM) {
-		ani = ENEMYH_ANI_ITEM;
-	}
-	if (state == ENEMYH_STATE_DIE)
+	int ani = get_hit;
+	if (state == STATE_DIE)
 	{
 		return;
 	}
@@ -56,8 +53,11 @@ void EnemyH::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ENEMYH_STATE_DIE:
+	case STATE_DIE:
 		DebugOut(L"EnemyH die");
+		break;
+	case STATE_ITEM:
+		vx = vy = 0;
 		break;
 	}
 }

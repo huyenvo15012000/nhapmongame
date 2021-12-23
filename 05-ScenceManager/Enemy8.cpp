@@ -7,6 +7,8 @@ Enemy8::Enemy8()
 
 void Enemy8::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == STATE_DIE)
+		return;
 	left = x;
 	top = y;
 	right = x + ENEMY8_BBOX_WIDTH;
@@ -39,8 +41,8 @@ void Enemy8::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Enemy8::Render()
 {
-	int ani = ENEMY8_ANI_WALKING;
-	if (state == ENEMY8_STATE_DIE) {
+	int ani = get_hit;
+	if (state == STATE_DIE) {
 		return;
 	}
 	else
@@ -54,12 +56,16 @@ void Enemy8::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ENEMY8_STATE_DIE:
+	case STATE_DIE:
 		vx = 0;
 		vy = 0;
 		break;
 	case ENEMY8_STATE_WALKING:
 		vx = ENEMY8_WALKING_SPEED;
-		vy = -ENEMY8_WALKING_SPEED
+		vy = -ENEMY8_WALKING_SPEED;
+		break;
+	case STATE_ITEM:
+		vx = vy = 0;
+		break;
 	}
 }

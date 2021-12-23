@@ -123,6 +123,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			/*
 			if (dynamic_cast<Enemy1*>(e->obj))
 			{
 				DebugOut(L"Enemy 1");
@@ -207,20 +208,26 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				 WallEnemy* e2 = dynamic_cast< WallEnemy*>(e->obj);
 				e2->SetState(WALLENEMY_STATE_DIE);
 				this->SetState(BULLET_STATE_DIE);
-			}
+			}*/
 			if (dynamic_cast<PenetrableBrick*>(e->obj))
 			{
 				x += dx;
 				y += dy;
+				this->SetState(BULLET_STATE_DIE);
 			}
-			if (dynamic_cast<Brick3*>(e->obj))
+			else if (dynamic_cast<Brick3*>(e->obj))
 			{
 				/*x += 0.01*dt;
 				y += 0.01*dt;*/
 				this->SetState(BULLET_STATE_DIE);
 			}
-			if (dynamic_cast<Brick2*>(e->obj))
+			else if (dynamic_cast<Brick2*>(e->obj))
 			{
+				this->SetState(BULLET_STATE_DIE);
+			}
+			else
+			{
+				e->obj->Hit();
 				this->SetState(BULLET_STATE_DIE);
 			}
 		}

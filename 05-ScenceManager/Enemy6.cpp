@@ -8,6 +8,8 @@ Enemy6::Enemy6()
 
 void Enemy6::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == STATE_DIE)
+		return;
 	left = x;
 	top = y;
 	right = x + ENEMY6_BBOX_WIDTH;
@@ -36,9 +38,9 @@ void Enemy6::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Enemy6::Render()
 {
-	int ani = ENEMY6_ANI_WALKING;
-	if (state == ENEMY6_STATE_DIE) {
-		ani = ENEMY6_ANI_DIE;
+	int ani = get_hit;
+	if (state == STATE_DIE) {
+		return;
 	}
 
 	animation_set->at(ani)->Render(x, y);
@@ -51,11 +53,15 @@ void Enemy6::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ENEMY6_STATE_DIE:
+	case STATE_DIE:
 		vx = 0;
 		vy = 0;
 		break;
 	case ENEMY6_STATE_WALKING:
 		vx = ENEMY6_WALKING_SPEED;
+		break;
+	case STATE_ITEM:
+		vx = vy = 0;
+		break;
 	}
 }

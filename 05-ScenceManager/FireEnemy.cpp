@@ -2,6 +2,7 @@
 #include "Brick2.h"
 #include "Utils.h"
 
+float u0, u1;
 FireEnemy::FireEnemy()
 {
 	state = FIREENEMY_STATE_IDLE;
@@ -9,7 +10,7 @@ FireEnemy::FireEnemy()
 
 void FireEnemy::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == FIREENEMY_STATE_DIE)
+	if (state == STATE_DIE)
 	{
 		return;
 	}
@@ -23,6 +24,11 @@ void FireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	float player_x, player_y;
+	for (int i = 0; i < bullets.size(); i++)
+		if (bullets[i]->GetState() == BULLET_STATE_DIE)
+			bullets.erase(bullets.begin() + i);
+	for (int i = 0; i < bullets.size(); i++)
+		bullets[i]->Update(dt, coObjects);
 	coObjects->at(coObjects->size() - 1)->GetPosition(player_x, player_y);
 	float distance = sqrt((player_x - x) * (player_x - x) + (player_y - y) * (player_y - y));
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -85,7 +91,13 @@ void FireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+	timecount++;
 
+	if (timecount >= 100)
+	{
+		Fire();
+		timecount = 0;
+	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	//DebugOut(L"X: %d, Y: %d \n", int(x), int(y));
@@ -96,25 +108,26 @@ void FireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void FireEnemy::MoveToPlayer(float a, float b)
 {
 	//DebugOut(L"Move X: %f, Y: %f \n", vx, vy);
-	float u0 = a - x;
-	float u1 = b - y;
+	u0 = a - x;
+	u1 = b - y;
 	x += vx * u0;
 	y += vy * u1;
 }
 void FireEnemy::Render()
 {
 	//DebugOut(L"State ene: %d \n", state);
-	int ani = FIREENEMY_ANI_IDLE;
+	int ani = get_hit;
 	/*if (state == FIREENEMY_STATE_ITEM) {
 		ani = FIREENEMY_ANI_ITEM;
-	}
-	if (state == FIREENEMY_STATE_DIE)
+	}*/
+	if (state == STATE_DIE)
 	{
 		return;
-	}*/
+	}
 	RenderBoundingBox();
 	animation_set->at(ani)->Render(x, y);
-
+	for (int i = 0; i < bullets.size();i++)
+		bullets[i]->Render();
 }
 
 void FireEnemy::SetState(int state)
@@ -125,5 +138,17 @@ void FireEnemy::SetState(int state)
 	case FIREENEMY_STATE_DIE:
 		DebugOut(L"FireEnemy die");
 		break;
+	case STATE_ITEM:
+		vx = vy = 0;
+		break;
 	}
+}
+void FireEnemy::Fire()
+{
+	EnemyBullet* newBullet;
+	newBullet = new EnemyBullet(u0/abs(u0), u1/abs(u1));
+	newBullet->SetAnimationSet(bullet->animation_set);
+	newBullet->SetPosition(x, y);
+	bullets.push_back(newBullet);
+	DebugOut(L"Bulet Fire \n", bullets.size());
 }

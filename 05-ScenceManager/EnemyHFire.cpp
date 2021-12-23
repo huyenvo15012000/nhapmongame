@@ -10,7 +10,7 @@ EnemyHFire::EnemyHFire()
 
 void EnemyHFire::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == ENEMYHFIRE_STATE_DIE)
+	if (state == STATE_DIE)
 	{
 		return;
 	}
@@ -54,11 +54,8 @@ void EnemyHFire::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void EnemyHFire::Render()
 {
 	//DebugOut(L"State ene: %d \n", state);
-	int ani = ENEMYHFIRE_ANI_IDLE;
-	if (state == ENEMYHFIRE_STATE_ITEM) {
-		ani = ENEMYHFIRE_ANI_ITEM;
-	}
-	if (state == ENEMYHFIRE_STATE_DIE)
+	int ani = get_hit;
+	if (state == STATE_DIE)
 	{
 		return;
 	}
@@ -74,8 +71,11 @@ void EnemyHFire::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ENEMYHFIRE_STATE_DIE:
+	case STATE_DIE:
 		DebugOut(L"EnemyHFire die");
+		break;
+	case STATE_ITEM:
+		vx = vy = 0;
 		break;
 	}
 }
@@ -83,7 +83,7 @@ void EnemyHFire::SetState(int state)
 void EnemyHFire::Fire()
 {
 	EnemyBullet* newBullet;
-	newBullet = new EnemyBullet(0,0);
+	newBullet = new EnemyBullet(0,-1);
 	newBullet->SetAnimationSet(bullet->animation_set);
 	newBullet->SetPosition(x, y);
 	bullets.push_back(newBullet);

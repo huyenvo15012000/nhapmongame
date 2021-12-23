@@ -24,7 +24,7 @@ bool Quadtree::IsContain(LPGAMEOBJECT entity)
     float l, t, r, b, x, y, w, h;
     entity->GetBoundingBox(l, t, r, b);
     x = l;
-    y = t;
+    y = t+10;
     w = r - l;
     h = b - t;
     return !(l + w < m_region->x ||

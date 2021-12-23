@@ -6,18 +6,16 @@ EnemyBullet::EnemyBullet(int nx, int ny)
 {
 	this->nyy = ny;
 	this->nx = nx;
-	if (nyy != 0)
-		vy = nyy * 0.1f;
-	else vx = nx * 0.1f;
+	vy = nyy * 0.09f;
+	vx = nx * 0.09f;
 }
 void EnemyBullet::Render()
 {
 	///*if (nyy != 0)
 	//	animation_set->at(1)->Render(x - 5, y + 20);
 	//else*/
-	animation_set->at(0)->Render(x + nx * 5, y);
+	animation_set->at(0)->Render(x + nx * 5, y+nyy*5);
 	RenderBoundingBox();
-	DebugOut(L"EB x: %f, EB y: %f \n", x, y);
 }
 
 
@@ -25,16 +23,8 @@ void EnemyBullet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	if (nyy != 0)
-	{
-		r = x + BULLET_WIDTH_U;
-		b = y + BULLET_HEIGHT_U;
-	}
-	else
-	{
-		r = x + BULLET_WIDTH_H;
-		b = y + BULLET_HEIGHT_H;
-	}
+	r = x + BULLET_WIDTH;
+	b = y + BULLET_HEIGHT;
 }
 
 void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -64,8 +54,8 @@ void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		//x += 0.1*dt;
-		y += -0.09*dt;
+		x += vx*dt;
+		y += vy*dt;
 		if (y < 0)
 			this->SetState(BULLET_STATE_DIE);
 	}/*

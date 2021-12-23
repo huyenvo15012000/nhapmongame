@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "EnemyBullet.h"
 
 #define FIREENEMY_BBOX_WIDTH 20
 #define FIREENEMY_BBOX_HEIGHT 20
@@ -16,7 +17,10 @@
 class FireEnemy : public CGameObject
 {
 	int x0, y0 = 0;
+	EnemyBullet* bullet;
+	int timecount;
 	int untouchable;
+	vector<LPGAMEOBJECT> bullets;
 	DWORD untouchable_start;
 	float vx;
 	float vy = ENEMY_SPEED;
@@ -26,6 +30,8 @@ class FireEnemy : public CGameObject
 
 public:
 	FireEnemy();
+	void Fire();
+	void AddBullet(EnemyBullet* bulletF) { bullet = bulletF; };
 	virtual void SetState(int state);
 	void MoveToPlayer(float a, float b);
 };

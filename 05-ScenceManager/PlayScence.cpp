@@ -302,6 +302,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_FIREENEMY:
 		obj = new FireEnemy();
+		dynamic_cast<FireEnemy*>(obj)->AddBullet(bullet);
 		break;
 	case OBJECT_TYPE_NOTFIREENEMY:
 		obj = new NotFireEnemy();
@@ -359,6 +360,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			objects.push_back(obj);
 			break;
 	}
+
+	//obj->SetHit();
 	//objects.push_back(obj);
 }
 

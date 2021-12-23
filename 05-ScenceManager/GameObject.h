@@ -13,7 +13,8 @@ using namespace std;
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
 #define BRICK_BBOX_WIDTH			16
 #define BRICK_BBOX_HEIGHT 			16
-
+#define STATE_DIE	9999
+#define STATE_ITEM	8888
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
@@ -60,6 +61,8 @@ public:
 	int nx;
 	bool isEnable = true;
 	int state;
+	int hit_times;
+	int get_hit = 0;
 	DWORD dt;
 
 	LPANIMATION_SET animation_set;
@@ -74,8 +77,9 @@ public:
 	int GetState() { return this->state; }
 	void Disable() {isEnable = false; }
 	void RenderBoundingBox();
-
-	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
+	void Hit() { get_hit++; if (animation_set->size() > 1 && get_hit == animation_set->size() - 1) SetState(STATE_ITEM); if (get_hit == animation_set->size()) SetState(STATE_DIE); };
+	void SetHit() { hit_times = animation_set->size(); }
+	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; /*SetHit();*/ }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
