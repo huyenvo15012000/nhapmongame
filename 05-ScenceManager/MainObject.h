@@ -7,9 +7,10 @@
 #include "Rect.h"
 #include "Point.h"
 #include "Bullet.h"
+#include "HealthBar.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.15f
-#define MAINOBJECT_JUMP_SPEED_Y		0.5f
+#define MAINOBJECT_JUMP_SPEED_Y		5.0f
 #define MAINOBJECT_GRAVITY			-0.005f
 
 #define MAINOBJECT_STATE_IDLE			0
@@ -32,6 +33,9 @@
 #define JASON_ANI_BACK		1
 #define MAINOBJECT_ANI_WALKING_RIGHT	3
 #define MAINOBJECT_ANI_WALKING_LEFT		2
+#define MAINOBJECT_ANI_FIRE_UP_LEFT	2
+#define MAINOBJECT_ANI_FIRE_UP_RIGHT	3
+#define BULLET_NUMBER	6
 
 
 #define MAINOBJECT_HEIGHT				30
@@ -55,6 +59,7 @@ protected:
 	Wheel* WheelLeft, * WheelRight;
 	Gun* MainGun;
 	Connector* connector;
+	HealthBar* healthbar;
 	Bullet* bullet;
 	int untouchable;
 	DWORD untouchable_start;
@@ -76,6 +81,7 @@ public:
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
 	void addBullet(Bullet* bulletF);
+	void addHealthBar(HealthBar* h) { this->healthbar = h; };
 
 	void Fire();
 

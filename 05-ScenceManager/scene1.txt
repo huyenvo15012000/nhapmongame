@@ -6,9 +6,27 @@
 50	textures\enemies3.png	255	255	255
 5	textures\jason.jpeg	255	255	255
 6	textures\items.png	255	255	255
-
+10	textures\healthbar.jpg	255	255	255
+11	textures\healthbar1.jpg	255	255	255
+12	textures\healthbar2.jpg	255	255	255
+13	textures\healthbar3.jpg	255	255	255
+14	textures\healthbar4.jpg	255	255	255
+15	textures\healthbar5.jpg	255	255	255
+16	textures\healthbar6.jpg	255	255	255
+17	textures\healthbar7.jpg	255	255	255
+18	textures\healthbar8.jpg	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+#healthbar
+1	0	0	8	48	10
+2	0	0	8	48	11
+3	0	0	8	48	12
+4	0	0	8	48	13
+5	0	0	8	48	14
+6	0	0	8	48	15
+7	0	0	8	48	16
+8	0	0	8	48	17
+9	0	0	8	48	18
 #Bullet
 123	91	20	115	28	100
 124	117	20	123	42	100
@@ -25,7 +43,7 @@
 70001	39	3	55	11	100
 70002	355	3	371	11	101
 70003	73	3	89	19	100
-70004	108	3	124	19	100
+70004	321	4	337	19	101
 #RightWheel
 30001	390	21	398	29	101
 30002	399	21	407	29	101
@@ -212,6 +230,16 @@
 101109	1632	1376	1696	1448	4
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+#healthbar
+51	1	0
+11	2	0
+12	3	0
+13	4	0
+14	5	0
+15	6	0
+16	7	0
+17	8	0
+18	9	0
 #enemy1
 9100	8000	100
 9101	8100	100
@@ -426,6 +454,8 @@
 2	50	301	401
 #connector
 3	60
+#healthbar
+20	51	11	12	13	14	15	16	17	18
 #portal
 301107	201107
 # BRICK 
@@ -786,3 +816,5 @@
 100	40	16	3000099	64	100	2
 #Background
 20	0	484	4
+#healbar
+888	-100	-10	20

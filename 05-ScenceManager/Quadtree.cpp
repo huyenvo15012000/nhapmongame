@@ -1,4 +1,5 @@
 #include "Quadtree.h"
+#include "MainObject.h"
 void Quadtree::Clear()
 {
     // Clear all nodes
@@ -24,9 +25,17 @@ bool Quadtree::IsContain(LPGAMEOBJECT entity)
     float l, t, r, b, x, y, w, h;
     entity->GetBoundingBox(l, t, r, b);
     x = l;
-    y = t+10;
-    w = r - l;
-    h = b - t;
+    y = t;
+    if (dynamic_cast<CMainObject*>(entity))
+    {
+        w = r - l+150;
+        h = b - t+150;
+    }
+    else
+    {
+        w = r - l;
+        h = b - t;
+    }
     return !(l + w < m_region->x ||
         y + h < m_region->y ||
         x > m_region->x + m_region->getWidth() ||

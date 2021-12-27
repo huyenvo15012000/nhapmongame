@@ -19,9 +19,14 @@ class Bullet : public CGameObject
 	int untouchable;
 	DWORD untouchable_start;
 	int nx, nyy;
+	float x0, y1;
+	float v1, v2;
+	int t;
 public:
+
 	bool IsJason = false;
-	Bullet(int nx, int ny);
+	Bullet(int nx, int ny, int v);
+	void SetT(int v) { t = v; };
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

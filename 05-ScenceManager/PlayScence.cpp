@@ -31,6 +31,7 @@
 #include "WallEnemy.h"
 #include "EnemyHFire.h"
 #include "EnemyBullet.h"
+#include "HealthBar.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -51,6 +52,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
+#define OBJECT_TYPE_HEALTHBAR	888
 #define OBJECT_TYPE_MAINOBJECT	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_BRICK2	1001
@@ -256,6 +258,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CONNECTOR:
 		obj = new Connector();
 		player->addConnector((Connector*)obj); break;
+	case OBJECT_TYPE_HEALTHBAR:
+			obj = new HealthBar();
+			player->addHealthBar((HealthBar*)obj); break;
 	case OBJECT_TYPE_WHEEL:
 		obj = new Wheel();
 		player->addWheel((Wheel*)obj); break;
@@ -312,7 +317,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bullet = (EnemyBullet*)obj;
 		break;
 	case OBJECT_TYPE_BULLET:
-		obj = new Bullet(0, 0);
+		obj = new Bullet(0, 0,0);
 		player->addBullet((Bullet*)obj);
 		break;
 	case OBJECT_TYPE_PORTAL:
@@ -349,7 +354,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BULLET:
 			break;
 		case OBJECT_TYPE_BULLETENEMY:
-			obj->Render();
+			break;
+		case OBJECT_TYPE_HEALTHBAR:
 			break;
 		/*case OBJECT_TYPE_PENETRABLEBRICK:
 			p->push_back(obj);
@@ -486,6 +492,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:		
 		main->Fire();
 		break;
+	case DIK_SPACE:
+		main->SetState(MAINOBJECT_STATE_JUMP);
+		break;
+	default:
+		main->SetState(MAINOBJECT_STATE_IDLE);
 	}
 }
 
@@ -510,8 +521,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		main->SetState(MAINOBJECT_STATE_WALKING_UP);
 	else if (game->IsKeyDown(DIK_DOWN))
 		main->SetState(MAINOBJECT_STATE_WALKING_DOWN);
-	else if (game->IsKeyDown(DIK_SPACE))
-		main->SetState(MAINOBJECT_STATE_JUMP);
+	/*else if (game->IsKeyDown(DIK_SPACE))
+		main->SetState(MAINOBJECT_STATE_JUMP);*/
 	else if (game->IsKeyDown(DIK_W))
 		main->SetState(MAINOBJECT_STATE_FIRE_UP);
 	else

@@ -23,14 +23,16 @@ void EnemyH::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 	x += vx * dt;
-	if (x < 30 && vx < 0)
+	if (x0 == 0)
+		x0 = x;
+	if (x < x0 - 30 && vx < 0)
 	{
-		x = 30;
+		x = x0 - 30;
 		vx = -vx;
 	}
-	if (x > 200 && vx > 0)
+	if (x > x0+200 && vx > 0)
 	{
-		x = 200;
+		x = x0+200;
 		vx = -vx;
 	}
 }

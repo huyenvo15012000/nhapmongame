@@ -9,7 +9,26 @@
 7	textures\lastmap.png	255	255	255
 8	textures\map2.png	255	255	255
 9	textures\walldie.png	255	255	255
+10	textures\healthbar.jpg	255	255	255
+11	textures\healthbar1.jpg	255	255	255
+12	textures\healthbar2.jpg	255	255	255
+13	textures\healthbar3.jpg	255	255	255
+14	textures\healthbar4.jpg	255	255	255
+15	textures\healthbar5.jpg	255	255	255
+16	textures\healthbar6.jpg	255	255	255
+17	textures\healthbar7.jpg	255	255	255
+18	textures\healthbar8.jpg	255	255	255
 [SPRITES]
+#healthbar
+1	0	0	8	48	10
+2	0	0	8	48	11
+3	0	0	8	48	12
+4	0	0	8	48	13
+5	0	0	8	48	14
+6	0	0	8	48	15
+7	0	0	8	48	16
+8	0	0	8	48	17
+9	0	0	8	48	18
 #Wallenemy
 10026	464	1424	480	1440	8
 10027	51	306	67	322	9
@@ -410,7 +429,19 @@
 9116	8042	100
 #Bullet2	
 9117	8043	100	8044	100	8045	100
+#healthbar
+50	1	0
+11	2	0
+12	3	0
+13	4	0
+14	5	0
+15	6	0
+16	7	0
+17	8	0
+18	9	0
 [ANIMATION_SETS]
+#healthbar
+20	50	11	12	13	14	15	16	17	18
 #Wallenemy
 9927	9925	9926
 9928	9925	9926	9927
@@ -2366,3 +2397,5 @@
 999	464	512	9927
 999	464	592	9927
 999	464	576	9927
+#healbar
+888	-100	-10	20

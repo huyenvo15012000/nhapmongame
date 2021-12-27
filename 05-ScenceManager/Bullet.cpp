@@ -18,13 +18,30 @@
 #include "Brick3.h"
 #include "Brick2.h"
 #include "Brick.h"
-Bullet::Bullet(int nx, int ny)
+
+
+Bullet::Bullet(int nx, int ny, int v)
 {
+	this->t = v;
 	this->nyy = ny;
 	this->nx = nx;
 	if (nyy != 0)
+	{
 		vy = nyy * 0.1f;
-	else vx = nx * 0.1f;
+		if (t == 0)
+			v1 = 1;
+		else
+			v1 = -1;
+	}		
+	else
+
+	{
+		if (t == 0)
+			v2 = 1;
+		else
+			v2 = -1;
+		vx = nx * 0.1f;
+	}
 }
 void Bullet::Render()
 {
@@ -74,6 +91,10 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//dx = dy = 0;
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
+	if (x0==0)
+		x0 = x;
+	if (y1==0) 
+		y1 = y;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -94,8 +115,35 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		x += dx;
-		y += dy;
+		if (this->animation_set->size()>1)
+		{
+			x += dx;
+			y += dy;
+		}
+		else
+		{
+			if (vy == 0)
+			{
+				x += dx;
+				y += v2;
+				if (y > y1 + 20)
+					v2 = -v2;
+				if (y < y1 - 20)
+					v2 = -v2;
+				//DebugOut(L"V2: %d", int(v2));
+			}
+			else
+			{
+				y += dy;
+				x += v1;
+				if (x > x0 + 20)
+					v1 = -v1;
+				if (x < x0 - 20)
+					v1 = -v1;
+				DebugOut(L"V1: %d", int(v1));
+
+			}
+		}
 	}
 	else
 	{
