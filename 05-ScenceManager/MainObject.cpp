@@ -12,6 +12,7 @@
 #include "Enemy7.h"
 #include "Portal.h"
 #include "Game.h"
+#include "WallEnemy.h"
 
 #define ID_TEX_MAINOBJECT_RIGHT			10
 #define ID_TEX_MAINOBJECT_LEFT 			11
@@ -38,6 +39,10 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
+	if (get_hit == MAINOBJECT_HEALTH)
+		SetState(MAINOBJECT_STATE_DIE);
+	if (state == MAINOBJECT_STATE_DIE)
+		return;
 	for (int i = 0; i < bullets.size(); i++)
 		if (bullets[i]->GetState() == BULLET_STATE_DIE)
 			bullets.erase(bullets.begin() + i);
@@ -103,8 +108,15 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<Enemy1*>(e->obj))
 				{
 					Enemy1* e2 = dynamic_cast<Enemy1*>(e->obj);
-					e2->SetState(ENEMY1_STATE_DIE);
-					this->Hit();
+					if (e2->GetState() == STATE_ITEM)
+					{
+						this->get_hit--;
+						e2->Hit();
+						if (get_hit < 0)
+							get_hit = 0;
+					}
+					else
+						this->Hit();
 				}
 				else if (dynamic_cast<Enemy2*>(e->obj))
 				{
@@ -113,9 +125,17 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
-					DebugOut(L"Okie \n");
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				}
+				else if (dynamic_cast<WallEnemy*>(e->obj))
+				{
+					WallEnemy* p = dynamic_cast<WallEnemy*>(e->obj);
+					if (p->GetState() == STATE_ITEM || p->GetState() == STATE_DIE)
+					{
+						x += dx;
+						y += dy;
+					}
 				}
 			}
 			catch (exception e) {
@@ -131,86 +151,99 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMainObject::Render()
 {
-	int ani;
-	DebugOut(L"Vx: %f, vy: %f", vx, vy);
-	if (nx > 0)
+	if (state == MAINOBJECT_STATE_DIE)
 	{
-		ani = MAINOBJECT_ANI_WALKING_RIGHT;
-		old_ani = ani;
-		if (!IsJason())
-		{
-			ani = MAINOBJECT_ANI_IDLE_RIGHT;
-			if (bullet_ny == 0)
-			{
-				MainGun->Render(x + 15, y);
-				MainGun->SetState(GUN_STATE_RIGHT);	
-				WheelLeft->Render(x, y - 8);
-				WheelRight->Render(x + 14, y - 8);
-				connector->Render(x + 8, y - 8);
-				animation_set->at(MAINOBJECT_ANI_IDLE_RIGHT)->Render(x, y, 255);
-				bullet_x = x + 12;
-				bullet_y = y;
-			}
-			else
-			{
-				MainGun->SetState(GUN_STATE_UP);
-				MainGun->Render(x+7, y + 17);
-				WheelLeft->Render(x+3, y - 8);
-				WheelRight->Render(x + 13, y - 8);
-				connector->Render(x + 8, y - 1);
-				animation_set->at(MAINOBJECT_ANI_FIRE_UP_RIGHT)->Render(x, y+10, 255);
-				bullet_x = x + 7;
-				bullet_y = y+17;
-			}
-		}
+		RenderBoundingBox();
 	}
 	else
-		if (nx < 0)
+	{
+		int ani;
+		DebugOut(L"Vx: %f, vy: %f", vx, vy);
+		if (nx > 0)
 		{
-			ani = MAINOBJECT_ANI_WALKING_LEFT;
+			ani = MAINOBJECT_ANI_WALKING_RIGHT;
 			old_ani = ani;
 			if (!IsJason())
 			{
+				ani = MAINOBJECT_ANI_IDLE_RIGHT;
 				if (bullet_ny == 0)
 				{
-					ani = MAINOBJECT_ANI_IDLE_LEFT;
-					MainGun->Render(x - 8, y);
-					MainGun->SetState(GUN_STATE_LEFT);
-					WheelLeft->Render(x - 4, y - 8);
-					WheelRight->Render(x + 9, y - 8);
-					connector->Render(x + 2, y - 8);
-					animation_set->at(MAINOBJECT_ANI_IDLE_LEFT)->Render(x, y, 255);
-					bullet_x = x-8;
+					MainGun->Render(x + 15, y);
+					MainGun->SetState(GUN_STATE_RIGHT);
+					WheelLeft->Render(x, y - 8);
+					WheelRight->Render(x + 14, y - 8);
+					connector->Render(x + 8, y - 8);
+					animation_set->at(MAINOBJECT_ANI_IDLE_RIGHT)->Render(x, y, 255);
+					bullet_x = x + 12;
 					bullet_y = y;
 				}
 				else
 				{
 					MainGun->SetState(GUN_STATE_UP);
-					MainGun->Render(x, y + 13);
-					WheelLeft->Render(x -4, y - 8);
-					WheelRight->Render(x + 6, y - 8);
-					connector->Render(x , y - 2);
-					animation_set->at(MAINOBJECT_ANI_FIRE_UP_LEFT)->Render(x, y+8, 255);
-					bullet_x = x+3;
-					bullet_y = y+13;
+					MainGun->Render(x + 7, y + 17);
+					WheelLeft->Render(x + 3, y - 8);
+					WheelRight->Render(x + 13, y - 8);
+					connector->Render(x + 8, y - 1);
+					animation_set->at(MAINOBJECT_ANI_FIRE_UP_RIGHT)->Render(x, y + 10, 255);
+					bullet_x = x + 7;
+					bullet_y = y + 17;
 				}
 			}
 		}
-	int alpha = 255;
-	if (untouchable) alpha = 128;
-	if (nyy > 0)
-		ani = JASON_ANI_BACK;
-	if (nyy < 0)
-		ani = JASON_ANI_IDLE;
-	if (IsJason())
-		animation_set->at(ani)->Render(x, y, alpha);
+		else
+			if (nx < 0)
+			{
+				ani = MAINOBJECT_ANI_WALKING_LEFT;
+				old_ani = ani;
+				if (!IsJason())
+				{
+					if (bullet_ny == 0)
+					{
+						ani = MAINOBJECT_ANI_IDLE_LEFT;
+						MainGun->Render(x - 8, y);
+						MainGun->SetState(GUN_STATE_LEFT);
+						WheelLeft->Render(x - 4, y - 8);
+						WheelRight->Render(x + 9, y - 8);
+						connector->Render(x + 2, y - 8);
+						animation_set->at(MAINOBJECT_ANI_IDLE_LEFT)->Render(x, y, 255);
+						bullet_x = x - 8;
+						bullet_y = y;
+					}
+					else
+					{
+						MainGun->SetState(GUN_STATE_UP);
+						MainGun->Render(x, y + 13);
+						WheelLeft->Render(x - 4, y - 8);
+						WheelRight->Render(x + 6, y - 8);
+						connector->Render(x, y - 2);
+						animation_set->at(MAINOBJECT_ANI_FIRE_UP_LEFT)->Render(x, y + 8, 255);
+						bullet_x = x + 3;
+						bullet_y = y + 13;
+					}
+				}
+			}
+		int alpha = 255;
+		if (untouchable) alpha = 128;
+		if (nyy > 0)
+			ani = JASON_ANI_BACK;
+		if (nyy < 0)
+			ani = JASON_ANI_IDLE;
+		if (IsJason())
+			animation_set->at(ani)->Render(x, y, alpha);
 
-	for (int i = 0; i < bullets.size();i++)
-		bullets[i]->Render();
-	if (x-160<0)
-		healthbar->Render(0, y, get_hit);
-	else healthbar->Render(x - 160, y, get_hit);
-	RenderBoundingBox();
+		for (int i = 0; i < bullets.size();i++)
+			bullets[i]->Render();
+		float h_x, h_y;
+		if (x - 160 < 0)
+			h_x = 0;
+		else h_x = x - 160;
+		if (y - 90 < 0)
+			h_y = 0;
+		else h_y = y - 90;
+		healthbar->Render(h_x, h_y, get_hit);
+		RenderBoundingBox();
+	}
+	
 }
 
 void CMainObject::SetState(int state)
@@ -378,7 +411,7 @@ void CMainObject::Fire()
 			Bullet* newBullet;
 			newBullet = new Bullet(nx, nyy,0);
 			newBullet->SetAnimationSet(bullet->animation_set);
-			newBullet->SetPosition(x+va*i*10, y-i*vb*10);
+			newBullet->SetPosition(x+va*i*10, y+i*vb*10);
 			bullets.push_back(newBullet);
 		}
 		for (int i = 0; i < BULLET_NUMBER / 2; i++)
@@ -386,7 +419,7 @@ void CMainObject::Fire()
 			Bullet* newBullet;
 			newBullet = new Bullet(nx, nyy,-1);
 			newBullet->SetAnimationSet(bullet->animation_set);
-			newBullet->SetPosition(x + va * i * 20, y - i * vb*20);
+			newBullet->SetPosition(x + va * i * 20, y + i * vb*20);
 			bullets.push_back(newBullet);
 		}
 	}

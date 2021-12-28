@@ -18,7 +18,7 @@
 #include "Brick3.h"
 #include "Brick2.h"
 #include "Brick.h"
-
+#include "MainObject.h"
 
 Bullet::Bullet(int nx, int ny, int v)
 {
@@ -91,10 +91,6 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//dx = dy = 0;
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-	if (x0==0)
-		x0 = x;
-	if (y1==0) 
-		y1 = y;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -115,35 +111,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		if (this->animation_set->size()>1)
-		{
-			x += dx;
-			y += dy;
-		}
-		else
-		{
-			if (vy == 0)
-			{
-				x += dx;
-				y += v2;
-				if (y > y1 + 20)
-					v2 = -v2;
-				if (y < y1 - 20)
-					v2 = -v2;
-				//DebugOut(L"V2: %d", int(v2));
-			}
-			else
-			{
-				y += dy;
-				x += v1;
-				if (x > x0 + 20)
-					v1 = -v1;
-				if (x < x0 - 20)
-					v1 = -v1;
-				DebugOut(L"V1: %d", int(v1));
-
-			}
-		}
+		Move();
 	}
 	else
 	{
@@ -162,7 +130,8 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
-
+		float vx0 = vx;
+		float vy0 = vy;
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 		//
@@ -259,8 +228,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}*/
 			if (dynamic_cast<PenetrableBrick*>(e->obj))
 			{
-				x += dx;
-				y += dy;
+				Move();
 				this->SetState(BULLET_STATE_DIE);
 			}
 			else if (dynamic_cast<Brick3*>(e->obj))
@@ -273,6 +241,28 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				this->SetState(BULLET_STATE_DIE);
 			}
+			else if (dynamic_cast<CMainObject*>(e->obj))
+			{
+				vx = vx0;
+				vy = vy0;
+				Move();
+			}
+			else if (dynamic_cast<WallEnemy*>(e->obj))
+			{
+				WallEnemy* e2 = dynamic_cast<WallEnemy*>(e->obj);
+				if (e2->GetState() != STATE_ITEM )
+				{
+					e2->Hit();
+					this->SetState(BULLET_STATE_DIE);
+				}
+				else
+				{
+					vx = vx0;
+					vy = vy0;
+					Move();
+					//this->SetState(BULLET_STATE_DIE);
+				}
+			}
 			else
 			{
 				e->obj->Hit();
@@ -284,6 +274,41 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	//y += 0.1;
+}
+void Bullet::Move()
+{
+	if (x0 == 0)
+	x0 = x;
+	if (y1 == 0)
+	y1 = y;
+	if (this->animation_set->size() > 1)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+		if (vy == 0)
+		{
+			x += dx;
+			y += v2;
+			if (y > y1 + 20)
+				v2 = -v2;
+			if (y < y1 - 20)
+				v2 = -v2;
+			//DebugOut(L"V2: %d", int(v2));
+		}
+		else
+		{
+			y += dy;
+			x += v1;
+			if (x > x0 + 20)
+				v1 = -v1;
+			if (x < x0 - 20)
+				v1 = -v1;
+
+		}
+	}
 }
 void Bullet::SetState(int state)
 {

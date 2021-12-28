@@ -7,12 +7,10 @@ WallEnemy::WallEnemy()
 
 void WallEnemy::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state ==STATE_DIE)
-		return;
-	left = x;
-	top = y;
-	right = x + WALLENEMY_BBOX_WIDTH;
-	bottom = y + WALLENEMY_BBOX_HEIGHT;
+		left = x;
+		top = y;
+		right = x + WALLENEMY_BBOX_WIDTH;
+		bottom = y + WALLENEMY_BBOX_HEIGHT;
 }
 
 void WallEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

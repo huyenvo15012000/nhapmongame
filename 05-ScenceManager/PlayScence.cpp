@@ -454,6 +454,9 @@ void CPlayScene::Render()
 {
 	if (background)
 		background->Render();
+	for (int i = 0; i < coObj->size(); i++)
+		if (coObj->at(i)->IsEnable() && coObj->at(i)->GetState() == STATE_ITEM)
+			coObj->at(i)->Render();
 	if (player)
 		player->Render();
 	/*for (int i = 0; i < p->size(); i++)
@@ -462,10 +465,10 @@ void CPlayScene::Render()
 		else
 			p->erase(p->begin() + i);*/
 	for (int i = 0; i < coObj->size(); i++)
-		if (coObj->at(i)->IsEnable())
+		if (coObj->at(i)->IsEnable() && coObj->at(i)->GetState() != STATE_ITEM && coObj->at(i)->GetState() != STATE_DIE)
 			coObj->at(i)->Render();
 		else
-			coObj->erase(coObj->begin() + i);
+			if (!coObj->at(i)->IsEnable()) coObj->erase(coObj->begin() + i);
 }
 
 /*

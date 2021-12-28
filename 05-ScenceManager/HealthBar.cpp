@@ -16,6 +16,7 @@ void HealthBar::Render()
 void HealthBar::Render(float a, float b, int ani_id)
 {
 	int alpha = 255;
+	if (ani_id<animation_set->size())
 	animation_set->at(ani_id)->Render(a, b, alpha);
 
 	//RenderBoundingBox();

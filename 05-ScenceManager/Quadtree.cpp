@@ -28,8 +28,8 @@ bool Quadtree::IsContain(LPGAMEOBJECT entity)
     y = t;
     if (dynamic_cast<CMainObject*>(entity))
     {
-        w = r - l+150;
-        h = b - t+150;
+        w = r - l+250;
+        h = b - t+250;
     }
     else
     {
