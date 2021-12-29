@@ -44,7 +44,7 @@ void NotFireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (coEvents.size() == 0)
 	{
 		vx = vy = ENEMY_SPEED;
-		if (distance <= 100)
+		if (distance <= 100 && state != STATE_ITEM)
 			MoveToPlayer(player_x, player_y);
 	}
 	else

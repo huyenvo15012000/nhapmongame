@@ -12,6 +12,7 @@
 #define FIREENEMY_ANI_ITEM 1
 #define FIREENEMY_ANI_IDLE 0
 #define MAINOBJECT_UNTOUCHABLE_TIME 			1000
+#define FIRE_TIME	100
 
 #define ENEMY_SPEED 0.007f
 class FireEnemy : public CGameObject

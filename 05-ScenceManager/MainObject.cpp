@@ -2,6 +2,8 @@
 #include "Textures.h"
 #include "Utils.h"
 #include "Brick.h"
+#include "Brick2.h"
+#include "Brick3.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
 #include "PenetrableBrick.h"
@@ -32,7 +34,6 @@ CMainObject::CMainObject() {
 	WheelRight = new Wheel();
 	this->MainGun = new Gun();
 	connector = new Connector();
-	healthbar = new HealthBar();
 	bullet = new Bullet(nx, bullet_ny,0);
 
 }
@@ -107,33 +108,9 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x += dx;
 					y += dy;
 				}
-				else if (dynamic_cast<Enemy1*>(e->obj))
+				else if (dynamic_cast<CBrick*>(e->obj) || dynamic_cast<Brick2*>(e->obj) || dynamic_cast<Brick3*>(e->obj))
 				{
-					Enemy1* e2 = dynamic_cast<Enemy1*>(e->obj);
-					if (e2->GetState() == STATE_ITEM)
-					{
-						
-						this->get_hit--;
-						e2->Hit();
-						if (get_hit < 0)
-							get_hit = 0;
-					}
-					else
-						if (touchable > 80)
-						{
-							touchable = 0;
-							this->Hit();
-						}
-				}
-				else if (dynamic_cast<Enemy2*>(e->obj))
-				{
-					Enemy2* e2 = dynamic_cast<Enemy2*>(e->obj);
-					this->Hit();
-				}
-				else if (dynamic_cast<CPortal*>(e->obj))
-				{
-					CPortal* p = dynamic_cast<CPortal*>(e->obj);
-					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+
 				}
 				else if (dynamic_cast<WallEnemy*>(e->obj))
 				{
@@ -143,6 +120,31 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						x += dx;
 						y += dy;
 					}
+				}
+				else if (dynamic_cast<CPortal*>(e->obj))
+				{
+					CPortal* p = dynamic_cast<CPortal*>(e->obj);
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				}
+				else
+				{
+					switch (e->obj->GetState())
+					{
+					case STATE_ITEM:
+						this->get_hit--;
+						e->obj->Hit();
+						if (get_hit < 0)
+							get_hit = 0;
+						break;
+					default:
+						if (touchable > 80)
+						{
+							touchable = 0;
+							this->Hit();
+						}
+						break;
+					}			
+						
 				}
 			}
 			catch (exception e) {
@@ -237,17 +239,8 @@ void CMainObject::Render()
 			ani = JASON_ANI_IDLE;
 		if (IsJason())
 			animation_set->at(ani)->Render(x, y, alpha);
-
 		for (int i = 0; i < bullets.size();i++)
 			bullets[i]->Render();
-		float h_x, h_y;
-		if (x - 160 < 0)
-			h_x = 0;
-		else h_x = x - 160;
-		if (y - 90 < 0)
-			h_y = 0;
-		else h_y = y - 90;
-		healthbar->Render(h_x, h_y, get_hit);
 		RenderBoundingBox();
 	}
 	

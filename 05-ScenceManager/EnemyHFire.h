@@ -12,6 +12,7 @@
 #define ENEMYHFIRE_ANI_ITEM 1
 #define ENEMYHFIRE_ANI_IDLE 0
 #define ENEMYHFIRE_SPEED 0.1f
+#define FIRE_TIME	100
 class EnemyHFire : public CGameObject
 {
 	int untouchable;

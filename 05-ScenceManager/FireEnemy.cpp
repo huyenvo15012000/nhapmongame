@@ -46,7 +46,7 @@ void FireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (coEvents.size() == 0)
 	{
 		vx = vy = ENEMY_SPEED;
-		if (distance <= 100)
+		if (distance <= 100 && state !=STATE_ITEM)
 			MoveToPlayer(player_x, player_y);
 		//DebugOut(L"Move X: %d, Y: %d , D: %f \n", int(player_x), int(player_y), distance);
 	}
@@ -93,7 +93,7 @@ void FireEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	timecount++;
 
-	if (timecount >= 100)
+	if (timecount >= FIRE_TIME && state != STATE_ITEM)
 	{
 		Fire();
 		timecount = 0;
@@ -150,5 +150,4 @@ void FireEnemy::Fire()
 	newBullet->SetAnimationSet(bullet->animation_set);
 	newBullet->SetPosition(x, y);
 	bullets.push_back(newBullet);
-	DebugOut(L"Bulet Fire \n", bullets.size());
 }

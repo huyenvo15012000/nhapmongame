@@ -30,9 +30,9 @@ void EnemyH::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x = x0 - 30;
 		vx = -vx;
 	}
-	if (x > x0+200 && vx > 0)
+	if (x > x0+170 && vx > 0)
 	{
-		x = x0+200;
+		x = x0+150;
 		vx = -vx;
 	}
 }

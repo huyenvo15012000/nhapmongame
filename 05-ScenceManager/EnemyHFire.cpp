@@ -43,7 +43,7 @@ void EnemyHFire::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	timecount++;
 	
-	if (timecount >= 100)
+	if (timecount >= FIRE_TIME && state != STATE_ITEM)
 	{
 		Fire();
 		timecount = 0;

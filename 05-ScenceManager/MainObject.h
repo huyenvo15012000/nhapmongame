@@ -60,7 +60,6 @@ protected:
 	Wheel* WheelLeft, * WheelRight;
 	Gun* MainGun;
 	Connector* connector;
-	HealthBar* healthbar;
 	Bullet* bullet;
 	int untouchable;
 	DWORD untouchable_start;
@@ -82,7 +81,6 @@ public:
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
 	void addBullet(Bullet* bulletF);
-	void addHealthBar(HealthBar* h) { this->healthbar = h; };
 
 	void Fire();
 

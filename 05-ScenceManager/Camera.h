@@ -9,7 +9,9 @@
 class Camera
 {
 	vector<int> scenes_height;
+	vector<int> scenes_width;
 	int curent_scene_height;
+	int curent_scene_width;
 	int scene_id;
 public:
 	//Constructors and Destructor
@@ -25,7 +27,10 @@ public:
 	void FlipY(float& y) {
 		y = curent_scene_height - y;
 	}
-	void SetSceneHeight(int i) { this->curent_scene_height = scenes_height.at(i - 1); }
+	void SetSceneHeight(int i) { 
+		this->curent_scene_height = scenes_height.at(i - 1);
+		this->curent_scene_width = scenes_width.at(i - 1);
+	}
 	D3DVECTOR GetPosition();
 
 private:

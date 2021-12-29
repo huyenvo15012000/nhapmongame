@@ -1,6 +1,7 @@
 #include "EnemyBullet.h"
 #include "Utils.h"
 #include "Brick.h"
+#include "MainObject.h"
 
 EnemyBullet::EnemyBullet(int nx, int ny)
 {
@@ -89,6 +90,10 @@ void EnemyBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<CMainObject*>(e->obj))
+			{
+				e->obj->Hit();
+			}
 		
 		}
 	}

@@ -87,7 +87,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 vector<LPGAMEOBJECT>* coObj = new vector<LPGAMEOBJECT>();
 vector<LPGAMEOBJECT>*p = new vector<LPGAMEOBJECT>();
 Background* background;
-
+HealthBar* healthbar;
 LPDIRECT3DTEXTURE9 texMap1;
 int lx, ly;
 int Stage;
@@ -97,6 +97,7 @@ Connector* connector;
 Wheel* wheel;
 EnemyBullet* bullet;
 int main_previous_state = 0;
+int previous_hit = 0;
 Quadtree* CPlayScene::CreateQuadtree(vector<LPGAMEOBJECT> entity_list)
 {
 	Quadtree* quadtree = new Quadtree(1, new Rect(0, 0, 3016, 2016));
@@ -221,6 +222,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player = (CMainObject*)obj;
 		if (main_previous_state != 0)
 			player->SetState(main_previous_state);
+		if (previous_hit != 0)
+			player->get_hit = previous_hit;
 		break;
 	case OBJECT_TYPE_JASON:
 		if (player != NULL)
@@ -232,8 +235,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMainObject(x, y);
 		player = (CMainObject*)obj;
 		player->SetJason();
-		if (main_previous_state != 0)
-			player->SetState(main_previous_state);
+		if (previous_hit != 0)
+			player->get_hit = previous_hit;
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new Background();
@@ -260,7 +263,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player->addConnector((Connector*)obj); break;
 	case OBJECT_TYPE_HEALTHBAR:
 			obj = new HealthBar();
-			player->addHealthBar((HealthBar*)obj); break;
+			healthbar=(HealthBar*)obj; 
+			break;
 	case OBJECT_TYPE_WHEEL:
 		obj = new Wheel();
 		player->addWheel((Wheel*)obj); break;
@@ -469,6 +473,10 @@ void CPlayScene::Render()
 			coObj->at(i)->Render();
 		else
 			if (!coObj->at(i)->IsEnable()) coObj->erase(coObj->begin() + i);
+	float a, b;
+	player->GetPosition(a, b);
+	DebugOut(L"X: %f, Y: %f", a, b);
+	healthbar->Render(a, b, player->get_hit);
 }
 
 /*
@@ -476,8 +484,11 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
-	/*if (player != NULL)
-		main_previous_state = player->GetState();*/
+	if (player != NULL)
+	{
+		main_previous_state = player->GetState();
+		previous_hit = player->get_hit;
+	}
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Disable();
 
