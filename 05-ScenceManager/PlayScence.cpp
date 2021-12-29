@@ -494,10 +494,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_A:		
 		main->Fire();
-		break;
-	case DIK_SPACE:
-		main->SetState(MAINOBJECT_STATE_JUMP);
-		break;
+		break;	
 	default:
 		main->SetState(MAINOBJECT_STATE_IDLE);
 	}
@@ -524,6 +521,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		main->SetState(MAINOBJECT_STATE_WALKING_UP);
 	else if (game->IsKeyDown(DIK_DOWN))
 		main->SetState(MAINOBJECT_STATE_WALKING_DOWN);
+	else if (game->IsKeyDown(DIK_SPACE))
+		main->SetState(MAINOBJECT_STATE_JUMP);
 	/*else if (game->IsKeyDown(DIK_SPACE))
 		main->SetState(MAINOBJECT_STATE_JUMP);*/
 	else if (game->IsKeyDown(DIK_W))

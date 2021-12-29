@@ -19,6 +19,7 @@
 int bullet_ny = 0;
 int old_ani;
 float bullet_x, bullet_y;
+int touchable = 0;
 CMainObject::CMainObject(float x, float y) : CGameObject()
 {
 	SetState(MAINOBJECT_STATE_IDLE);
@@ -39,6 +40,7 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
+	touchable++;
 	if (get_hit == MAINOBJECT_HEALTH)
 		SetState(MAINOBJECT_STATE_DIE);
 	if (state == MAINOBJECT_STATE_DIE)
@@ -110,13 +112,18 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					Enemy1* e2 = dynamic_cast<Enemy1*>(e->obj);
 					if (e2->GetState() == STATE_ITEM)
 					{
+						
 						this->get_hit--;
 						e2->Hit();
 						if (get_hit < 0)
 							get_hit = 0;
 					}
 					else
-						this->Hit();
+						if (touchable > 80)
+						{
+							touchable = 0;
+							this->Hit();
+						}
 				}
 				else if (dynamic_cast<Enemy2*>(e->obj))
 				{
