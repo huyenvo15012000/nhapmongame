@@ -8,6 +8,7 @@
 #include "Point.h"
 #include "Bullet.h"
 #include "HealthBar.h"
+#include "SmallJason.h"
 
 #define MAINOBJECT_WALKING_SPEED		0.15f
 #define MAINOBJECT_JUMP_SPEED_Y		0.5f
@@ -61,6 +62,7 @@ protected:
 	Gun* MainGun;
 	Connector* connector;
 	Bullet* bullet;
+	SmallJason* jason;
 	int untouchable;
 	DWORD untouchable_start;
 	bool IsCollide = false;
@@ -81,6 +83,7 @@ public:
 	void addConnector(Connector* connectorF);
 	void addWheel(Wheel* wheelF);
 	void addBullet(Bullet* bulletF);
+	void addJason(SmallJason* js) { jason = js; };
 
 	void Fire();
 

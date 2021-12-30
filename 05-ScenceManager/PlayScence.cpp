@@ -32,6 +32,7 @@
 #include "EnemyHFire.h"
 #include "EnemyBullet.h"
 #include "HealthBar.h"
+#include "SmallJason.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -81,6 +82,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_JASON	1000
 #define OBJECT_TYPE_PORTAL	100
 #define OBJECT_TYPE_WALLENEMY	999
+#define OBJECT_TYPE_SMALLJASON	678
 
 #define MAX_SCENE_LINE 1024
 
@@ -225,6 +227,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (previous_hit != 0)
 			player->get_hit = previous_hit;
 		break;
+	case OBJECT_TYPE_SMALLJASON:
+		obj = new SmallJason(0,0);
+		player->addJason((SmallJason*)obj);
+		break;
 	case OBJECT_TYPE_JASON:
 		if (player != NULL)
 		{
@@ -348,6 +354,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_CONNECTOR:
 			break;
 		case OBJECT_TYPE_JASON:
+			break;
+		case OBJECT_TYPE_SMALLJASON:
 			break;
 		case OBJECT_TYPE_MAINOBJECT:
 			break;

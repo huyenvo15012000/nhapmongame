@@ -17,6 +17,17 @@
 18	textures\healthbar8.jpg	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+#small jason go
+4004	141	3	151	20	5
+4005	154	4	164	20	5
+4006	167	4	177	20	5
+4007	180	3	190	20	5
+#small jason jump
+4000	177	23	191	39	5
+4001	98	25	114	39	5
+4002	81	23	97	37	5
+4003	61	25	77	39	5
+4008	177	23	191	39	5
 #healthbar
 1	0	0	8	48	10
 2	0	0	8	48	11
@@ -54,6 +65,9 @@
 60001	39	21	47	29	100
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+#Small jason
+5678	4000	100	4001	100	4002	100	4003	100	4008	100
+5679	4004	100	4005	100	4006	100	4007	100
 #healthbar
 51	1	0
 11	2	0
@@ -100,6 +114,8 @@
 2	50	301	401
 #connector
 3	60
+#small jason
+6968	5678	5679
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 #Background
@@ -112,6 +128,8 @@
 3	0	436	3
 #wheel			
 4	0	486	2
+#small jason
+678	0	0	6968
 # BRICK 
 1	80	224	-1
 1	88	224	-1

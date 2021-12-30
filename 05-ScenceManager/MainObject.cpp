@@ -35,12 +35,15 @@ CMainObject::CMainObject() {
 	this->MainGun = new Gun();
 	connector = new Connector();
 	bullet = new Bullet(nx, bullet_ny,0);
+	jason = new SmallJason(x,y);
 
 }
 void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
+	if (jason && jason->Active)
+		jason->Update(dt, coObjects);
 	touchable++;
 	if (get_hit == MAINOBJECT_HEALTH)
 		SetState(MAINOBJECT_STATE_DIE);
@@ -124,7 +127,14 @@ void CMainObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
-					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+					if (p->GetSceneId() == 4)
+					{
+						if (jason->Active == false)
+						jason->SetPosition(x-10, y+5);
+						jason->Active = true;
+					}
+						
+					else CGame::GetInstance()->SwitchScene(p->GetSceneId());
 				}
 				else
 				{
@@ -243,7 +253,11 @@ void CMainObject::Render()
 			bullets[i]->Render();
 		RenderBoundingBox();
 	}
-	
+	if (jason && jason->Active)
+	{
+			jason->Render();
+	}
+		
 }
 
 void CMainObject::SetState(int state)
@@ -373,10 +387,10 @@ void CMainObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 	}
 	else
 	{
-		l = x + 10;
-		t = y - 13;
-		r = x + JASON_BBOX_WIDTH + 6;
-		b = y + JASON_BBOX_HEIGHT - 10;
+		l = x;
+		t = y;
+		r = x + JASON_BBOX_WIDTH;
+		b = y + JASON_BBOX_HEIGHT;
 	}
 }
 void CMainObject::Reset()
