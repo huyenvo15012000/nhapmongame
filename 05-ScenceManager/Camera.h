@@ -13,6 +13,7 @@ class Camera
 	int curent_scene_height;
 	int curent_scene_width;
 	int scene_id;
+	int test;
 public:
 	//Constructors and Destructor
 	Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactors);
